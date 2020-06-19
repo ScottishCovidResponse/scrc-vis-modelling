@@ -83,14 +83,14 @@ def convertInfectionMapToNetworkXGraph(infectionMapFileName):
 
 ### Here is a testing routine that draws the graph and generates a graphml export
 
-G = convertInfectionMapToNetworkXGraph('infectionMap_sample.txt')
-nodes = G.nodes(data=True)
-plt.figure(1,figsize=(12,12))
-colors = [v['infectionTime'] for u,v in nodes]
-#print(colors)
-pos = nx.spring_layout(G)
-nx.draw(G, pos=pos, cmap=plt.cm.Blues, node_color= colors)
-nx.draw_networkx_labels(G, pos=pos, font_size = 8)
-plt.show()
+G = convertInfectionMapToNetworkXGraph('../../data/infectionMap_NoRandom.txt')
+# nodes = G.nodes(data=True)
+# plt.figure(1,figsize=(12,12))
+# colors = [v['infectionTime'] for u,v in nodes]
+# #print(colors)
+# pos = nx.spring_layout(G)
+# nx.draw(G, pos=pos, cmap=plt.cm.Blues, node_color= colors)
+# nx.draw_networkx_labels(G, pos=pos, font_size = 8)
+# plt.show()
 
-nx.write_graphml_lxml(G, "fullInfectionMap.graphml")
+nx.write_graphml_lxml(G, "fullInfectionMap_noRandom.graphml")

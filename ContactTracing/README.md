@@ -9,5 +9,7 @@ Results to be summarised here as they become available.
 Main contact people in this stream are:
 
 Cagatay Turkay, University of Warwick
+
 Daniel Archambault, Swansea University
+
 Kai Xu, Middlesex University

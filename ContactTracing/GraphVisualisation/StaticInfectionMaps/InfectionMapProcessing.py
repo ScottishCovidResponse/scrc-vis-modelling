@@ -50,12 +50,12 @@ def convertInfectionMapToNetworkXGraph(infectionMapFileName):
             else:
                 #print(line);
                 # First check how many "->" this infection line has.
-
+                infectionTimes = []
                 tempSplit = re.split("->", line)
                 if len(tempSplit) == 2:
                     #This is the initial phase in the chain
                     tempSourceNode = parseNodeTimeObject(tempSplit[0]);
-                    #print("SourceNode:", tempSourceNode);
+                    print("SourceNode:", tempSourceNode);
                     G.add_node(tempSourceNode[0], infectionTime = int(tempSourceNode[1]))
                     tempTargetNodes = parseInfectedNodesList(tempSplit[1]);
                     #print("TargetNodes:", tempTargetNodes);
@@ -93,4 +93,4 @@ G = convertInfectionMapToNetworkXGraph('../../data/infectionMap_NoRandom.txt')
 # nx.draw_networkx_labels(G, pos=pos, font_size = 8)
 # plt.show()
 
-nx.write_graphml_lxml(G, "fullInfectionMap_noRandom.graphml")
+#nx.write_graphml_lxml(G, "fullInfectionMap_noRandom.graphml")

@@ -1,0 +1,3863 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d5" for="edge" attr.name="sourceDiseaseStatus" attr.type="string"/>
+<key id="d4" for="edge" attr.name="contactLocation" attr.type="string"/>
+<key id="d3" for="edge" attr.name="infectionTime" attr.type="long"/>
+<key id="d2" for="node" attr.name="generationTime" attr.type="float"/>
+<key id="d1" for="node" attr.name="age" attr.type="int"/>
+<key id="d0" for="node" attr.name="infectionTime" attr.type="long"/>
+<graph edgedefault="directed"><node id="2930">
+  <data key="d0">11</data>
+  <data key="d1">36</data>
+</node>
+<node id="4841">
+  <data key="d0">4</data>
+  <data key="d1">14</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="9206">
+  <data key="d0">17</data>
+  <data key="d1">22</data>
+</node>
+<node id="4246">
+  <data key="d0">6</data>
+  <data key="d1">26</data>
+</node>
+<node id="7664">
+  <data key="d0">4</data>
+  <data key="d1">6</data>
+  <data key="d2">10.0</data>
+</node>
+<node id="7556">
+  <data key="d0">10</data>
+  <data key="d1">5</data>
+  <data key="d2">6.0</data>
+</node>
+<node id="3024">
+  <data key="d0">2</data>
+  <data key="d1">6</data>
+  <data key="d2">4.5</data>
+</node>
+<node id="6110">
+  <data key="d0">5</data>
+  <data key="d1">11</data>
+</node>
+<node id="9265">
+  <data key="d0">3</data>
+  <data key="d1">20</data>
+</node>
+<node id="6079">
+  <data key="d0">3</data>
+  <data key="d1">20</data>
+  <data key="d2">7.0</data>
+</node>
+<node id="8568">
+  <data key="d0">8</data>
+  <data key="d1">7</data>
+</node>
+<node id="2127">
+  <data key="d0">14</data>
+  <data key="d1">7</data>
+</node>
+<node id="2314">
+  <data key="d0">3</data>
+  <data key="d1">6</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="2780">
+  <data key="d0">0</data>
+  <data key="d1">40</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="9134">
+  <data key="d0">7</data>
+  <data key="d1">44</data>
+</node>
+<node id="5242">
+  <data key="d0">2</data>
+  <data key="d1">9</data>
+</node>
+<node id="9240">
+  <data key="d0">4</data>
+  <data key="d1">6</data>
+  <data key="d2">6.0</data>
+</node>
+<node id="6109">
+  <data key="d0">2</data>
+  <data key="d1">8</data>
+  <data key="d2">3.5</data>
+</node>
+<node id="3065">
+  <data key="d0">6</data>
+  <data key="d1">48</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="8905">
+  <data key="d0">6</data>
+  <data key="d1">54</data>
+  <data key="d2">11.0</data>
+</node>
+<node id="1593">
+  <data key="d0">10</data>
+  <data key="d1">11</data>
+</node>
+<node id="8290">
+  <data key="d0">16</data>
+  <data key="d1">68</data>
+</node>
+<node id="2307">
+  <data key="d0">9</data>
+  <data key="d1">0</data>
+</node>
+<node id="8551">
+  <data key="d0">6</data>
+  <data key="d1">37</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="5779">
+  <data key="d0">9</data>
+  <data key="d1">53</data>
+</node>
+<node id="1603">
+  <data key="d0">5</data>
+  <data key="d1">39</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="849">
+  <data key="d0">3</data>
+  <data key="d1">10</data>
+</node>
+<node id="1768">
+  <data key="d0">10</data>
+  <data key="d1">13</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="4624">
+  <data key="d0">7</data>
+  <data key="d1">45</data>
+</node>
+<node id="542">
+  <data key="d0">7</data>
+  <data key="d1">17</data>
+</node>
+<node id="2861">
+  <data key="d0">7</data>
+  <data key="d1">7</data>
+</node>
+<node id="7147">
+  <data key="d0">2</data>
+  <data key="d1">5</data>
+  <data key="d2">6.0</data>
+</node>
+<node id="1261">
+  <data key="d0">7</data>
+  <data key="d1">10</data>
+</node>
+<node id="176">
+  <data key="d0">9</data>
+  <data key="d1">45</data>
+</node>
+<node id="992">
+  <data key="d0">8</data>
+  <data key="d1">51</data>
+</node>
+<node id="4911">
+  <data key="d0">3</data>
+  <data key="d1">6</data>
+  <data key="d2">5.5</data>
+</node>
+<node id="5704">
+  <data key="d0">8</data>
+  <data key="d1">14</data>
+</node>
+<node id="6841">
+  <data key="d0">0</data>
+  <data key="d1">62</data>
+  <data key="d2">2.5</data>
+</node>
+<node id="1274">
+  <data key="d0">8</data>
+  <data key="d1">17</data>
+</node>
+<node id="375">
+  <data key="d0">3</data>
+  <data key="d1">12</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="613">
+  <data key="d0">2</data>
+  <data key="d1">37</data>
+</node>
+<node id="2252">
+  <data key="d0">14</data>
+  <data key="d1">45</data>
+</node>
+<node id="1257">
+  <data key="d0">2</data>
+  <data key="d1">7</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="1258">
+  <data key="d0">5</data>
+  <data key="d1">6</data>
+</node>
+<node id="3287">
+  <data key="d0">2</data>
+  <data key="d1">14</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="2483">
+  <data key="d0">10</data>
+  <data key="d1">10</data>
+</node>
+<node id="6461">
+  <data key="d0">9</data>
+  <data key="d1">58</data>
+</node>
+<node id="3446">
+  <data key="d0">2</data>
+  <data key="d1">57</data>
+</node>
+<node id="7068">
+  <data key="d0">4</data>
+  <data key="d1">28</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="5674">
+  <data key="d0">7</data>
+  <data key="d1">16</data>
+</node>
+<node id="3708">
+  <data key="d0">8</data>
+  <data key="d1">15</data>
+  <data key="d2">10.0</data>
+</node>
+<node id="6815">
+  <data key="d0">7</data>
+  <data key="d1">11</data>
+</node>
+<node id="6390">
+  <data key="d0">9</data>
+  <data key="d1">55</data>
+</node>
+<node id="2354">
+  <data key="d0">6</data>
+  <data key="d1">11</data>
+</node>
+<node id="3533">
+  <data key="d0">9</data>
+  <data key="d1">6</data>
+</node>
+<node id="2351">
+  <data key="d0">3</data>
+  <data key="d1">15</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="9928">
+  <data key="d0">10</data>
+  <data key="d1">12</data>
+</node>
+<node id="6533">
+  <data key="d0">10</data>
+  <data key="d1">64</data>
+</node>
+<node id="3078">
+  <data key="d0">8</data>
+  <data key="d1">53</data>
+</node>
+<node id="3447">
+  <data key="d0">4</data>
+  <data key="d1">48</data>
+</node>
+<node id="8529">
+  <data key="d0">12</data>
+  <data key="d1">1</data>
+</node>
+<node id="4567">
+  <data key="d0">2</data>
+  <data key="d1">17</data>
+  <data key="d2">8.0</data>
+</node>
+<node id="6298">
+  <data key="d0">2</data>
+  <data key="d1">11</data>
+  <data key="d2">6.5</data>
+</node>
+<node id="3448">
+  <data key="d0">0</data>
+  <data key="d1">18</data>
+  <data key="d2">2.5</data>
+</node>
+<node id="8724">
+  <data key="d0">2</data>
+  <data key="d1">11</data>
+  <data key="d2">7.0</data>
+</node>
+<node id="3154">
+  <data key="d0">8</data>
+  <data key="d1">70</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="5163">
+  <data key="d0">18</data>
+  <data key="d1">73</data>
+</node>
+<node id="455">
+  <data key="d0">0</data>
+  <data key="d1">5</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="7910">
+  <data key="d0">4</data>
+  <data key="d1">16</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="8528">
+  <data key="d0">4</data>
+  <data key="d1">28</data>
+</node>
+<node id="3796">
+  <data key="d0">3</data>
+  <data key="d1">28</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="6830">
+  <data key="d0">7</data>
+  <data key="d1">12</data>
+</node>
+<node id="4640">
+  <data key="d0">12</data>
+  <data key="d1">0</data>
+</node>
+<node id="5349">
+  <data key="d0">7</data>
+  <data key="d1">59</data>
+</node>
+<node id="8492">
+  <data key="d0">8</data>
+  <data key="d1">17</data>
+</node>
+<node id="9245">
+  <data key="d0">4</data>
+  <data key="d1">23</data>
+</node>
+<node id="481">
+  <data key="d0">3</data>
+  <data key="d1">76</data>
+</node>
+<node id="9068">
+  <data key="d0">23</data>
+  <data key="d1">38</data>
+</node>
+<node id="4636">
+  <data key="d0">7</data>
+  <data key="d1">7</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="484">
+  <data key="d0">6</data>
+  <data key="d1">44</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="7126">
+  <data key="d0">4</data>
+  <data key="d1">12</data>
+  <data key="d2">9.0</data>
+</node>
+<node id="7134">
+  <data key="d0">12</data>
+  <data key="d1">4</data>
+  <data key="d2">11.0</data>
+</node>
+<node id="1448">
+  <data key="d0">10</data>
+  <data key="d1">10</data>
+</node>
+<node id="7138">
+  <data key="d0">14</data>
+  <data key="d1">4</data>
+</node>
+<node id="1499">
+  <data key="d0">7</data>
+  <data key="d1">48</data>
+</node>
+<node id="9471">
+  <data key="d0">11</data>
+  <data key="d1">31</data>
+</node>
+<node id="7311">
+  <data key="d0">9</data>
+  <data key="d1">9</data>
+</node>
+<node id="4990">
+  <data key="d0">7</data>
+  <data key="d1">13</data>
+</node>
+<node id="2525">
+  <data key="d0">2</data>
+  <data key="d1">14</data>
+  <data key="d2">7.0</data>
+</node>
+<node id="7460">
+  <data key="d0">2</data>
+  <data key="d1">10</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="7298">
+  <data key="d0">3</data>
+  <data key="d1">3</data>
+  <data key="d2">9.0</data>
+</node>
+<node id="4575">
+  <data key="d0">7</data>
+  <data key="d1">10</data>
+</node>
+<node id="7713">
+  <data key="d0">2</data>
+  <data key="d1">45</data>
+</node>
+<node id="7617">
+  <data key="d0">14</data>
+  <data key="d1">2</data>
+</node>
+<node id="7282">
+  <data key="d0">3</data>
+  <data key="d1">0</data>
+</node>
+<node id="2552">
+  <data key="d0">10</data>
+  <data key="d1">2</data>
+</node>
+<node id="2547">
+  <data key="d0">8</data>
+  <data key="d1">1</data>
+</node>
+<node id="7290">
+  <data key="d0">0</data>
+  <data key="d1">11</data>
+  <data key="d2">2.5</data>
+</node>
+<node id="5007">
+  <data key="d0">2</data>
+  <data key="d1">15</data>
+  <data key="d2">8.0</data>
+</node>
+<node id="2364">
+  <data key="d0">12</data>
+  <data key="d1">72</data>
+</node>
+<node id="7605">
+  <data key="d0">8</data>
+  <data key="d1">8</data>
+  <data key="d2">6.0</data>
+</node>
+<node id="8711">
+  <data key="d0">3</data>
+  <data key="d1">11</data>
+</node>
+<node id="7440">
+  <data key="d0">12</data>
+  <data key="d1">35</data>
+</node>
+<node id="5017">
+  <data key="d0">10</data>
+  <data key="d1">3</data>
+</node>
+<node id="2666">
+  <data key="d0">3</data>
+  <data key="d1">15</data>
+  <data key="d2">9.0</data>
+</node>
+<node id="4373">
+  <data key="d0">9</data>
+  <data key="d1">49</data>
+</node>
+<node id="1086">
+  <data key="d0">4</data>
+  <data key="d1">4</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="9524">
+  <data key="d0">7</data>
+  <data key="d1">20</data>
+</node>
+<node id="632">
+  <data key="d0">9</data>
+  <data key="d1">56</data>
+</node>
+<node id="5721">
+  <data key="d0">11</data>
+  <data key="d1">16</data>
+</node>
+<node id="9405">
+  <data key="d0">11</data>
+  <data key="d1">37</data>
+</node>
+<node id="2975">
+  <data key="d0">4</data>
+  <data key="d1">64</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="1800">
+  <data key="d0">4</data>
+  <data key="d1">6</data>
+</node>
+<node id="1347">
+  <data key="d0">2</data>
+  <data key="d1">33</data>
+</node>
+<node id="8721">
+  <data key="d0">3</data>
+  <data key="d1">15</data>
+  <data key="d2">7.0</data>
+</node>
+<node id="1064">
+  <data key="d0">0</data>
+  <data key="d1">17</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="1314">
+  <data key="d0">13</data>
+  <data key="d1">23</data>
+</node>
+<node id="1039">
+  <data key="d0">7</data>
+  <data key="d1">6</data>
+  <data key="d2">6.0</data>
+</node>
+<node id="9403">
+  <data key="d0">5</data>
+  <data key="d1">36</data>
+  <data key="d2">6.0</data>
+</node>
+<node id="8818">
+  <data key="d0">3</data>
+  <data key="d1">17</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="4164">
+  <data key="d0">10</data>
+  <data key="d1">69</data>
+</node>
+<node id="2641">
+  <data key="d0">7</data>
+  <data key="d1">36</data>
+</node>
+<node id="89">
+  <data key="d0">8</data>
+  <data key="d1">53</data>
+</node>
+<node id="1591">
+  <data key="d0">7</data>
+  <data key="d1">10</data>
+</node>
+<node id="4886">
+  <data key="d0">11</data>
+  <data key="d1">29</data>
+</node>
+<node id="4198">
+  <data key="d0">15</data>
+  <data key="d1">33</data>
+</node>
+<node id="3021">
+  <data key="d0">4</data>
+  <data key="d1">31</data>
+  <data key="d2">7.0</data>
+</node>
+<node id="6994">
+  <data key="d0">7</data>
+  <data key="d1">17</data>
+</node>
+<node id="8056">
+  <data key="d0">8</data>
+  <data key="d1">16</data>
+</node>
+<node id="5960">
+  <data key="d0">3</data>
+  <data key="d1">25</data>
+</node>
+<node id="6418">
+  <data key="d0">4</data>
+  <data key="d1">16</data>
+</node>
+<node id="2643">
+  <data key="d0">4</data>
+  <data key="d1">18</data>
+  <data key="d2">3.5</data>
+</node>
+<node id="1422">
+  <data key="d0">8</data>
+  <data key="d1">9</data>
+</node>
+<node id="2278">
+  <data key="d0">0</data>
+  <data key="d1">15</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="3015">
+  <data key="d0">6</data>
+  <data key="d1">0</data>
+  <data key="d2">9.0</data>
+</node>
+<node id="7879">
+  <data key="d0">8</data>
+  <data key="d1">8</data>
+</node>
+<node id="7891">
+  <data key="d0">3</data>
+  <data key="d1">8</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="6859">
+  <data key="d0">0</data>
+  <data key="d1">16</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="7974">
+  <data key="d0">10</data>
+  <data key="d1">13</data>
+</node>
+<node id="7079">
+  <data key="d0">7</data>
+  <data key="d1">14</data>
+</node>
+<node id="2589">
+  <data key="d0">4</data>
+  <data key="d1">10</data>
+</node>
+<node id="9197">
+  <data key="d0">8</data>
+  <data key="d1">5</data>
+</node>
+<node id="9036">
+  <data key="d0">4</data>
+  <data key="d1">6</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="9811">
+  <data key="d0">4</data>
+  <data key="d1">77</data>
+</node>
+<node id="9810">
+  <data key="d0">9</data>
+  <data key="d1">93</data>
+</node>
+<node id="827">
+  <data key="d0">7</data>
+  <data key="d1">15</data>
+</node>
+<node id="2201">
+  <data key="d0">9</data>
+  <data key="d1">41</data>
+</node>
+<node id="598">
+  <data key="d0">7</data>
+  <data key="d1">8</data>
+</node>
+<node id="7681">
+  <data key="d0">7</data>
+  <data key="d1">6</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="6858">
+  <data key="d0">4</data>
+  <data key="d1">6</data>
+</node>
+<node id="6855">
+  <data key="d0">5</data>
+  <data key="d1">8</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="7207">
+  <data key="d0">4</data>
+  <data key="d1">14</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="6028">
+  <data key="d0">2</data>
+  <data key="d1">8</data>
+</node>
+<node id="3839">
+  <data key="d0">2</data>
+  <data key="d1">7</data>
+  <data key="d2">10.0</data>
+</node>
+<node id="6874">
+  <data key="d0">11</data>
+  <data key="d1">58</data>
+</node>
+<node id="2059">
+  <data key="d0">0</data>
+  <data key="d1">6</data>
+  <data key="d2">2.0</data>
+</node>
+<node id="2568">
+  <data key="d0">2</data>
+  <data key="d1">16</data>
+  <data key="d2">7.5</data>
+</node>
+<node id="3109">
+  <data key="d0">2</data>
+  <data key="d1">14</data>
+</node>
+<node id="2627">
+  <data key="d0">3</data>
+  <data key="d1">23</data>
+</node>
+<node id="1855">
+  <data key="d0">9</data>
+  <data key="d1">49</data>
+</node>
+<node id="9458">
+  <data key="d0">15</data>
+  <data key="d1">16</data>
+</node>
+<node id="6909">
+  <data key="d0">9</data>
+  <data key="d1">13</data>
+</node>
+<node id="3406">
+  <data key="d0">8</data>
+  <data key="d1">25</data>
+</node>
+<node id="2628">
+  <data key="d0">5</data>
+  <data key="d1">31</data>
+</node>
+<node id="508">
+  <data key="d0">4</data>
+  <data key="d1">47</data>
+</node>
+<node id="8737">
+  <data key="d0">2</data>
+  <data key="d1">14</data>
+  <data key="d2">7.0</data>
+</node>
+<node id="9255">
+  <data key="d0">2</data>
+  <data key="d1">60</data>
+</node>
+<node id="7377">
+  <data key="d0">10</data>
+  <data key="d1">40</data>
+</node>
+<node id="5055">
+  <data key="d0">2</data>
+  <data key="d1">11</data>
+  <data key="d2">7.0</data>
+</node>
+<node id="4206">
+  <data key="d0">8</data>
+  <data key="d1">80</data>
+</node>
+<node id="7375">
+  <data key="d0">4</data>
+  <data key="d1">46</data>
+  <data key="d2">6.0</data>
+</node>
+<node id="2603">
+  <data key="d0">0</data>
+  <data key="d1">10</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="1813">
+  <data key="d0">14</data>
+  <data key="d1">46</data>
+</node>
+<node id="8138">
+  <data key="d0">6</data>
+  <data key="d1">13</data>
+  <data key="d2">8.0</data>
+</node>
+<node id="4176">
+  <data key="d0">3</data>
+  <data key="d1">17</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="1740">
+  <data key="d0">9</data>
+  <data key="d1">9</data>
+</node>
+<node id="7168">
+  <data key="d0">9</data>
+  <data key="d1">23</data>
+</node>
+<node id="4186">
+  <data key="d0">6</data>
+  <data key="d1">15</data>
+</node>
+<node id="9343">
+  <data key="d0">9</data>
+  <data key="d1">16</data>
+</node>
+<node id="3513">
+  <data key="d0">3</data>
+  <data key="d1">38</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="5711">
+  <data key="d0">6</data>
+  <data key="d1">56</data>
+</node>
+<node id="7484">
+  <data key="d0">12</data>
+  <data key="d1">42</data>
+</node>
+<node id="5714">
+  <data key="d0">7</data>
+  <data key="d1">10</data>
+</node>
+<node id="4519">
+  <data key="d0">4</data>
+  <data key="d1">12</data>
+</node>
+<node id="7485">
+  <data key="d0">9</data>
+  <data key="d1">52</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="8634">
+  <data key="d0">3</data>
+  <data key="d1">14</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="4104">
+  <data key="d0">0</data>
+  <data key="d1">17</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="5712">
+  <data key="d0">8</data>
+  <data key="d1">53</data>
+</node>
+<node id="4347">
+  <data key="d0">2</data>
+  <data key="d1">17</data>
+</node>
+<node id="8">
+  <data key="d0">8</data>
+  <data key="d1">64</data>
+</node>
+<node id="5299">
+  <data key="d0">4</data>
+  <data key="d1">13</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="180">
+  <data key="d0">8</data>
+  <data key="d1">8</data>
+</node>
+<node id="1644">
+  <data key="d0">11</data>
+  <data key="d1">64</data>
+</node>
+<node id="1643">
+  <data key="d0">2</data>
+  <data key="d1">23</data>
+  <data key="d2">7.5</data>
+</node>
+<node id="8035">
+  <data key="d0">10</data>
+  <data key="d1">9</data>
+</node>
+<node id="1185">
+  <data key="d0">3</data>
+  <data key="d1">7</data>
+</node>
+<node id="3238">
+  <data key="d0">8</data>
+  <data key="d1">24</data>
+  <data key="d2">6.0</data>
+</node>
+<node id="196">
+  <data key="d0">4</data>
+  <data key="d1">5</data>
+</node>
+<node id="7402">
+  <data key="d0">6</data>
+  <data key="d1">45</data>
+</node>
+<node id="5732">
+  <data key="d0">8</data>
+  <data key="d1">6</data>
+</node>
+<node id="3449">
+  <data key="d0">3</data>
+  <data key="d1">17</data>
+</node>
+<node id="1727">
+  <data key="d0">14</data>
+  <data key="d1">51</data>
+</node>
+<node id="6303">
+  <data key="d0">7</data>
+  <data key="d1">45</data>
+</node>
+<node id="7403">
+  <data key="d0">0</data>
+  <data key="d1">54</data>
+  <data key="d2">3.5</data>
+</node>
+<node id="2413">
+  <data key="d0">3</data>
+  <data key="d1">17</data>
+  <data key="d2">6.0</data>
+</node>
+<node id="988">
+  <data key="d0">3</data>
+  <data key="d1">9</data>
+  <data key="d2">4.5</data>
+</node>
+<node id="1225">
+  <data key="d0">7</data>
+  <data key="d1">62</data>
+</node>
+<node id="2164">
+  <data key="d0">7</data>
+  <data key="d1">7</data>
+</node>
+<node id="5888">
+  <data key="d0">3</data>
+  <data key="d1">7</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="3950">
+  <data key="d0">7</data>
+  <data key="d1">59</data>
+</node>
+<node id="2722">
+  <data key="d0">2</data>
+  <data key="d1">7</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="9986">
+  <data key="d0">11</data>
+  <data key="d1">5</data>
+</node>
+<node id="3739">
+  <data key="d0">6</data>
+  <data key="d1">23</data>
+</node>
+<node id="414">
+  <data key="d0">10</data>
+  <data key="d1">4</data>
+</node>
+<node id="7744">
+  <data key="d0">0</data>
+  <data key="d1">6</data>
+  <data key="d2">7.0</data>
+</node>
+<node id="5438">
+  <data key="d0">8</data>
+  <data key="d1">7</data>
+</node>
+<node id="794">
+  <data key="d0">7</data>
+  <data key="d1">9</data>
+</node>
+<node id="9593">
+  <data key="d0">7</data>
+  <data key="d1">9</data>
+</node>
+<node id="240">
+  <data key="d0">8</data>
+  <data key="d1">51</data>
+</node>
+<node id="8502">
+  <data key="d0">2</data>
+  <data key="d1">7</data>
+</node>
+<node id="6534">
+  <data key="d0">8</data>
+  <data key="d1">9</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="3740">
+  <data key="d0">6</data>
+  <data key="d1">26</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="107">
+  <data key="d0">0</data>
+  <data key="d1">17</data>
+  <data key="d2">3.5</data>
+</node>
+<node id="9932">
+  <data key="d0">13</data>
+  <data key="d1">64</data>
+</node>
+<node id="121">
+  <data key="d0">3</data>
+  <data key="d1">45</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="8349">
+  <data key="d0">3</data>
+  <data key="d1">8</data>
+</node>
+<node id="3295">
+  <data key="d0">3</data>
+  <data key="d1">16</data>
+  <data key="d2">8.0</data>
+</node>
+<node id="4655">
+  <data key="d0">12</data>
+  <data key="d1">50</data>
+</node>
+<node id="3675">
+  <data key="d0">10</data>
+  <data key="d1">8</data>
+</node>
+<node id="117">
+  <data key="d0">4</data>
+  <data key="d1">63</data>
+  <data key="d2">9.0</data>
+</node>
+<node id="7496">
+  <data key="d0">8</data>
+  <data key="d1">14</data>
+</node>
+<node id="1034">
+  <data key="d0">8</data>
+  <data key="d1">15</data>
+</node>
+<node id="724">
+  <data key="d0">11</data>
+  <data key="d1">16</data>
+</node>
+<node id="1513">
+  <data key="d0">9</data>
+  <data key="d1">67</data>
+</node>
+<node id="4238">
+  <data key="d0">10</data>
+  <data key="d1">11</data>
+</node>
+<node id="2529">
+  <data key="d0">11</data>
+  <data key="d1">79</data>
+</node>
+<node id="5813">
+  <data key="d0">2</data>
+  <data key="d1">10</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="4140">
+  <data key="d0">0</data>
+  <data key="d1">59</data>
+  <data key="d2">2.0</data>
+</node>
+<node id="1554">
+  <data key="d0">8</data>
+  <data key="d1">51</data>
+</node>
+<node id="8236">
+  <data key="d0">8</data>
+  <data key="d1">38</data>
+</node>
+<node id="2973">
+  <data key="d0">2</data>
+  <data key="d1">4</data>
+  <data key="d2">10.0</data>
+</node>
+<node id="1677">
+  <data key="d0">7</data>
+  <data key="d1">5</data>
+</node>
+<node id="1552">
+  <data key="d0">6</data>
+  <data key="d1">63</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="4141">
+  <data key="d0">3</data>
+  <data key="d1">57</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="8281">
+  <data key="d0">23</data>
+  <data key="d1">59</data>
+</node>
+<node id="2270">
+  <data key="d0">12</data>
+  <data key="d1">43</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="1228">
+  <data key="d0">2</data>
+  <data key="d1">7</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="8278">
+  <data key="d0">15</data>
+  <data key="d1">19</data>
+  <data key="d2">8.0</data>
+</node>
+<node id="8569">
+  <data key="d0">4</data>
+  <data key="d1">73</data>
+</node>
+<node id="2553">
+  <data key="d0">7</data>
+  <data key="d1">8</data>
+</node>
+<node id="4496">
+  <data key="d0">14</data>
+  <data key="d1">45</data>
+</node>
+<node id="8645">
+  <data key="d0">7</data>
+  <data key="d1">12</data>
+</node>
+<node id="8308">
+  <data key="d0">3</data>
+  <data key="d1">6</data>
+  <data key="d2">4.5</data>
+</node>
+<node id="8565">
+  <data key="d0">9</data>
+  <data key="d1">70</data>
+  <data key="d2">11.0</data>
+</node>
+<node id="6115">
+  <data key="d0">0</data>
+  <data key="d1">6</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="5329">
+  <data key="d0">3</data>
+  <data key="d1">9</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="3177">
+  <data key="d0">7</data>
+  <data key="d1">13</data>
+  <data key="d2">7.0</data>
+</node>
+<node id="3845">
+  <data key="d0">20</data>
+  <data key="d1">76</data>
+</node>
+<node id="459">
+  <data key="d0">7</data>
+  <data key="d1">55</data>
+</node>
+<node id="7567">
+  <data key="d0">7</data>
+  <data key="d1">45</data>
+</node>
+<node id="6543">
+  <data key="d0">8</data>
+  <data key="d1">39</data>
+</node>
+<node id="8531">
+  <data key="d0">4</data>
+  <data key="d1">12</data>
+</node>
+<node id="1025">
+  <data key="d0">4</data>
+  <data key="d1">16</data>
+</node>
+<node id="1883">
+  <data key="d0">1</data>
+  <data key="d1">12</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="2558">
+  <data key="d0">11</data>
+  <data key="d1">37</data>
+</node>
+<node id="2557">
+  <data key="d0">9</data>
+  <data key="d1">37</data>
+</node>
+<node id="3947">
+  <data key="d0">7</data>
+  <data key="d1">12</data>
+</node>
+<node id="6490">
+  <data key="d0">4</data>
+  <data key="d1">16</data>
+</node>
+<node id="1894">
+  <data key="d0">4</data>
+  <data key="d1">10</data>
+</node>
+<node id="1998">
+  <data key="d0">4</data>
+  <data key="d1">15</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="8484">
+  <data key="d0">7</data>
+  <data key="d1">5</data>
+</node>
+<node id="2422">
+  <data key="d0">4</data>
+  <data key="d1">23</data>
+</node>
+<node id="2420">
+  <data key="d0">4</data>
+  <data key="d1">58</data>
+</node>
+<node id="1884">
+  <data key="d0">4</data>
+  <data key="d1">17</data>
+</node>
+<node id="9925">
+  <data key="d0">11</data>
+  <data key="d1">69</data>
+</node>
+<node id="1451">
+  <data key="d0">19</data>
+  <data key="d1">52</data>
+</node>
+<node id="5328">
+  <data key="d0">13</data>
+  <data key="d1">20</data>
+</node>
+<node id="911">
+  <data key="d0">7</data>
+  <data key="d1">9</data>
+</node>
+<node id="8602">
+  <data key="d0">8</data>
+  <data key="d1">5</data>
+</node>
+<node id="6613">
+  <data key="d0">7</data>
+  <data key="d1">38</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="6933">
+  <data key="d0">7</data>
+  <data key="d1">8</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="7364">
+  <data key="d0">7</data>
+  <data key="d1">13</data>
+</node>
+<node id="8588">
+  <data key="d0">3</data>
+  <data key="d1">11</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="5078">
+  <data key="d0">8</data>
+  <data key="d1">16</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="9139">
+  <data key="d0">7</data>
+  <data key="d1">11</data>
+</node>
+<node id="6611">
+  <data key="d0">12</data>
+  <data key="d1">58</data>
+</node>
+<node id="7182">
+  <data key="d0">13</data>
+  <data key="d1">37</data>
+</node>
+<node id="904">
+  <data key="d0">0</data>
+  <data key="d1">37</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="5789">
+  <data key="d0">9</data>
+  <data key="d1">58</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="9478">
+  <data key="d0">10</data>
+  <data key="d1">3</data>
+</node>
+<node id="8778">
+  <data key="d0">6</data>
+  <data key="d1">29</data>
+</node>
+<node id="454">
+  <data key="d0">3</data>
+  <data key="d1">42</data>
+  <data key="d2">6.5</data>
+</node>
+<node id="8779">
+  <data key="d0">3</data>
+  <data key="d1">37</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="458">
+  <data key="d0">15</data>
+  <data key="d1">25</data>
+</node>
+<node id="452">
+  <data key="d0">6</data>
+  <data key="d1">53</data>
+</node>
+<node id="9421">
+  <data key="d0">12</data>
+  <data key="d1">81</data>
+</node>
+<node id="2571">
+  <data key="d0">8</data>
+  <data key="d1">62</data>
+</node>
+<node id="1981">
+  <data key="d0">2</data>
+  <data key="d1">59</data>
+</node>
+<node id="5985">
+  <data key="d0">7</data>
+  <data key="d1">39</data>
+</node>
+<node id="7240">
+  <data key="d0">9</data>
+  <data key="d1">23</data>
+</node>
+<node id="7937">
+  <data key="d0">9</data>
+  <data key="d1">5</data>
+</node>
+<node id="8306">
+  <data key="d0">7</data>
+  <data key="d1">25</data>
+</node>
+<node id="3701">
+  <data key="d0">0</data>
+  <data key="d1">12</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="8305">
+  <data key="d0">12</data>
+  <data key="d1">53</data>
+</node>
+<node id="5097">
+  <data key="d0">4</data>
+  <data key="d1">16</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="6048">
+  <data key="d0">2</data>
+  <data key="d1">17</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="5881">
+  <data key="d0">4</data>
+  <data key="d1">13</data>
+  <data key="d2">5.5</data>
+</node>
+<node id="4516">
+  <data key="d0">4</data>
+  <data key="d1">13</data>
+</node>
+<node id="17">
+  <data key="d0">9</data>
+  <data key="d1">8</data>
+</node>
+<node id="1594">
+  <data key="d0">14</data>
+  <data key="d1">47</data>
+</node>
+<node id="8463">
+  <data key="d0">7</data>
+  <data key="d1">45</data>
+</node>
+<node id="6129">
+  <data key="d0">3</data>
+  <data key="d1">16</data>
+  <data key="d2">4.5</data>
+</node>
+<node id="9329">
+  <data key="d0">7</data>
+  <data key="d1">9</data>
+</node>
+<node id="6228">
+  <data key="d0">3</data>
+  <data key="d1">28</data>
+</node>
+<node id="5722">
+  <data key="d0">8</data>
+  <data key="d1">9</data>
+</node>
+<node id="7410">
+  <data key="d0">9</data>
+  <data key="d1">7</data>
+</node>
+<node id="4383">
+  <data key="d0">0</data>
+  <data key="d1">9</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="6927">
+  <data key="d0">7</data>
+  <data key="d1">15</data>
+</node>
+<node id="5428">
+  <data key="d0">8</data>
+  <data key="d1">17</data>
+</node>
+<node id="8523">
+  <data key="d0">8</data>
+  <data key="d1">7</data>
+</node>
+<node id="6145">
+  <data key="d0">7</data>
+  <data key="d1">0</data>
+</node>
+<node id="7759">
+  <data key="d0">13</data>
+  <data key="d1">73</data>
+</node>
+<node id="9475">
+  <data key="d0">3</data>
+  <data key="d1">61</data>
+  <data key="d2">6.0</data>
+</node>
+<node id="9190">
+  <data key="d0">11</data>
+  <data key="d1">6</data>
+</node>
+<node id="5019">
+  <data key="d0">3</data>
+  <data key="d1">16</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="7649">
+  <data key="d0">4</data>
+  <data key="d1">21</data>
+</node>
+<node id="8089">
+  <data key="d0">9</data>
+  <data key="d1">14</data>
+</node>
+<node id="7139">
+  <data key="d0">6</data>
+  <data key="d1">58</data>
+  <data key="d2">18.0</data>
+</node>
+<node id="244">
+  <data key="d0">7</data>
+  <data key="d1">38</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="1267">
+  <data key="d0">4</data>
+  <data key="d1">24</data>
+  <data key="d2">6.0</data>
+</node>
+<node id="5106">
+  <data key="d0">10</data>
+  <data key="d1">16</data>
+</node>
+<node id="6669">
+  <data key="d0">0</data>
+  <data key="d1">55</data>
+  <data key="d2">3.5</data>
+</node>
+<node id="2186">
+  <data key="d0">2</data>
+  <data key="d1">6</data>
+</node>
+<node id="3102">
+  <data key="d0">7</data>
+  <data key="d1">15</data>
+</node>
+<node id="2771">
+  <data key="d0">24</data>
+  <data key="d1">38</data>
+</node>
+<node id="4181">
+  <data key="d0">7</data>
+  <data key="d1">41</data>
+</node>
+<node id="8494">
+  <data key="d0">7</data>
+  <data key="d1">17</data>
+</node>
+<node id="4341">
+  <data key="d0">8</data>
+  <data key="d1">24</data>
+</node>
+<node id="4741">
+  <data key="d0">2</data>
+  <data key="d1">10</data>
+  <data key="d2">8.0</data>
+</node>
+<node id="7135">
+  <data key="d0">5</data>
+  <data key="d1">51</data>
+  <data key="d2">12.0</data>
+</node>
+<node id="6249">
+  <data key="d0">4</data>
+  <data key="d1">5</data>
+</node>
+<node id="6970">
+  <data key="d0">17</data>
+  <data key="d1">28</data>
+</node>
+<node id="4282">
+  <data key="d0">10</data>
+  <data key="d1">57</data>
+</node>
+<node id="7062">
+  <data key="d0">5</data>
+  <data key="d1">57</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="2675">
+  <data key="d0">9</data>
+  <data key="d1">13</data>
+</node>
+<node id="7765">
+  <data key="d0">0</data>
+  <data key="d1">8</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="6720">
+  <data key="d0">10</data>
+  <data key="d1">50</data>
+</node>
+<node id="9497">
+  <data key="d0">2</data>
+  <data key="d1">12</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="2859">
+  <data key="d0">3</data>
+  <data key="d1">50</data>
+</node>
+<node id="3631">
+  <data key="d0">16</data>
+  <data key="d1">35</data>
+</node>
+<node id="1530">
+  <data key="d0">10</data>
+  <data key="d1">38</data>
+</node>
+<node id="9500">
+  <data key="d0">7</data>
+  <data key="d1">1</data>
+</node>
+<node id="7767">
+  <data key="d0">0</data>
+  <data key="d1">6</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="2668">
+  <data key="d0">4</data>
+  <data key="d1">10</data>
+  <data key="d2">12.0</data>
+</node>
+<node id="9563">
+  <data key="d0">9</data>
+  <data key="d1">46</data>
+  <data key="d2">7.0</data>
+</node>
+<node id="4014">
+  <data key="d0">4</data>
+  <data key="d1">14</data>
+  <data key="d2">5.5</data>
+</node>
+<node id="8211">
+  <data key="d0">16</data>
+  <data key="d1">54</data>
+</node>
+<node id="1590">
+  <data key="d0">7</data>
+  <data key="d1">16</data>
+</node>
+<node id="2417">
+  <data key="d0">4</data>
+  <data key="d1">7</data>
+</node>
+<node id="8592">
+  <data key="d0">4</data>
+  <data key="d1">40</data>
+</node>
+<node id="5435">
+  <data key="d0">4</data>
+  <data key="d1">16</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="5858">
+  <data key="d0">8</data>
+  <data key="d1">51</data>
+  <data key="d2">8.5</data>
+</node>
+<node id="523">
+  <data key="d0">13</data>
+  <data key="d1">20</data>
+</node>
+<node id="4158">
+  <data key="d0">5</data>
+  <data key="d1">43</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="5856">
+  <data key="d0">18</data>
+  <data key="d1">44</data>
+</node>
+<node id="4156">
+  <data key="d0">4</data>
+  <data key="d1">26</data>
+</node>
+<node id="6640">
+  <data key="d0">4</data>
+  <data key="d1">12</data>
+</node>
+<node id="3665">
+  <data key="d0">9</data>
+  <data key="d1">53</data>
+</node>
+<node id="3233">
+  <data key="d0">15</data>
+  <data key="d1">39</data>
+</node>
+<node id="2987">
+  <data key="d0">0</data>
+  <data key="d1">5</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="525">
+  <data key="d0">3</data>
+  <data key="d1">40</data>
+  <data key="d2">10.0</data>
+</node>
+<node id="6955">
+  <data key="d0">7</data>
+  <data key="d1">36</data>
+</node>
+<node id="8888">
+  <data key="d0">19</data>
+  <data key="d1">67</data>
+</node>
+<node id="4755">
+  <data key="d0">6</data>
+  <data key="d1">20</data>
+</node>
+<node id="3093">
+  <data key="d0">9</data>
+  <data key="d1">27</data>
+</node>
+<node id="6928">
+  <data key="d0">7</data>
+  <data key="d1">32</data>
+  <data key="d2">7.0</data>
+</node>
+<node id="4758">
+  <data key="d0">2</data>
+  <data key="d1">24</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="9714">
+  <data key="d0">6</data>
+  <data key="d1">79</data>
+  <data key="d2">9.5</data>
+</node>
+<node id="3092">
+  <data key="d0">14</data>
+  <data key="d1">29</data>
+</node>
+<node id="8892">
+  <data key="d0">14</data>
+  <data key="d1">31</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="7799">
+  <data key="d0">14</data>
+  <data key="d1">27</data>
+</node>
+<node id="6828">
+  <data key="d0">17</data>
+  <data key="d1">53</data>
+</node>
+<node id="3090">
+  <data key="d0">6</data>
+  <data key="d1">86</data>
+  <data key="d2">5.5</data>
+</node>
+<node id="4802">
+  <data key="d0">6</data>
+  <data key="d1">48</data>
+  <data key="d2">6.0</data>
+</node>
+<node id="1676">
+  <data key="d0">10</data>
+  <data key="d1">44</data>
+</node>
+<node id="2901">
+  <data key="d0">9</data>
+  <data key="d1">13</data>
+</node>
+<node id="1950">
+  <data key="d0">11</data>
+  <data key="d1">47</data>
+</node>
+<node id="6670">
+  <data key="d0">10</data>
+  <data key="d1">2</data>
+</node>
+<node id="1953">
+  <data key="d0">5</data>
+  <data key="d1">27</data>
+  <data key="d2">6.0</data>
+</node>
+<node id="9415">
+  <data key="d0">4</data>
+  <data key="d1">22</data>
+  <data key="d2">6.0</data>
+</node>
+<node id="3622">
+  <data key="d0">12</data>
+  <data key="d1">25</data>
+</node>
+<node id="1033">
+  <data key="d0">6</data>
+  <data key="d1">14</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="1296">
+  <data key="d0">3</data>
+  <data key="d1">37</data>
+  <data key="d2">3.0</data>
+</node>
+<node id="104">
+  <data key="d0">0</data>
+  <data key="d1">47</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="1282">
+  <data key="d0">8</data>
+  <data key="d1">23</data>
+</node>
+<node id="3983">
+  <data key="d0">2</data>
+  <data key="d1">57</data>
+  <data key="d2">5.5</data>
+</node>
+<node id="3842">
+  <data key="d0">8</data>
+  <data key="d1">29</data>
+  <data key="d2">5.5</data>
+</node>
+<node id="1662">
+  <data key="d0">14</data>
+  <data key="d1">26</data>
+</node>
+<node id="1266">
+  <data key="d0">18</data>
+  <data key="d1">69</data>
+</node>
+<node id="5481">
+  <data key="d0">7</data>
+  <data key="d1">57</data>
+  <data key="d2">9.5</data>
+</node>
+<node id="3402">
+  <data key="d0">5</data>
+  <data key="d1">50</data>
+  <data key="d2">8.0</data>
+</node>
+<node id="3844">
+  <data key="d0">13</data>
+  <data key="d1">18</data>
+</node>
+<node id="3698">
+  <data key="d0">15</data>
+  <data key="d1">53</data>
+</node>
+<node id="2144">
+  <data key="d0">0</data>
+  <data key="d1">25</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="3431">
+  <data key="d0">13</data>
+  <data key="d1">73</data>
+</node>
+<node id="5265">
+  <data key="d0">5</data>
+  <data key="d1">14</data>
+  <data key="d2">6.0</data>
+</node>
+<node id="3976">
+  <data key="d0">8</data>
+  <data key="d1">39</data>
+</node>
+<node id="4508">
+  <data key="d0">15</data>
+  <data key="d1">56</data>
+</node>
+<node id="2530">
+  <data key="d0">7</data>
+  <data key="d1">82</data>
+</node>
+<node id="7424">
+  <data key="d0">11</data>
+  <data key="d1">31</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="8994">
+  <data key="d0">9</data>
+  <data key="d1">25</data>
+</node>
+<node id="6814">
+  <data key="d0">0</data>
+  <data key="d1">65</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="4808">
+  <data key="d0">4</data>
+  <data key="d1">0</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="8090">
+  <data key="d0">10</data>
+  <data key="d1">76</data>
+</node>
+<node id="1586">
+  <data key="d0">10</data>
+  <data key="d1">50</data>
+</node>
+<node id="6813">
+  <data key="d0">5</data>
+  <data key="d1">18</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="4704">
+  <data key="d0">4</data>
+  <data key="d1">14</data>
+</node>
+<node id="8213">
+  <data key="d0">4</data>
+  <data key="d1">11</data>
+</node>
+<node id="5376">
+  <data key="d0">9</data>
+  <data key="d1">58</data>
+</node>
+<node id="3828">
+  <data key="d0">8</data>
+  <data key="d1">0</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="3831">
+  <data key="d0">4</data>
+  <data key="d1">9</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="5832">
+  <data key="d0">4</data>
+  <data key="d1">9</data>
+  <data key="d2">5.0</data>
+</node>
+<node id="9380">
+  <data key="d0">0</data>
+  <data key="d1">8</data>
+  <data key="d2">4.0</data>
+</node>
+<node id="8279">
+  <data key="d0">8</data>
+  <data key="d1">15</data>
+</node>
+<node id="4447">
+  <data key="d0">12</data>
+  <data key="d1">72</data>
+</node>
+<node id="8251">
+  <data key="d0">9</data>
+  <data key="d1">47</data>
+  <data key="d2">7.0</data>
+</node>
+<node id="8833">
+  <data key="d0">16</data>
+  <data key="d1">67</data>
+</node>
+<edge source="4841" target="8568">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="7664" target="2127">
+  <data key="d3">14</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="7556" target="8290">
+  <data key="d3">16</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="3024" target="4246">
+  <data key="d3">6</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="3024" target="9134">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="6079" target="1593">
+  <data key="d3">10</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2314" target="3065">
+  <data key="d3">6</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2780" target="3024">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2780" target="5242">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2780" target="6109">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2780" target="2314">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2780" target="6079">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2780" target="9265">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2780" target="4841">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2780" target="7664">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2780" target="9240">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2780" target="8905">
+  <data key="d3">6</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="9240" target="7556">
+  <data key="d3">10</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="6109" target="6110">
+  <data key="d3">5</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6109" target="8551">
+  <data key="d3">6</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="3065" target="2307">
+  <data key="d3">9</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="8905" target="9206">
+  <data key="d3">17</data>
+  <data key="d4">ConstructionSite</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="8551" target="2930">
+  <data key="d3">11</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="1603" target="2483">
+  <data key="d3">10</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1768" target="2252">
+  <data key="d3">14</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="7147" target="992">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="4911" target="5704">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="4911" target="176">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6841" target="613">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6841" target="1257">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6841" target="3287">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6841" target="7147">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6841" target="375">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6841" target="849">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6841" target="4911">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6841" target="542">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="375" target="1274">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1257" target="1258">
+  <data key="d3">5</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1257" target="1603">
+  <data key="d3">5</data>
+  <data key="d4">SingleOlder</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1257" target="1261">
+  <data key="d3">7</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1257" target="1768">
+  <data key="d3">10</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="3287" target="2861">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="3287" target="4624">
+  <data key="d3">7</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="3287" target="5779">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7068" target="3708">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="3708" target="5163">
+  <data key="d3">18</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2351" target="2354">
+  <data key="d3">6</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2351" target="5674">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2351" target="3154">
+  <data key="d3">8</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="4567" target="6533">
+  <data key="d3">10</data>
+  <data key="d4">SingleParent</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="4567" target="9928">
+  <data key="d3">10</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="6298" target="3078">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6298" target="3533">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="3448" target="3446">
+  <data key="d3">2</data>
+  <data key="d4">LargeAdult</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="3448" target="4567">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="3448" target="6298">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="3448" target="8724">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="3448" target="2351">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="3448" target="3447">
+  <data key="d3">4</data>
+  <data key="d4">LargeAdult</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="3448" target="7068">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="3448" target="6815">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="8724" target="6390">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="8724" target="6461">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="3154" target="8529">
+  <data key="d3">12</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="455" target="481">
+  <data key="d3">3</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="455" target="3796">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="455" target="7126">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="455" target="7910">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="455" target="8528">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="455" target="9245">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="455" target="484">
+  <data key="d3">6</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="455" target="4636">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="455" target="5349">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="455" target="6830">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="455" target="8492">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="455" target="1448">
+  <data key="d3">10</data>
+  <data key="d4">School</data>
+  <data key="d5">DEAD</data>
+</edge>
+<edge source="7910" target="7311">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="3796" target="1499">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="4636" target="4640">
+  <data key="d3">12</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="484" target="9471">
+  <data key="d3">11</data>
+  <data key="d4">Shop</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="7126" target="7134">
+  <data key="d3">12</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="7126" target="7138">
+  <data key="d3">14</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="7134" target="9068">
+  <data key="d3">23</data>
+  <data key="d4">Nursery</data>
+  <data key="d5">SEVERELY_SYMPTOMATIC</data>
+</edge>
+<edge source="2525" target="2547">
+  <data key="d3">8</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="2525" target="2552">
+  <data key="d3">10</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="7460" target="4575">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="7460" target="4990">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="7460" target="7605">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="7298" target="7440">
+  <data key="d3">12</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="7290" target="2525">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7290" target="5007">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7290" target="7460">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7290" target="7713">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7290" target="2666">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="7290" target="7282">
+  <data key="d3">3</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="7290" target="7298">
+  <data key="d3">3</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="7290" target="8711">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="5007" target="5017">
+  <data key="d3">10</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="7605" target="7617">
+  <data key="d3">14</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2666" target="2364">
+  <data key="d3">12</data>
+  <data key="d4">Shop</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="1086" target="632">
+  <data key="d3">9</data>
+  <data key="d4">Shop</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2975" target="1039">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="8721" target="4373">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="8721" target="4164">
+  <data key="d3">10</data>
+  <data key="d4">Shop</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="8721" target="5721">
+  <data key="d3">11</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="1064" target="1347">
+  <data key="d3">2</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="1064" target="8721">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="1064" target="8818">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="1064" target="1086">
+  <data key="d3">4</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="1064" target="1800">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="1064" target="2975">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="1064" target="9403">
+  <data key="d3">5</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="1039" target="1314">
+  <data key="d3">13</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="9403" target="9405">
+  <data key="d3">11</data>
+  <data key="d4">LargeAdult</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="8818" target="9524">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="3021" target="4886">
+  <data key="d3">11</data>
+  <data key="d4">Office</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2643" target="1591">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2643" target="2641">
+  <data key="d3">7</data>
+  <data key="d4">LargeManyAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2643" target="89">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2643" target="8056">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2278" target="5960">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="2278" target="7891">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="2278" target="2643">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2278" target="3021">
+  <data key="d3">4</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2278" target="6418">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2278" target="3015">
+  <data key="d3">6</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2278" target="6994">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2278" target="7879">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="3015" target="4198">
+  <data key="d3">15</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="7891" target="1422">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6859" target="2589">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6859" target="6858">
+  <data key="d3">4</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6859" target="7207">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6859" target="9036">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6859" target="9811">
+  <data key="d3">4</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6859" target="6855">
+  <data key="d3">5</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="9036" target="7681">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="9036" target="2201">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="7681" target="7974">
+  <data key="d3">10</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6855" target="9810">
+  <data key="d3">9</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="7207" target="598">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="7207" target="827">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="7207" target="7079">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="7207" target="9197">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="3839" target="6909">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="3839" target="9458">
+  <data key="d3">15</data>
+  <data key="d4">School</data>
+  <data key="d5">SEVERELY_SYMPTOMATIC</data>
+</edge>
+<edge source="2059" target="2568">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2059" target="3109">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2059" target="3839">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2059" target="6028">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2059" target="8737">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2059" target="2627">
+  <data key="d3">3</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2059" target="508">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2059" target="2628">
+  <data key="d3">5</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2568" target="3406">
+  <data key="d3">8</data>
+  <data key="d4">SingleParent</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2568" target="6874">
+  <data key="d3">11</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="8737" target="1855">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="5055" target="1740">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="5055" target="7168">
+  <data key="d3">9</data>
+  <data key="d4">SingleParent</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="5055" target="9343">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="7375" target="7377">
+  <data key="d3">10</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="2603" target="5055">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2603" target="9255">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2603" target="3513">
+  <data key="d3">3</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2603" target="4176">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2603" target="7375">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="8138" target="1813">
+  <data key="d3">14</data>
+  <data key="d4">Shop</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="4176" target="4186">
+  <data key="d3">6</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="4176" target="8138">
+  <data key="d3">6</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="3513" target="4206">
+  <data key="d3">8</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7485" target="7484">
+  <data key="d3">12</data>
+  <data key="d4">LargeManyAdultFamily</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="8634" target="180">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="4104" target="1643">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="4104" target="4347">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="4104" target="8634">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="4104" target="4519">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="4104" target="5299">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="4104" target="5711">
+  <data key="d3">6</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="4104" target="5714">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="4104" target="5712">
+  <data key="d3">8</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="5299" target="7485">
+  <data key="d3">9</data>
+  <data key="d4">LargeManyAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="1643" target="8">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1643" target="1644">
+  <data key="d3">11</data>
+  <data key="d4">SmallAdult</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="3238" target="1727">
+  <data key="d3">14</data>
+  <data key="d4">ConstructionSite</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="7403" target="988">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="7403" target="1185">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="7403" target="2413">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="7403" target="3449">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="7403" target="196">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="7403" target="7402">
+  <data key="d3">6</data>
+  <data key="d4">SmallAdult</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="7403" target="2164">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="7403" target="6303">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="2413" target="3238">
+  <data key="d3">8</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="2413" target="8035">
+  <data key="d3">10</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="988" target="1225">
+  <data key="d3">7</data>
+  <data key="d4">SingleParent</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="988" target="5732">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="5888" target="5438">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2722" target="3739">
+  <data key="d3">6</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="2722" target="3740">
+  <data key="d3">6</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="2722" target="9593">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="7744" target="2722">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7744" target="8502">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7744" target="5888">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7744" target="794">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7744" target="3950">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7744" target="240">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="7744" target="6534">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="6534" target="9986">
+  <data key="d3">11</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="3740" target="414">
+  <data key="d3">10</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="107" target="121">
+  <data key="d3">3</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="107" target="3295">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="107" target="8349">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="107" target="117">
+  <data key="d3">4</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="107" target="3675">
+  <data key="d3">10</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="107" target="724">
+  <data key="d3">11</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="121" target="1034">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="121" target="7496">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="121" target="1513">
+  <data key="d3">9</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="3295" target="4238">
+  <data key="d3">10</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="3295" target="4655">
+  <data key="d3">12</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="117" target="9932">
+  <data key="d3">13</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="5813" target="1677">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="4140" target="1228">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="4140" target="2973">
+  <data key="d3">2</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="4140" target="5813">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="4140" target="4141">
+  <data key="d3">3</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2973" target="2270">
+  <data key="d3">12</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="1552" target="2529">
+  <data key="d3">11</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="4141" target="8236">
+  <data key="d3">8</data>
+  <data key="d4">Office</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="2270" target="8278">
+  <data key="d3">15</data>
+  <data key="d4">Office</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="1228" target="1552">
+  <data key="d3">6</data>
+  <data key="d4">LargeManyAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1228" target="1554">
+  <data key="d3">8</data>
+  <data key="d4">LargeManyAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="8278" target="8281">
+  <data key="d3">23</data>
+  <data key="d4">SmallAdult</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="8308" target="2553">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="8308" target="6543">
+  <data key="d3">8</data>
+  <data key="d4">Shop</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="8565" target="3845">
+  <data key="d3">20</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="6115" target="5329">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6115" target="8308">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6115" target="8569">
+  <data key="d3">4</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6115" target="3177">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6115" target="8565">
+  <data key="d3">9</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="5329" target="459">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="5329" target="7567">
+  <data key="d3">7</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="5329" target="8645">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="3177" target="4496">
+  <data key="d3">14</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1883" target="1025">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1883" target="1884">
+  <data key="d3">4</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1883" target="1894">
+  <data key="d3">4</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1883" target="1998">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1883" target="2420">
+  <data key="d3">4</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1883" target="2422">
+  <data key="d3">4</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1883" target="6490">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1883" target="8531">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1883" target="3947">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1998" target="8484">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1998" target="2557">
+  <data key="d3">9</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1998" target="2558">
+  <data key="d3">11</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6613" target="6611">
+  <data key="d3">12</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="6933" target="9925">
+  <data key="d3">11</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">SEVERELY_SYMPTOMATIC</data>
+</edge>
+<edge source="8588" target="911">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="8588" target="6613">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="8588" target="6933">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="8588" target="7364">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="8588" target="9139">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="8588" target="5078">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="8588" target="8602">
+  <data key="d3">8</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="5078" target="5328">
+  <data key="d3">13</data>
+  <data key="d4">Shop</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="5078" target="7182">
+  <data key="d3">13</data>
+  <data key="d4">SingleParent</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="5078" target="1451">
+  <data key="d3">19</data>
+  <data key="d4">SingleParent</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="904" target="1981">
+  <data key="d3">2</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="904" target="454">
+  <data key="d3">3</data>
+  <data key="d4">ConstructionSite</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="904" target="8779">
+  <data key="d3">3</data>
+  <data key="d4">ConstructionSite</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="904" target="5985">
+  <data key="d3">7</data>
+  <data key="d4">ConstructionSite</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="904" target="2571">
+  <data key="d3">8</data>
+  <data key="d4">ConstructionSite</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="5789" target="9421">
+  <data key="d3">12</data>
+  <data key="d4">Shop</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="454" target="452">
+  <data key="d3">6</data>
+  <data key="d4">LargeAdult</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="454" target="5789">
+  <data key="d3">9</data>
+  <data key="d4">ConstructionSite</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="454" target="9478">
+  <data key="d3">10</data>
+  <data key="d4">LargeManyAdultFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="454" target="458">
+  <data key="d3">15</data>
+  <data key="d4">LargeAdult</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="8779" target="8778">
+  <data key="d3">6</data>
+  <data key="d4">SmallAdult</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="3701" target="6048">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="3701" target="4516">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">SEVERELY_SYMPTOMATIC</data>
+</edge>
+<edge source="3701" target="5097">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">SEVERELY_SYMPTOMATIC</data>
+</edge>
+<edge source="3701" target="5881">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">SEVERELY_SYMPTOMATIC</data>
+</edge>
+<edge source="5097" target="17">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="5097" target="7240">
+  <data key="d3">9</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="5097" target="7937">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="5097" target="1594">
+  <data key="d3">14</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="6048" target="8463">
+  <data key="d3">7</data>
+  <data key="d4">SingleParent</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="5881" target="8306">
+  <data key="d3">7</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="5881" target="8305">
+  <data key="d3">12</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="6129" target="6145">
+  <data key="d3">7</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6129" target="8523">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="4383" target="6129">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="4383" target="6228">
+  <data key="d3">3</data>
+  <data key="d4">LargeManyAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="4383" target="9475">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="4383" target="6927">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="4383" target="9329">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="4383" target="5722">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="9475" target="5428">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="9475" target="7410">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="9475" target="7759">
+  <data key="d3">13</data>
+  <data key="d4">SmallAdult</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="5019" target="7139">
+  <data key="d3">6</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="5019" target="244">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="5019" target="3102">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7139" target="2771">
+  <data key="d3">24</data>
+  <data key="d4">ConstructionSite</data>
+  <data key="d5">SEVERELY_SYMPTOMATIC</data>
+</edge>
+<edge source="244" target="5106">
+  <data key="d3">10</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="1267" target="8089">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1267" target="9190">
+  <data key="d3">11</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="6669" target="2186">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="6669" target="5019">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="6669" target="1267">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="6669" target="7649">
+  <data key="d3">4</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="4741" target="2675">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="4741" target="4282">
+  <data key="d3">10</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="4741" target="6720">
+  <data key="d3">10</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="7135" target="6970">
+  <data key="d3">17</data>
+  <data key="d4">Office</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="7062" target="4341">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="7765" target="4741">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7765" target="6249">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7765" target="7062">
+  <data key="d3">5</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7765" target="7135">
+  <data key="d3">5</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7765" target="4181">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="7765" target="8494">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="9497" target="9500">
+  <data key="d3">7</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="7767" target="9497">
+  <data key="d3">2</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7767" target="2859">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7767" target="2417">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7767" target="2668">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7767" target="4014">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="7767" target="1590">
+  <data key="d3">7</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="2668" target="3631">
+  <data key="d3">16</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="9563" target="8211">
+  <data key="d3">16</data>
+  <data key="d4">Shop</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="4014" target="9563">
+  <data key="d3">9</data>
+  <data key="d4">Shop</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="4014" target="1530">
+  <data key="d3">10</data>
+  <data key="d4">School</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="5435" target="3665">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="5858" target="3233">
+  <data key="d3">15</data>
+  <data key="d4">Hospital</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="5858" target="5856">
+  <data key="d3">18</data>
+  <data key="d4">SmallAdult</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="4158" target="5858">
+  <data key="d3">8</data>
+  <data key="d4">Hospital</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="2987" target="525">
+  <data key="d3">3</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2987" target="4156">
+  <data key="d3">4</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2987" target="5435">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2987" target="6640">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2987" target="8592">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2987" target="4158">
+  <data key="d3">5</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="525" target="523">
+  <data key="d3">13</data>
+  <data key="d4">SmallAdult</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="6928" target="7799">
+  <data key="d3">14</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="4758" target="3090">
+  <data key="d3">6</data>
+  <data key="d4">Shop</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="4758" target="4755">
+  <data key="d3">6</data>
+  <data key="d4">LargeAdult</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="4758" target="9714">
+  <data key="d3">6</data>
+  <data key="d4">Shop</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="4758" target="6928">
+  <data key="d3">7</data>
+  <data key="d4">ConstructionSite</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="4758" target="6955">
+  <data key="d3">7</data>
+  <data key="d4">ConstructionSite</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="9714" target="8892">
+  <data key="d3">14</data>
+  <data key="d4">Shop</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="9714" target="6828">
+  <data key="d3">17</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="8892" target="8888">
+  <data key="d3">19</data>
+  <data key="d4">AdultPensioner</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="3090" target="3093">
+  <data key="d3">9</data>
+  <data key="d4">LargeAdult</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="3090" target="3092">
+  <data key="d3">14</data>
+  <data key="d4">LargeAdult</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="4802" target="3622">
+  <data key="d3">12</data>
+  <data key="d4">Hospital</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="1953" target="1950">
+  <data key="d3">11</data>
+  <data key="d4">LargeAdult</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="9415" target="1676">
+  <data key="d3">10</data>
+  <data key="d4">Hospital</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="9415" target="6670">
+  <data key="d3">10</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="1033" target="2901">
+  <data key="d3">9</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1296" target="1033">
+  <data key="d3">6</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="1296" target="4802">
+  <data key="d3">6</data>
+  <data key="d4">Hospital</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="104" target="1296">
+  <data key="d3">3</data>
+  <data key="d4">Hospital</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="104" target="9415">
+  <data key="d3">4</data>
+  <data key="d4">Hospital</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="104" target="1953">
+  <data key="d3">5</data>
+  <data key="d4">Hospital</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="3983" target="5481">
+  <data key="d3">7</data>
+  <data key="d4">CovidHospital</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="3983" target="3842">
+  <data key="d3">8</data>
+  <data key="d4">CovidHospital</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="3842" target="3844">
+  <data key="d3">13</data>
+  <data key="d4">SmallAdult</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="3842" target="1662">
+  <data key="d3">14</data>
+  <data key="d4">CovidHospital</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="5481" target="3698">
+  <data key="d3">15</data>
+  <data key="d4">CovidHospital</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="5481" target="1266">
+  <data key="d3">18</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="3402" target="3431">
+  <data key="d3">13</data>
+  <data key="d4">AdultPensioner</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="2144" target="3983">
+  <data key="d3">2</data>
+  <data key="d4">CovidHospital</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="2144" target="3402">
+  <data key="d3">5</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="2144" target="1282">
+  <data key="d3">8</data>
+  <data key="d4">CovidHospital</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="5265" target="7424">
+  <data key="d3">11</data>
+  <data key="d4">LargeManyAdultFamily</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="7424" target="4508">
+  <data key="d3">15</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+<edge source="6814" target="4808">
+  <data key="d3">4</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="6814" target="5265">
+  <data key="d3">5</data>
+  <data key="d4">LargeManyAdultFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="6814" target="6813">
+  <data key="d3">5</data>
+  <data key="d4">SmallFamily</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="6814" target="3976">
+  <data key="d3">8</data>
+  <data key="d4">Shop</data>
+  <data key="d5">SEVERELY_SYMPTOMATIC</data>
+</edge>
+<edge source="4808" target="2530">
+  <data key="d3">7</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="4808" target="8994">
+  <data key="d3">9</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="4808" target="8090">
+  <data key="d3">10</data>
+  <data key="d4">Shop</data>
+  <data key="d5">SYMPTOMATIC</data>
+</edge>
+<edge source="6813" target="1586">
+  <data key="d3">10</data>
+  <data key="d4">Office</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="3828" target="4447">
+  <data key="d3">12</data>
+  <data key="d4">Shop</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="3831" target="3828">
+  <data key="d3">8</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="3831" target="8279">
+  <data key="d3">8</data>
+  <data key="d4">School</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="3831" target="5376">
+  <data key="d3">9</data>
+  <data key="d4">LargeTwoAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="5832" target="8251">
+  <data key="d3">9</data>
+  <data key="d4">LargeManyAdultFamily</data>
+  <data key="d5">ASYMPTOMATIC</data>
+</edge>
+<edge source="9380" target="3831">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="9380" target="4704">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="9380" target="5832">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="9380" target="8213">
+  <data key="d3">4</data>
+  <data key="d4">School</data>
+  <data key="d5">RECOVERED</data>
+</edge>
+<edge source="8251" target="8833">
+  <data key="d3">16</data>
+  <data key="d4">Restaurant</data>
+  <data key="d5">PRESYMPTOMATIC</data>
+</edge>
+</graph></graphml>

@@ -22,7 +22,7 @@ with and without interventions.
 3. School closings and the intervention blocks can be shown/hidden so they
    don't obscure other information.
 
-<img src="screenshot.png" width="800" height="600" />
+<img src="screenshot.png" width="800" />
 
 ## Code overview and technology
 

@@ -1,0 +1,7 @@
+Person Days in Isolation , 110376.0
+People infected , 3718
+Contacts Traced , 2315
+Correct Positive Tests , 1615
+Correct Negative Tests , 755
+False Positive Tests , 40
+False Negative Tests , 104

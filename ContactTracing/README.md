@@ -13,3 +13,6 @@ Cagatay Turkay, University of Warwick
 Daniel Archambault, Swansea University
 
 Kai Xu, Middlesex University
+
+### GMap visualisation
+The code and images created with the [GMap visualisation](http://gmap.cs.arizona.edu/description) is avaiable on [this reporsitory](https://github.com/jeewanhyongju/InfectionMap-Visualization)

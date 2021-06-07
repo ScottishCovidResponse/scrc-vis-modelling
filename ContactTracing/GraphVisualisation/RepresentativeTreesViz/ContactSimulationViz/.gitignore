@@ -1,0 +1,12 @@
+#Vscode ignore
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Local History for Visual Studio Code
+.history/
+/JsonMerge/JsonMerger/nbproject/private/
+/JsonMerge/JsonMerger/build/
+/JsonMerge/JsonMerger/dist/

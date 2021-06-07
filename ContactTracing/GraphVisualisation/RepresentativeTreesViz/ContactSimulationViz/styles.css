@@ -1,0 +1,316 @@
+* {
+    box-sizing: border-box;
+    /* Include padding and margins in the height and width so there is not overflow from scrollbars*/
+}
+
+#rootDiv {
+    height: 100%;
+    display: flex;
+    overflow: hidden;
+    padding: 8px;
+}
+
+#sidePanel {
+    height: 100%;
+    width: 260px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#treeGridDiv {
+    height: 100%;
+    flex-grow: 1;
+    overflow: scroll;
+    padding: 0;
+}
+
+body,
+html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+
+/*
+Css code for the visualization of the trees
+*/
+
+#treeGrid .visible {
+    opacity: 1;
+    /*visible*/
+}
+
+#treeGrid .hidden {
+    opacity: 0.4;
+    /*Blur it out*/
+}
+
+.popupFrame {
+    stroke-width: 2;
+    stroke: black;
+    fill: white;
+}
+
+.nodeText .textRepAmount {
+    text-anchor: middle;
+    text-align: center;
+    alignment-baseline: central;
+}
+
+.edge {
+    fill: none;
+    stroke: #555;
+    stroke-opacity: 0.4;
+}
+
+.node {
+    stroke-linejoin: round;
+}
+
+.glyphRectangle {
+    stroke: black;
+    stroke-width: 0.1px;
+}
+
+
+/*
+Sidepanel
+*/
+
+.SidePanelPanelDiv {
+    outline: 1px solid black;
+    /*margin for outline*/
+    margin: 1px;
+    padding: 3px;
+}
+
+
+/*
+Text elements in sidepanel
+*/
+
+.text {
+    font-size: 12pt;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.title {
+    margin: 0;
+    text-align: center;
+}
+
+.subtitle {
+    margin: 0;
+}
+
+.subtitleDiv {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+/*
+Slider
+*/
+
+.sliderdiv {
+    width: 200px;
+    margin: auto;
+}
+
+.slidecontainer {
+    width: 175px;
+    /* Width of the outside container*/
+    height: 25px;
+    /* Specified height */
+    display: inline-block;
+}
+
+.slidernumber {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+
+/* The slider itself */
+
+.slider {
+    appearance: none;
+    width: 100%;
+    /* Full-width */
+    height: 15px;
+    /* Specified height */
+    background: #d3d3d3;
+    /* Grey background */
+    outline: none;
+    /* Remove outline */
+    opacity: 0.7;
+    /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s;
+    /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+    border-radius: 5px;
+    /*rounded rectangle*/
+}
+
+
+/* Mouse-over effects */
+
+.slider:hover {
+    opacity: 1;
+    /* Fully shown on mouse-over */
+}
+
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+
+.slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 25px;
+    /* Set a specific slider handle width */
+    height: 25px;
+    /* Slider handle height */
+    border-radius: 50%;
+    /*make it round*/
+    background: #0b6dc9;
+    /* Green background */
+    cursor: pointer;
+    /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    /* Set a specific slider handle width */
+    height: 25px;
+    /* Slider handle height */
+    border-radius: 50%;
+    /*make it round*/
+    background: #0b6dc9;
+    /* Green background */
+    cursor: pointer;
+    /* Cursor on hover */
+}
+
+
+/*
+Sidepanel comboboxes
+*/
+
+.sidePanelComboBox {
+    /*reduce default margins*/
+    margin-top: 3px;
+    margin-bottom: 5px;
+    font-size: 9pt;
+}
+
+.comboBoxesDiv {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+/*
+Sidepanel checkboxes
+*/
+
+
+/*
+sidePanelSort
+*/
+
+.sortDiv {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+}
+
+
+/*
+sidePanelButtonDiv
+*/
+
+.recalculateDiv {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    padding-bottom: 2px;
+}
+
+.button {
+    border: 1px solid #000000;
+}
+
+.disabled {
+    pointer-events: none;
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+}
+
+
+/*
+Color legend
+*/
+
+.colorLegend {
+    display: flex;
+    justify-content: space-between;
+}
+
+.halfColorLegendDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 50%;
+}
+
+.colorLegendItem {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.colorLegendDot {
+    width: 25px;
+    height: 25px;
+    /*disallow the square to become smaller */
+    flex-shrink: 0;
+}
+
+.colorLegendText {
+    font-size: 9pt;
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.distributionChartPanel {
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+}
+
+.distributionChartDiv {
+    height: 170px;
+    flex-shrink: 0;
+}
+
+.distributionChartLegend {
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.distributionChart {
+    stroke-width: 2;
+    stroke: black;
+    fill: red;
+}

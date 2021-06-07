@@ -12,6 +12,8 @@ Cagatay Turkay, University of Warwick
 
 Daniel Archambault, Swansea University
 
+Max Sondag, Swansea University
+
 Kai Xu, Middlesex University
 
 ### GMap visualisation

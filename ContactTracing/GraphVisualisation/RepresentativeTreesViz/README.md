@@ -23,7 +23,7 @@ The resulting output files can be copied to ContactSimulationViz/data which will
 
 ### Example screenshots
 
-Here is a screenshot from The prototype from 07/06/2021 where the resulting representative trees are visualized and a post-hoc policy on the trace of an infection map is visualized:
+Here is a screenshot from the prototype from 07/06/2021 where the resulting representative trees are visualized and a post-hoc policy on the trace of an infection map is visualized:
 
 ![Screen-1](ExampleViz.JPG)
 

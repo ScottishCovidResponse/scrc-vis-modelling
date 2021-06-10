@@ -12,7 +12,7 @@
 
 #sidePanel {
     height: 100%;
-    width: 260px;
+    width: 270px;
     padding-right: 20px;
     padding-bottom: 20px;
     overflow: hidden;
@@ -82,7 +82,7 @@ Css code for the visualization of the trees
 Sidepanel
 */
 
-.SidePanelPanelDiv {
+#SidePanelPanelDiv {
     outline: 1px solid black;
     /*margin for outline*/
     margin: 1px;
@@ -121,19 +121,23 @@ Slider
 .sliderdiv {
     width: 200px;
     margin: auto;
+    margin-bottom: 15px;
 }
 
 .slidecontainer {
-    width: 175px;
     /* Width of the outside container*/
+    width: 175px;
+    /*height of the outside container. Make space for slider knob*/
     height: 25px;
-    /* Specified height */
-    display: inline-block;
+    display: flex;
+    justify-content: space-between;
 }
 
 .slidernumber {
     display: inline-block;
     margin-left: 5px;
+    margin-bottom: 0px;
+    margin-top: 0px;
 }
 
 
@@ -215,8 +219,20 @@ Sidepanel comboboxes
 
 
 /*
-Sidepanel checkboxes
+line chart classes
 */
+
+.LineChartSvg {
+    outline: 1px solid darkgray;
+}
+
+.filledShape {
+    fill: darkgray;
+}
+
+.filledShapeBlue {
+    fill: darkblue;
+}
 
 
 /*

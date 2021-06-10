@@ -9,9 +9,10 @@ function createSidePanel() {
 
 function createSelectors() {
     const selectorDiv = d3.select("#sidePanel").append("div")
+        .attr("id", "SelectorDiv")
         .attr("class", "SidePanelPanelDiv");
 
-    createTEDSlider(selectorDiv);
+    createDistanceSlider(selectorDiv);
     createSizeSlider(selectorDiv);
     createNodeColorSelectors(selectorDiv);
     createPolicySelectors(selectorDiv);
@@ -21,7 +22,7 @@ function createSelectors() {
 }
 
 
-function createTEDSlider(selectorDiv) {
+function createDistanceSlider(selectorDiv) {
 
     createSlider(selectorDiv, "DistanceSlider", "Rt tree distance", 0, 99, initEditDistanceSliderVal)
 
@@ -29,9 +30,12 @@ function createTEDSlider(selectorDiv) {
         .on("input", function() {
             currentEditDistance = parseInt(this.value); //keep the value up to date
             updateSliderPreview() //Show a preview
-            d3.select("#DistanceSliderNumber").select("p").text(this.value);
+            d3.select("#DistanceSliderNumber").text(this.value);
             changePending();
         })
+
+    //create it at the end of the sliderdiv so the slider aligns with the scented widget
+    createScentedRtLineChart(selectorDiv.select("#DistanceSliderdiv"), initEditDistanceSliderVal);
 }
 
 function createSizeSlider(selectorDiv) {
@@ -43,7 +47,7 @@ function createSizeSlider(selectorDiv) {
             setVizSizes(parseInt(this.value)); //update all the sizes that are dependent on node size
 
 
-            d3.select("#SizeSliderNumber").select("p").text(this.value);
+            d3.select("#SizeSliderNumber").text(this.value);
             recalculate = true;
             changePending();
         })
@@ -316,19 +320,6 @@ function createDistributionChartPanel() {
 
 }
 
-function createDistributionChart(distributionDiv) {
-    const chartDiv = distributionDiv.append("div")
-        .attr("class", "distributionChartDiv");
-
-
-    const width = 250;
-    const height = 150;
-
-    const currentChartData = simMetaData; //getChartData();
-
-    createStackedAreaChart(chartDiv, width, height, currentChartData);
-}
-
 
 
 
@@ -432,6 +423,7 @@ function createSlider(divToAppendTo, id, text, minVal, maxVal, initVal) {
 
     const sliderDiv = divToAppendTo
         .insert("div") //insert sliderdiv before svg
+        .attr("id", id + "div")
         .attr("class", "sliderdiv")
 
     //text above slider
@@ -440,9 +432,10 @@ function createSlider(divToAppendTo, id, text, minVal, maxVal, initVal) {
         .text(text)
 
     //slider itself
-    sliderDiv.append("div")
+    const slideContainer = sliderDiv.append("div")
         .attr("class", "slidecontainer")
-        .append("input")
+
+    slideContainer.append("input")
         .attr("type", "range")
         .attr("class", "slider")
         .attr("id", id)
@@ -451,9 +444,8 @@ function createSlider(divToAppendTo, id, text, minVal, maxVal, initVal) {
         .attr("value", initVal)
 
     //attach the number behind the slider
-    sliderDiv.append("div")
+    slideContainer.append("div")
         .attr("class", "slidernumber")
         .attr("id", id + "Number")
-        .append("p")
         .text(initVal)
 }

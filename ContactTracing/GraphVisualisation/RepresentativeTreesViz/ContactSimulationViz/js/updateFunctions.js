@@ -5,7 +5,10 @@ function updateSliderPreview() {
     let idsToHide = getIdsToHide(currentEditDistance)
     hideTrees(idsToHide);
     updateRepresentationText();
+
+    updateScentWidget(currentEditDistance)
 }
+
 
 function updateAll() {
     updateSliderPreview();
@@ -69,6 +72,12 @@ function updateRepresentationText() {
 }
 
 
+function updateScentWidget(distance) {
+    //delete old
+    d3.select("#RtScentedChart").remove();
+    //make new
+    createScentedRtLineChart(d3.select("#DistanceSliderdiv"), distance);
+}
 
 function updateTreesAnimated(idsToHide) {
     const updatedPlacement = recalculatePlacement(idsToHide);

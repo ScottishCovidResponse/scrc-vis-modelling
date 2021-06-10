@@ -78,7 +78,7 @@ var d3;
 
 
 //Load in all the javascript files
-requirejs(["js/d3/d3.js", "js/ColorSchemes.js", "js/StackedAreaChart.js", "js/dataQueries.js", "js/stateCounters.js", "js/nodeViz.js", "js/sidePanel.js", "js/treeLayout.js", "js/representativeGraph.js", "js/popup.js", "js/updateFunctions.js", "js/offsetCalculator.js"], function(d3Var) {
+requirejs(["js/d3/d3.js", "js/ColorSchemes.js", "js/LineChart.js", "js/StackedAreaChart.js", "js/dataQueries.js", "js/stateCounters.js", "js/nodeViz.js", "js/sidePanel.js", "js/treeLayout.js", "js/representativeGraph.js", "js/popup.js", "js/updateFunctions.js", "js/offsetCalculator.js"], function(d3Var) {
     //load in all the data
     d3 = d3Var;
     d3.json(repTreesDataInputLocation).then(function(repTreesDataInput) {

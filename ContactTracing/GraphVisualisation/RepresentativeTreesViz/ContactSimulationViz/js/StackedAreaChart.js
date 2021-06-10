@@ -1,5 +1,18 @@
-function getChartData() {
+function createDistributionChart(distributionDiv) {
+    const chartDiv = distributionDiv.append("div")
+        .attr("class", "distributionChartDiv");
 
+
+    const width = 250;
+    const height = 150;
+
+    const currentChartData = simMetaData; //getChartData();
+
+    createStackedAreaChart(chartDiv, width, height, currentChartData);
+}
+
+
+function getStackedAreaChartData() {
     console.log("Add dead to distributionchartorder")
     const compartmentOrder = distributionChartColorSchemeOrder;
     //time, [compartments]
@@ -25,7 +38,6 @@ function getChartData() {
             returnData[time][compartmentIndex] = value;
         }
     });
-
 }
 
 

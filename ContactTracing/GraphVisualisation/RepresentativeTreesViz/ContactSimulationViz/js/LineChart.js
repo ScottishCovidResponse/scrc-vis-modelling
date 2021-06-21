@@ -4,7 +4,7 @@ const treesPerSize = []; //for each R_t value (represented by the index), holds 
 
 function createScentedRtLineChart(chartDiv, scentIndex) {
 
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < maxEditDistanceSliderVal; i++) {
         treesPerSize[i] = 0;
     }
 

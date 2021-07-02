@@ -19,6 +19,8 @@ function updateAll() {
     } else { //it suffices to only change the positions
         updatePositions();
     }
+
+    updateGlobalChart();
     changeNoLongerPending();
 }
 
@@ -32,6 +34,12 @@ function updatePositions() {
     removeAllPopups(); //remove all popups as we are changing the layout and possibly hiding trees/nodes
     let idsToHide = getIdsToHide(currentEditDistance);
     updateTreesAnimated(idsToHide);
+}
+
+function updateGlobalChart() {
+    //TODO: Not optimized at all, but works
+    d3.select("#distributionChartPanel").remove();
+    createDistributionChartPanel();
 }
 
 

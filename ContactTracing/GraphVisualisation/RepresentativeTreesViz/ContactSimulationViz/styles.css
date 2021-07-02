@@ -223,7 +223,7 @@ line chart classes
 */
 
 .LineChartSvg {
-    outline: 1px solid darkgray;
+    outline: 0px solid darkgray;
 }
 
 .filledShape {
@@ -232,6 +232,27 @@ line chart classes
 
 .filledShapeBlue {
     fill: #0b6dc9;
+}
+
+
+/*
+barChartClasses
+*/
+
+.barChartsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.barChartSvg {
+    width: 60px;
+}
+
+.barChartRectangle {
+    stroke: black;
+    stroke-width: 0.1px;
+    width: 50px;
 }
 
 
@@ -310,7 +331,7 @@ Color legend
 .distributionChartPanel {
     display: flex;
     flex-direction: column;
-    height: 300px;
+    /* height: 300px; */
 }
 
 .distributionChartDiv {

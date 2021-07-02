@@ -1,9 +1,9 @@
 function createSidePanel() {
+    console.log("Figure out why colorlegens won't go below the chart");
 
-
-    createSelectors()
-    createColorLegends();
+    createSelectors();
     createDistributionChartPanel();
+    createColorLegends();
 }
 
 
@@ -221,7 +221,7 @@ function createRecalculateButton(selectorDiv) {
 
 function createColorLegends() {
     const colorLegendDiv = d3.select("#sidePanel")
-        .insert("div") //insert colorLegend
+        .append("div")
         .attr("id", "colorLegendDiv")
         .attr("class", "colorLegend SidePanelPanelDiv")
 
@@ -311,13 +311,13 @@ function createStateColorLegendItem(color, name, isLeft, divToAddTo) {
 
 function createDistributionChartPanel() {
     const distributionDiv = d3.select("#sidePanel").append("div")
+        .attr("id", "distributionChartPanel")
         .attr("class", "distributionChartPanel SidePanelPanelDiv");
 
 
-    createDistributionChart(distributionDiv)
-
-    createDistributionLegend(distributionDiv)
-
+    // createDistributionChart(distributionDiv);
+    // createDistributionLegend(distributionDiv);
+    createComponentChart(distributionDiv);
 }
 
 

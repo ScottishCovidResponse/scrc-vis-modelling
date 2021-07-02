@@ -95,7 +95,7 @@ public class Tree<N extends Node<E>, E extends Edge<N>> extends Graph {
      *
      * @return
      */
-    private HashMap<Integer, Set<N>> getDepthMap() {
+    public HashMap<Integer, Set<N>> getDepthMap() {
         N root = calculateRoot();
         HashMap<Integer, Set<N>> nodesPerDepth = new HashMap();
         HashSet d0 = new HashSet(Arrays.asList(root));

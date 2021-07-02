@@ -14,6 +14,7 @@ import InfectionTreeGenerator.Graph.Infection.InfectionEdge;
 import InfectionTreeGenerator.Graph.Infection.InfectionGraph;
 import InfectionTreeGenerator.Graph.Infection.InfectionNode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -49,6 +50,8 @@ public abstract class Policy {
     public void addPolicyData() {
 
         Collection<InfectionNode> nodes = ig.getNodes();
+
+        
         for (InfectionNode symptomaticNode : nodes) {
             //nodes isolate once they become symptomatic
             Double symptomaticTime = symptomaticNode.getSymptomaticTime();

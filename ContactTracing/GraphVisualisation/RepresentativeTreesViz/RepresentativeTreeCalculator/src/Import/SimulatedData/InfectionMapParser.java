@@ -1,3 +1,5 @@
+package Import.SimulatedData;
+
 
 import InfectionTreeGenerator.Graph.Infection.InfectionEdge;
 import InfectionTreeGenerator.Graph.Infection.InfectionGraph;

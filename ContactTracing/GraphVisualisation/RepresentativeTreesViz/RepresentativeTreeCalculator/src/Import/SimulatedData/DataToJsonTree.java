@@ -1,3 +1,5 @@
+package Import.SimulatedData;
+
 
 import Contact.Contact;
 import Contact.ContactParser;
@@ -13,6 +15,7 @@ import InfectionTreeGenerator.Graph.GraphAlgorithms.ForestFinder;
 import InfectionTreeGenerator.Graph.GraphAlgorithms.RepresentativeTree.RepresentativeTreesFinder;
 import InfectionTreeGenerator.Graph.Infection.InfectionGraph;
 import InfectionTreeGenerator.Graph.Infection.InfectionNode;
+import InfectionTreeGenerator.Graph.Node;
 import InfectionTreeGenerator.Graph.Tree;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -104,11 +107,10 @@ public class DataToJsonTree {
         ForestFinder ff = new ForestFinder(ig, Tree.class);
         Set<Tree> forest = ff.getForest();
 
-        tw.writeForest(outputFileLocation + "/AllTrees.json", forest);
-
-        TreeDistanceMeasure tdm = new RtDistanceMeasure(100, 1);
-        RepresentativeTreesFinder rgf = new RepresentativeTreesFinder();
-        rgf.getAndWriteRepresentativeTreeData(forest, startTreeSize, endTreeSize, tdm, outputFileLocation + "/ReptreesRTDistance/");
+//        tw.writeForest(outputFileLocation + "/AllTrees.json", forest);
+//        TreeDistanceMeasure tdm = new RtDistanceMeasure(100, 1);
+//        RepresentativeTreesFinder rgf = new RepresentativeTreesFinder();
+//        rgf.getAndWriteRepresentativeTreeData(forest, startTreeSize, endTreeSize, tdm, outputFileLocation + "/ReptreesRTDistance/");
     }
 
     private void printStatistics(HashMap<Integer, Set<Contact>> contacts, InfectionGraph ig) {

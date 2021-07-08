@@ -29,7 +29,7 @@
 *.xlsx
 
 # Build files
-buid/
+build/
 dist/
 *build.xml
 *manifest.mf

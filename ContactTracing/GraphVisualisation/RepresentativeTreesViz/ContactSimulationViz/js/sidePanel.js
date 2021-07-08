@@ -1,6 +1,4 @@
 function createSidePanel() {
-    console.log("Figure out why colorlegens won't go below the chart");
-
     createSelectors();
     createDistributionChartPanel();
     createColorLegends();
@@ -123,7 +121,18 @@ function createPolicySelectors(selectorDiv) {
         changePending();
     }
 
-    createLeftRightComboBoxes(selectorDiv, colorOptions, "leftPolicySelector", "rightPolicySelector", currentLeftPolicy, currentRightPolicy, leftChangeFunction, rightChangeFunction);
+
+    const policySplitCheckBoxFunction = function() {
+        splitPolicy = this.checked;
+        changePending();
+    };
+
+    const comboBoxDiv = selectorDiv.append("div")
+        .attr("class", "comboBoxesDiv")
+
+    createComboBox(comboBoxDiv, "leftPolicySelector", colorOptions, currentLeftPolicy, leftChangeFunction);
+    createCheckBox(comboBoxDiv, "policySplitCheckbox", false, policySplitCheckBoxFunction, "Detailed")
+    createComboBox(comboBoxDiv, "rightPolicySelector", colorOptions, currentRightPolicy, rightChangeFunction);
 }
 
 
@@ -363,9 +372,17 @@ function createDistributionChartSelectors(divToAddTo) {
         updateGlobalChart();
     };
 
+
+    const normalizeCheckBoxFunction = function() {
+        normalizeComponentChart = this.checked;
+        updateGlobalChart();
+    };
     const comboBoxDiv = divToAddTo.append("div").attr("class", "comboBoxesDiv")
 
     createComboBox(comboBoxDiv, "levelComboBox", comboOptions, sortBy, selectLeftLevelFunction, false);
+
+    createCheckBox(comboBoxDiv, "normalizeCheckbox", false, normalizeCheckBoxFunction, "Normalize")
+
     createComboBox(comboBoxDiv, "levelComboBox", comboOptions, sortBy, selectRightLevelFunction, false);
 
 }
@@ -441,14 +458,19 @@ function createComboBox(divToAppendTo, id, valueList, initVal, changeFunction, m
 
 }
 
-function createCheckBox(divToAppendTo, id, initVal, changeFunction) {
+function createCheckBox(divToAppendTo, id, initVal, changeFunction, labelName) {
 
-    const checkboxDiv = divToAppendTo
-        .insert("div") //insert combodiv before svg
-        .attr("class", "checkdiv")
+    if (labelName != undefined) {
+        const label = divToAppendTo.append("label").text(labelName);
+        divToAppendTo = label;
+    }
+
+    // const checkboxDiv = divToAppendTo
+    //     .insert("div") //insert a div for the checkbox
+    //     .attr("class", "checkdiv")
 
     //attach the checkbox itself
-    const checkbox = checkboxDiv.append("input")
+    const checkbox = divToAppendTo.append("input")
         .attr("class", "sidePanelCheckBox")
         .attr("id", id)
         .attr("type", "checkbox")

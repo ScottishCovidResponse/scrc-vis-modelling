@@ -33,15 +33,28 @@ function createComponentBarChart(divToAddTo) {
 
     //add an additional normalizing step as we are only showing the values from a single level which is confusing.
     //Bar charts need to display height proportional to the total.
-    let totalNodes = metaDataFromNodeById.size;
+    let totalNodes;
+    if (normalizeComponentChart) { //if normalize is true, simply show each level by itself
+        totalNodes = -1;
+    } else {
+        totalNodes = metaDataFromNodeById.size;
+    }
 
 
     const barchartsDiv = divToAddTo.append("div").attr("class", "barChartsContainer")
 
-    const leftBarChartG = barchartsDiv.append("svg").attr("class", "barChartSvg").append("g")
+    const leftBarChartG = barchartsDiv.append("svg")
+        .attr("class", "barChartSvg")
+        .attr("height", barChartHeight)
+        .append("g")
+
     createBarChart(leftBarChartG, barChartHeight, leftValues, leftColors, totalNodes)
 
-    const rightBarChartG = barchartsDiv.append("svg").attr("class", "barChartSvg").append("g")
+    const rightBarChartG = barchartsDiv.append("svg")
+        .attr("class", "barChartSvg")
+        .attr("height", barChartHeight)
+        .append("g")
+
     createBarChart(rightBarChartG, barChartHeight, rightValues, rightColors, totalNodes)
 
 }
@@ -50,7 +63,7 @@ function createComponentBarChart(divToAddTo) {
 
 function createBarChart(gElement, totalHeight, dataValues, colors, sum) {
     const parts = dataValues.length;
-    if (sum === undefined) {
+    if (sum === undefined || sum == -1) { //either not given or explicitly set to not use. Otherwise it's a value
         sum = dataValues.reduce((accumulator, currentVal) => accumulator + currentVal)
     }
 

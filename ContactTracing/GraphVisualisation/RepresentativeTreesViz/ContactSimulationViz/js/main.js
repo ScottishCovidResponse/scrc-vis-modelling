@@ -61,12 +61,14 @@ var currentLeftColor = "None"; //What we are currently coloring the nodes by for
 var currentRightColor = "None"; //What we are currently coloring the nodes by for the left sides of the glyphs
 var currentLeftPolicy = "1a"; //what the current policy is for the left sides of the glyphs
 var currentRightPolicy = "1a"; //what the current policy is for the left sides of the glyphs
+var splitPolicy = false; //Whether to split to policy into infection route prevent and contact avoided.
+
 var currentLeftAppPercentage = "100";
 var currentRightAppPercentage = "100";
 
 var currentLeftDistributionSelection = "All"; //which levels of the distribution we are currently showing
 var currentRightDistributionSelection = "All"; //which levels of the distribution we are currently showing
-
+var normalizeComponentChart = false; //whether we normalize the bar chart against the total amount of nodes or not.
 
 var sortEnabled = false;
 var sortBy = "Tree size";

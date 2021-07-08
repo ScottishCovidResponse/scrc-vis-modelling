@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author MaxSondag
  */
-class InfectionMapParser {
+public class InfectionMapParser {
 
     InfectionGraph ig = new InfectionGraph();
     List<String> content;

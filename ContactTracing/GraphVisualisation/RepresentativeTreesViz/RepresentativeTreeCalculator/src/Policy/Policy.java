@@ -16,6 +16,8 @@ import InfectionTreeGenerator.Graph.Infection.InfectionNode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -49,15 +51,28 @@ public abstract class Policy {
      */
     public void addPolicyData() {
 
-        Collection<InfectionNode> nodes = ig.getNodes();
+        ArrayList<InfectionNode> sortedNodes = new ArrayList<InfectionNode>();
+        sortedNodes.addAll(ig.getNodes());
 
-        
-        for (InfectionNode symptomaticNode : nodes) {
+        //sort nodes based on exposed time to ensure we processed all nodes earlier in the infection chain when determining if it becomes symptomatic
+        Collections.sort(sortedNodes, new Comparator<InfectionNode>() {
+            @Override
+            public int compare(InfectionNode n1, InfectionNode n2) {
+                return Double.compare(n1.exposedTime, n2.exposedTime);
+            }
+        });
+
+        for (InfectionNode symptomaticNode : sortedNodes) {
             //nodes isolate once they become symptomatic
             Double symptomaticTime = symptomaticNode.getSymptomaticTime();
             if (symptomaticTime == null) {
                 continue;
             }
+            if (!symptomaticNode.policies.isEmpty()) {
+                //node doesn't become symptomatic anymore for this paticular trace
+                continue;
+            }
+
             int symptomaticNodeId = symptomaticNode.id;
 
             TimeWindow contactWindow = getContactWindow(symptomaticTime);

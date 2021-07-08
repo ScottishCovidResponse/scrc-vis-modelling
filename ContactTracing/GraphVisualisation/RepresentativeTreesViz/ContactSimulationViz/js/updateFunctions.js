@@ -38,8 +38,10 @@ function updatePositions() {
 
 function updateGlobalChart() {
     //TODO: Not optimized at all, but works
-    d3.select("#distributionChartPanel").remove();
-    createDistributionChartPanel();
+    const distributionDiv = d3.select("#sidePanel").select("#distributionChartPanel");
+    distributionDiv.select(".barChartsContainer").remove()
+
+    createComponentBarChart(distributionDiv);
 }
 
 

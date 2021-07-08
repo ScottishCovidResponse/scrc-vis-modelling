@@ -16,23 +16,58 @@ function preprocessData() {
     }
 
 
-    for (let i = 0; i < allTreesData.length; i++) {
-        const tree = allTreesData[i];
-        const id = tree.id;
-        allTreeById.set(id, tree);
-    }
-
     for (let i = 0; i < metaData.length; i++) {
         const node = metaData[i];
         const id = node.id;
         metaDataFromNodeById.set(id, node);
     }
 
+    for (let i = 0; i < allTreesData.length; i++) {
+        const tree = allTreesData[i];
+        const id = tree.id;
+        allTreeById.set(id, tree);
+
+        //add depth meta data for each tree.
+        addDepthMetaData(tree, 0);
+    }
+
+
+
 }
 
+function addDepthMetaData(tree, depth) {
+    //save node reference
+    metaDataFromNodeById.get(tree.id).depth = depth;
 
+    //recurse into children
+    for (let child of tree.children) {
+        addDepthMetaData(child, depth + 1);
+    }
+}
 
+/**
+ * Returns the maximum depth of any tree
+ */
+function getMaxDepth() {
+    let maxDepth = 0;
+    for (let tree of allTreeById.values()) {
+        maxDepth = Math.max(maxDepth, getTreeHeight(tree))
+    }
+    return maxDepth;
+}
 
+/**
+ * 
+ * Returns the height of the subtree rooted at treeNode
+ */
+function getTreeHeight(treeNode) {
+    let height = 0;
+    for (let tree of treeNode.children) {
+        let newHeight = getTreeHeight(tree) + 1; //1 further downt he tree
+        height = Math.max(height, newHeight);
+    }
+    return height;
+}
 
 
 

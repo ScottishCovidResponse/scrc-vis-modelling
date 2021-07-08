@@ -315,11 +315,60 @@ function createDistributionChartPanel() {
         .attr("class", "distributionChartPanel SidePanelPanelDiv");
 
 
+    distributionDiv.append("p").attr("class", "title text").text("Distribution of properties")
+
+    createDistributionChartSelectors(distributionDiv);
+
     // createDistributionChart(distributionDiv);
     // createDistributionLegend(distributionDiv);
-    createComponentChart(distributionDiv);
+
+    createComponentBarChart(distributionDiv);
 }
 
+function createDistributionChartSelectors(divToAddTo) {
+
+    const comboOptions = [
+        { "NAME": "All" },
+    ]
+
+    const maxDepth = getMaxDepth();
+
+    for (let i = 0; i < maxDepth; i++) {
+        comboOptions.push({ "NAME": "Level " + i });
+    }
+
+    const selectLeftLevelFunction = function() {
+        currentLeftDistributionSelection = [];
+        for (let option of this.selectedOptions) {
+            if (option.value == "All") {
+                currentLeftDistributionSelection.push("All")
+            } else {
+                //take only the number. Represent as int for ease of manipulation later
+                currentLeftDistributionSelection.push(parseInt(option.value.split(" ")[1]))
+            }
+        }
+        updateGlobalChart();
+    };
+
+    const selectRightLevelFunction = function() {
+        currentRightDistributionSelection = [];
+        for (let option of this.selectedOptions) {
+            if (option.value == "All") {
+                currentRightDistributionSelection.push("All")
+            } else {
+                //take only the number. Represent as int for ease of manipulation later
+                currentRightDistributionSelection.push(parseInt(option.value.split(" ")[1]))
+            }
+        }
+        updateGlobalChart();
+    };
+
+    const comboBoxDiv = divToAddTo.append("div").attr("class", "comboBoxesDiv")
+
+    createComboBox(comboBoxDiv, "levelComboBox", comboOptions, sortBy, selectLeftLevelFunction, false);
+    createComboBox(comboBoxDiv, "levelComboBox", comboOptions, sortBy, selectRightLevelFunction, false);
+
+}
 
 
 
@@ -361,12 +410,16 @@ function createLeftRightComboBoxes(divToAppendTo, colorOptions, leftId, rightId,
     createComboBox(comboBoxDiv, rightId, colorOptions, rightInitColor, rightChangeFunction);
 }
 
-function createComboBox(divToAppendTo, id, valueList, initVal, changeFunction) {
+function createComboBox(divToAppendTo, id, valueList, initVal, changeFunction, multiple) {
 
     //attach the combobox
     const dropDown = divToAppendTo.append("select")
         .attr("class", "sidePanelComboBox")
         .attr("id", id);
+
+    if (multiple) {
+        dropDown.attr("multiple", "multiple")
+    }
 
     const options = dropDown.selectAll("option")
         .data(valueList)

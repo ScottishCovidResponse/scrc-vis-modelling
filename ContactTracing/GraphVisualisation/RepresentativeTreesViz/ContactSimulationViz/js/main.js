@@ -53,6 +53,7 @@ var repNodeById = new Map(); //holds all node data represented by the specified 
 var allTreeById = new Map(); //holds the alltree data by id of the root
 var metaDataFromNodeById = new Map(); //holds the meta data for each node by id of the node.
 
+
 var currentEditDistance = initEditDistanceSliderVal; //Current edit distance
 
 
@@ -62,6 +63,10 @@ var currentLeftPolicy = "1a"; //what the current policy is for the left sides of
 var currentRightPolicy = "1a"; //what the current policy is for the left sides of the glyphs
 var currentLeftAppPercentage = "100";
 var currentRightAppPercentage = "100";
+
+var currentLeftDistributionSelection = "All"; //which levels of the distribution we are currently showing
+var currentRightDistributionSelection = "All"; //which levels of the distribution we are currently showing
+
 
 var sortEnabled = false;
 var sortBy = "Tree size";

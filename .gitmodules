@@ -1,0 +1,3 @@
+[submodule "ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructing-an-epidemic-over-time"]
+	path = ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructing-an-epidemic-over-time
+	url = https://github.com/TPNguyen/reconstructing-an-epidemic-over-time

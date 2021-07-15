@@ -10,6 +10,7 @@ import Export.SimMetaDataWriter;
 import InfectionTreeGenerator.Event.Event;
 import InfectionTreeGenerator.Event.EventParser;
 import InfectionTreeGenerator.Graph.ContactData.ContactEdge;
+import InfectionTreeGenerator.Graph.ContactData.ContactGraph;
 import InfectionTreeGenerator.Graph.ContactData.ContactNode;
 import InfectionTreeGenerator.Graph.Graph;
 import InfectionTreeGenerator.Graph.GraphAlgorithms.DistanceMeasures.RtDistanceMeasure;
@@ -73,29 +74,28 @@ public class RealDataParser {
         //read data
 
         //gets the structure of the graph. Ignore metadata
-        GraphParser gp = new GraphParser(inputFolderLocation + "/ContactEdgeData.csv",inputFolderLocation + "/NodeData.csv",);
-        Graph<ContactNode, ContactEdge> g = gp.constructGraph();
-        
-        
-        System.out.println("Calculate most likely infection chain");
-        InfectionChainCalculator icc = new InfectionChainCalculator(g);
-        InfectionGraph ig = icc.calculateInfectionGraph(positiveTestData);
+        ContactGraphParser gp = new ContactGraphParser(inputFolderLocation + "/NodeData.csv", inputFolderLocation + "/ContactEdgeData.csv");
+        ContactGraph g = gp.constructGraph();
 
-        System.out.println("Finding the forest");
-        ForestFinder ff = new ForestFinder(ig, Tree.class);
-        Set<Tree> forest = ff.getForest();
-
-        //write the forest to a file
-        GraphWriter tw = new GraphWriter();
-        tw.writeForest(outputFileLocation + "/AllTrees.json", forest);
-
-        System.out.println("TODO: Set time windows automatically");
-        
-        TreeDistanceMeasure tdm = new RtDistanceMeasure(100, 1);
-        RepresentativeTreesFinder rgf = new RepresentativeTreesFinder();
-        rgf.getAndWriteRepresentativeTreeData(forest, startTreeSize, endTreeSize, tdm, outputFileLocation + "/ReptreesRTDistance/");
-        
-        System.out.println("TODO Merge automatically");
+//        System.out.println("Calculate most likely infection chain");
+//        InfectionChainCalculator icc = new InfectionChainCalculator(g);
+//        InfectionGraph ig = icc.calculateInfectionGraph(positiveTestData);
+//
+//        System.out.println("Finding the forest");
+//        ForestFinder ff = new ForestFinder(ig, Tree.class);
+//        Set<Tree> forest = ff.getForest();
+//
+//        //write the forest to a file
+//        GraphWriter tw = new GraphWriter();
+//        tw.writeForest(outputFileLocation + "/AllTrees.json", forest);
+//
+//        System.out.println("TODO: Set time windows automatically");
+//        
+//        TreeDistanceMeasure tdm = new RtDistanceMeasure(100, 1);
+//        RepresentativeTreesFinder rgf = new RepresentativeTreesFinder();
+//        rgf.getAndWriteRepresentativeTreeData(forest, startTreeSize, endTreeSize, tdm, outputFileLocation + "/ReptreesRTDistance/");
+//        
+//        System.out.println("TODO Merge automatically");
     }
 
 }

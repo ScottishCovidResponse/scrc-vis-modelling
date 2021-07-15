@@ -5,9 +5,12 @@
  */
 package InfectionTreeGenerator.Graph.ContactData;
 
+import Import.RealData.MetaData;
 import InfectionTreeGenerator.Graph.Node;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
@@ -19,16 +22,22 @@ import java.util.TreeMap;
 public class ContactNode extends Node<ContactEdge> {
 
     /**
-     * Holds when this node was exposed
+     * Holds when this node was exposed. Time is unix timestamp
      */
-    public Double positiveTestTime;
+    public Integer positiveTestTime;
 
+    public ArrayList<MetaData> metaDataList;
+    
     public ContactNode(int id) {
         super(id);
     }
 
-    public void setTestTime(double positiveTestTime) {
+    public void setTestTime(int positiveTestTime) {
         this.positiveTestTime = positiveTestTime;
+    }
+
+    public void setMetaData(ArrayList<MetaData> metaDataList) {
+        this.metaDataList = metaDataList;
     }
 
 }

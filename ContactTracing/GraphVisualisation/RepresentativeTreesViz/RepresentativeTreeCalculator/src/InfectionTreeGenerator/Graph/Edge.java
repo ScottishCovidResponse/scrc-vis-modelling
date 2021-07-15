@@ -6,9 +6,11 @@
 package InfectionTreeGenerator.Graph;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * An edge is uniquely identified by {@code source.id} and {@code target.id}
+ *
  * @author MaxSondag
  */
 public class Edge<N extends Node> {
@@ -74,8 +76,9 @@ public class Edge<N extends Node> {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + this.target.id;
+        int hash = 3;
+        hash = 43 * hash + Objects.hashCode(this.source);
+        hash = 43 * hash + Objects.hashCode(this.target);
         return hash;
     }
 
@@ -91,15 +94,13 @@ public class Edge<N extends Node> {
             return false;
         }
         final Edge<?> other = (Edge<?>) obj;
-        if (this.source.id != other.source.id) {
+        if (!Objects.equals(this.source, other.source)) {
             return false;
         }
-        if (this.target.id != other.target.id) {
+        if (!Objects.equals(this.target, other.target)) {
             return false;
         }
         return true;
     }
 
-    
-    
 }

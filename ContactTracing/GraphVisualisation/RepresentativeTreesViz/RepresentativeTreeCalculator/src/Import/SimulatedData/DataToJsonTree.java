@@ -1,6 +1,5 @@
 package Import.SimulatedData;
 
-
 import Contact.Contact;
 import Contact.ContactParser;
 import Policy.PolicySimulator;
@@ -44,11 +43,13 @@ public class DataToJsonTree {
      */
     public static void main(String[] args) {
         try {
-//            String inputFolderLocation = "./Data/demoMultiScenario0";
-            String inputFolderLocation = "./Data/2021-01-06/DataForTreeReduction";
-            String outputFileLocation = inputFolderLocation;
+            String baseFolderLocation = "./Data/demoMultiScenario0";
+            //String baseFolderLocation = "./Data/2021-01-06/DataForTreeReduction";
 
-            int startTreeSize = 231;//calculate starting from trees of size 1
+            String inputFolderLocation = baseFolderLocation + "/input";
+            String outputFileLocation = baseFolderLocation + "/output";
+
+            int startTreeSize = 1;//calculate starting from trees of size 1
             int endTreeSize = 2000; //stop calculating for trees of size 200
 
             new DataToJsonTree(inputFolderLocation, outputFileLocation, startTreeSize, endTreeSize);
@@ -77,8 +78,8 @@ public class DataToJsonTree {
         List<Event> events = ep.getEvents();
         ig.addEventData(events);//add event to the data
 
-//        ContactParser cp = new ContactParser(inputFolderLocation + "/contacts_covid_model.csv");
-        ContactParser cp = new ContactParser(inputFolderLocation + "/contacts_pop_20000.csv");
+        ContactParser cp = new ContactParser(inputFolderLocation + "/contacts_covid_model.csv");
+//        ContactParser cp = new ContactParser(inputFolderLocation + "/contacts_pop_20000.csv");
         HashMap<Integer, Set<Contact>> contacts = cp.getContacts();
 
         addLocationData(ig, contacts);
@@ -90,8 +91,8 @@ public class DataToJsonTree {
         System.out.println("g.getNodes().size() = " + ig.getNodes().size());
         System.out.println("g.getEdges().size() = " + ig.getEdges().size());
 
-//        AgeParser ap = new AgeParser(inputFolderLocation + "/ids_paul.csv");
-        AgeParser ap = new AgeParser(inputFolderLocation + "/people_pop_20000.csv");
+        AgeParser ap = new AgeParser(inputFolderLocation + "/ids_paul.csv");
+//        AgeParser ap = new AgeParser(inputFolderLocation + "/people_pop_20000.csv");
         addAgeData(ig, ap);
 
         //output data
@@ -107,7 +108,7 @@ public class DataToJsonTree {
         ForestFinder ff = new ForestFinder(ig, Tree.class);
         Set<Tree> forest = ff.getForest();
 
-//        tw.writeForest(outputFileLocation + "/AllTrees.json", forest);
+        tw.writeForest(outputFileLocation + "/AllTrees.json", forest);
 //        TreeDistanceMeasure tdm = new RtDistanceMeasure(100, 1);
 //        RepresentativeTreesFinder rgf = new RepresentativeTreesFinder();
 //        rgf.getAndWriteRepresentativeTreeData(forest, startTreeSize, endTreeSize, tdm, outputFileLocation + "/ReptreesRTDistance/");

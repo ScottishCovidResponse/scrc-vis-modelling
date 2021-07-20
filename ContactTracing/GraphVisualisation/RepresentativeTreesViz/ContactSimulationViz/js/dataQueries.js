@@ -163,6 +163,10 @@ function getRepresentedNodesMetaData(nodeId, editDistance) {
     let metaDataNodes = [];
     for (let i = 0; i < repNodeIds.length; i++) {
         const tree = metaDataFromNodeById.get(repNodeIds[i]);
+        if (tree === undefined) {
+            console.error("Tree with id " + repNodeIds[i] + " is not present in the metadata")
+            continue;
+        }
         metaDataNodes.push(tree);
     }
 

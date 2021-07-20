@@ -121,17 +121,17 @@ function getStateArray(nodesWithMetaData, stateNames, policy, appPercentage, sta
         //which state this node has
         let stateIndex = -1;
 
-        if (nodeMetaData.policies.length > 0) {
-            stateIndex = stateIndex;
-        }
-
         //policies are not a specific state, so do these seperatly
         if (isRemovedByPolicy(nodeMetaData, policy, appPercentage)) { //is the node removed by the policy
             stateIndex = stateNames.indexOf("removedByPolicy");
         }
 
-        //Whether this node was the original of a removal chain
+        //Whether this node was the original of a removal chain and we are 
         if (isRemovedByPolicy(nodeMetaData, policy, appPercentage, true)) {
+            stateIndex = stateNames.indexOf("removedByPolicyOrigin");
+        }
+
+        if (stateIndex != -1 && splitPolicy == false) { //if splitPolicy is disabled, color everything according to origin
             stateIndex = stateNames.indexOf("removedByPolicyOrigin");
         }
 
@@ -180,6 +180,10 @@ function isRemovedByIsolation(nodeMetaData) {
  * @param {the meta data of the node} nodeMetaData
  */
 function getInfectorState(nodeMetaData) {
+    if (nodeMetaData === undefined) {
+        console.log("check")
+    }
+
     const sourceId = nodeMetaData.sourceInfectionId;
     const time = nodeMetaData.exposedTime;
 

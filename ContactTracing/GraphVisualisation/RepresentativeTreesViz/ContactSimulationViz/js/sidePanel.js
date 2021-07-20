@@ -290,7 +290,18 @@ function createStateColorLegend(colorLegendDiv, isLeft) {
 
     for (let i = startI; i < names.length; i++) {
         const color = colors[i];
-        const name = names[i];
+        let name = names[i];
+        if (!splitPolicy) //If we aren't looking into the detailed split policy we merge them together
+        {
+            if (name == "Infection route prevented earlier") {
+                //skip the detailed view
+                continue;
+            }
+            if (name == "Contact avoided due to isolation") {
+                //rename as it now represents all states
+                name = "Infection route prevented";
+            }
+        }
         createStateColorLegendItem(color, name, isLeft, halfColorDiv);
     }
 
@@ -381,7 +392,7 @@ function createDistributionChartSelectors(divToAddTo) {
 
     createComboBox(comboBoxDiv, "levelComboBox", comboOptions, sortBy, selectLeftLevelFunction, false);
 
-    createCheckBox(comboBoxDiv, "normalizeCheckbox", false, normalizeCheckBoxFunction, "Normalize")
+    createCheckBox(comboBoxDiv, "normalizeCheckbox", false, normalizeCheckBoxFunction, "Normalized")
 
     createComboBox(comboBoxDiv, "levelComboBox", comboOptions, sortBy, selectRightLevelFunction, false);
 

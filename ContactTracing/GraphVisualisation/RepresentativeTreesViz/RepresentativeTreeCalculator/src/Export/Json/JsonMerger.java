@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jsonmerger;
+package Export.Json;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,11 +26,8 @@ public class JsonMerger {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        // TODO code application logic here
-
         String inputFolderLocation = "F:\\Development\\Swansea\\ContactTracingViz\\CovidTracing\\EventToTree\\Data\\demoMultiScenario0\\RepTreesRTDistanceCopy";
-        String outputFileLocation = "F:\\Development\\Swansea\\ContactTracingViz\\CovidTracing\\EventToTree\\Data\\demoMultiScenario0\\RepTreesRTDistancePartial.json";
-
+        String outputFileLocation = "F:\\Development\\Swansea\\ContactTracingViz\\CovidTracing\\EventToTree\\Data\\demoMultiScenario0\\RepTreesRTDistance.json";
         JsonMerger jm = new JsonMerger(inputFolderLocation, outputFileLocation);
 //        jm.mergeNodesAndEdges();
         jm.mergeTrees();
@@ -50,9 +47,9 @@ public class JsonMerger {
 
         File[] listFiles = inputFolder.listFiles();
 
+        //sort trees based on size, small to large
         Arrays.sort(listFiles, new Comparator<File>() {
             public int compare(File f1, File f2) {
-                // Intentional: Reverse order for this demo
                 String f1Path = f1.getAbsolutePath();
                 String f2Path = f2.getAbsolutePath();
 
@@ -63,9 +60,15 @@ public class JsonMerger {
 
             }
 
+            /**
+             * Get the number describing how large this tree is
+             *
+             * @param path
+             * @return
+             */
             private int getTreeSize(String path) {
-                String end = path.substring(path.lastIndexOf("\\")+1);
-                String number = end.substring(0,end.indexOf(".json"));
+                String end = path.substring(path.lastIndexOf("\\") + 1);
+                String number = end.substring(0, end.indexOf(".json"));
                 return Integer.parseInt(number);
             }
         });
@@ -73,18 +76,29 @@ public class JsonMerger {
         for (int i = 0; i < listFiles.length; i++) {
             File f = listFiles[i];
             assert (f.getName().endsWith(".json"));
-            String fullContent = Files.readAllLines(f.toPath()).get(0);//only a single line in the file
+            String fullContent = Files.readAllLines(f.toPath()).get(0);//only a single line exists in the file
             String content = fullContent.substring(1, fullContent.length() - 1);//remove first [ and last ]
 
             sb.append(content);
             if (i != (listFiles.length - 1)) {
-                sb.append(",");//no comma after content of last file
+                sb.append(",");//add a comma if it is not the last tree we put in the json
             }
         }
 
+        //all trees added. Close json and write file
         sb.append("]");
         Files.writeString(Paths.get(outputFileLocation), sb.toString());
+    }
 
+    /**
+     * Removes unneeded folders on disc
+     */
+    public void cleanup() {
+        File dir = new File(inputFolderLocation);
+        for (File f : dir.listFiles()) {
+            f.delete();
+        }
+        dir.delete();
     }
 
     public void mergeNodesAndEdges() throws IOException {

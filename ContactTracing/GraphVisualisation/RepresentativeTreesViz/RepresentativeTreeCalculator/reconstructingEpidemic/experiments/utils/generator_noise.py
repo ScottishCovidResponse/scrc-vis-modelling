@@ -466,7 +466,10 @@ def readRealGraph(filepath):
     G.remove_edges_from(G.selfloop_edges())
     return edgesTS, G, nodes, edges
 
-def readFile(filepath, mode = 'general'):
+#Input format:
+#Timestamp \t 
+#mode options: "General, grid". Use grid if you have a gridgraph
+def readFile(filepath):
     G = nx.DiGraph()
     TS = []
     snapshots = {}
@@ -490,9 +493,7 @@ def readFile(filepath, mode = 'general'):
             tstamp = datetime.strptime(items[0], '%Y-%m-%d %H:%M:%S')
             ##print items
             #record = map(int, items[1:])
-            if mode == 'grid':
-                n1, n2 = literal_eval(items[1]), literal_eval(items[2])
-            else:
+
                 n1, n2 = int(items[1]), int(items[2])
             ##print n1, n2
             #exit()

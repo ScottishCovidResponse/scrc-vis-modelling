@@ -12,7 +12,13 @@ K = srcN
 real = True
 dataset = 'flixter_1000_K9'
 filepath = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructing-an-epidemic-over-time/Data/flixter_1000_K9.txt";
-TS, G, infection_order, infection_track, seeds = readFile(filepath, mode='general')
+TS, G, infection_order, infection_track, seeds = readFile(filepath)
+
+#G is a directed graph
+#TS is
+#Infection_order is
+#Infection track is
+#Seeds is
 
 
 dt_sec = 100

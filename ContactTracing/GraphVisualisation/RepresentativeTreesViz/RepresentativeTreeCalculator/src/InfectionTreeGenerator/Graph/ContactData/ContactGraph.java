@@ -5,8 +5,10 @@
  */
 package InfectionTreeGenerator.Graph.ContactData;
 
+import Import.RealData.MetaData;
 import InfectionTreeGenerator.Graph.Graph;
 import InfectionTreeGenerator.Graph.GraphFactory;
+import InfectionTreeGenerator.Graph.Infection.InfectionNode;
 import Utility.Pair;
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,12 +20,12 @@ import java.util.Set;
 
 /**
  * Temporal graph of contacts.
+ *
  * @author MaxSondag
  */
 public class ContactGraph {
 
     //TODO: Should be able to refactor using inheritance to duplicate some of the functionality without code duplication
-    
     /**
      * Not automatically set
      */
@@ -138,6 +140,14 @@ public class ContactGraph {
         return edgeMapping.get(new Pair(id1, id2));
     }
 
+    /**
+     * Get all edges starting or ending in the node with id {@code id}
+     */
+    public Set<ContactEdge> getEdges(int id) {
+        ContactNode cn = getNode(id);
+        return getEdges(cn);
+    }
+
     //Get all edges starting or ending in node n
     public Set<ContactEdge> getEdges(ContactNode n) {
         Set<ContactEdge> nEdges = new HashSet();
@@ -206,4 +216,16 @@ public class ContactGraph {
         return reachableNodes;
     }
 
+    /**
+     * Adds the amount of contacts each node has had to the metadata of this
+     * node.
+     */
+    public void addContactsAmountToMetadata() {
+        for (ContactNode cn : getNodes()) {
+            int amount = cn.getUniqueContacts().size();
+            MetaData md = new MetaData("numberOfContacts", "Integer", "" + amount);
+            cn.addToMetaData(md);
+        }
+
+    }
 }

@@ -6,6 +6,7 @@
 package InfectionTreeGenerator.Graph.GraphAlgorithms;
 
 import InfectionTreeGenerator.Graph.ContactData.ContactEdge;
+import InfectionTreeGenerator.Graph.ContactData.ContactGraph;
 import InfectionTreeGenerator.Graph.ContactData.ContactNode;
 import InfectionTreeGenerator.Graph.Edge;
 import InfectionTreeGenerator.Graph.Graph;
@@ -21,9 +22,9 @@ import java.util.HashMap;
  */
 public class InfectionChainCalculator {
 
+    private ContactGraph g;
 
-
-    public InfectionChainCalculator(Graph<ContactNode, ContactEdge> g) {
+    public InfectionChainCalculator(ContactGraph g) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

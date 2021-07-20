@@ -6,6 +6,7 @@
 package InfectionTreeGenerator.Graph.ContactData;
 
 import Import.RealData.MetaData;
+import InfectionTreeGenerator.Graph.Infection.InfectionNode;
 import InfectionTreeGenerator.Graph.Node;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class ContactNode extends Node<ContactEdge> {
     public Integer positiveTestTime;
 
     public ArrayList<MetaData> metaDataList;
-    
+
     public ContactNode(int id) {
         super(id);
     }
@@ -38,6 +39,29 @@ public class ContactNode extends Node<ContactEdge> {
 
     public void setMetaData(ArrayList<MetaData> metaDataList) {
         this.metaDataList = metaDataList;
+    }
+
+    public Set<ContactNode>  getUniqueContacts() {
+        //find the nodes that node n has been in contact with
+        Set<ContactNode> nodesInContact = new HashSet();
+        for (ContactEdge e : edges) {
+            nodesInContact.add(e.source);
+            nodesInContact.add(e.target);
+        }
+        //remove self
+        nodesInContact.remove(this);
+
+        return nodesInContact;
+    }
+
+    /**
+     * Adds to the metadata of this node. Care should be taken that all nodes
+     * have metadata in the same order
+     *
+     * @param md
+     */
+    protected void addToMetaData(MetaData md) {
+        metaDataList.add(md);
     }
 
 }

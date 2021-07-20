@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Export;
+package Export.Json;
 
 import Policy.Policy;
 import java.util.HashMap;

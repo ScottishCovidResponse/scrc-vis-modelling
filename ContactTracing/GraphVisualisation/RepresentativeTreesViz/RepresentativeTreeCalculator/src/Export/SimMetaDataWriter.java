@@ -5,8 +5,9 @@
  */
 package Export;
 
+import Export.Json.PolicyCompartmentsJson;
 import Contact.Contact;
-import Export.PolicyCompartmentsJson.Compartment;
+import Export.Json.PolicyCompartmentsJson.Compartment;
 import Policy.Policy;
 import Utility.Log;
 import com.google.gson.Gson;

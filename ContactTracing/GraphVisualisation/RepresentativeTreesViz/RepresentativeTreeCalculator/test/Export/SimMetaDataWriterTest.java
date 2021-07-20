@@ -5,8 +5,9 @@
  */
 package Export;
 
+import Export.Json.PolicyCompartmentsJson;
 import Contact.Contact;
-import Export.PolicyCompartmentsJson.Compartment;
+import Export.Json.PolicyCompartmentsJson.Compartment;
 import Policy.Policy;
 import Policy.Policy0;
 import Policy.Policy1a;

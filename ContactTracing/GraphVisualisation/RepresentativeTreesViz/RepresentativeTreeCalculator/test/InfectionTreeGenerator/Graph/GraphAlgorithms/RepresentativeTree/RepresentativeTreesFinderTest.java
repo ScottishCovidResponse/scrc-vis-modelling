@@ -9,7 +9,7 @@ import InfectionTreeGenerator.Graph.GraphAlgorithms.RepresentativeTree.Represent
 import InfectionTreeGenerator.Graph.GraphAlgorithms.RepresentativeTree.RepresentativeTreesFinder;
 import InfectionTreeGenerator.Graph.GraphAlgorithms.RepresentativeTree.RepresentativeEdge;
 import InfectionTreeGenerator.Graph.GraphAlgorithms.RepresentativeTree.RepresentativeNode;
-import Export.RepresentativeNodeJson;
+import Export.Json.RepresentativeNodeJson;
 import Utility.Log;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;

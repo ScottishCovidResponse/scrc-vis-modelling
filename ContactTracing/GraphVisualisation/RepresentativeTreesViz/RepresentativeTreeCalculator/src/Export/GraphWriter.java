@@ -1,5 +1,7 @@
 package Export;
 
+import Export.Json.TreeNodeJson;
+import Export.Json.RepresentativeNodeJson;
 import com.google.gson.Gson;
 import InfectionTreeGenerator.Graph.Graph;
 import InfectionTreeGenerator.Graph.GraphAlgorithms.RepresentativeTree.RepresentativeEdge;

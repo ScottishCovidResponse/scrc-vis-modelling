@@ -5,7 +5,8 @@
  */
 package Export;
 
-import Export.RepresentativeNodeJson.RepresentationJson;
+import Export.Json.RepresentativeNodeJson;
+import Export.Json.RepresentativeNodeJson.RepresentationJson;
 import Utility.Pair;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;

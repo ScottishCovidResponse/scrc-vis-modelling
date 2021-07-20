@@ -112,7 +112,7 @@ public class RepresentativeTreesFinder {
             //trim the dominating set down instead of recalculating so we keep the original trees. Trees thus only disappear
             List<Integer> dsTrimmed = dsc.trimDominatingSet(fgTED, currentDsIds);
 
-            //holds the set of trees that are assigned to a dominating tree at distance {ted}
+            //holds the set of trees that are assigned to a dominating tree at a certaindistance
             HashMap<Integer, List<Tree>> mapping = calculateDominationMapping(fgTED, dsTrimmed, trees);
 
             for (Integer id : dsTrimmed) {

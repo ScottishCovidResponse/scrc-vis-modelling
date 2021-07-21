@@ -36,10 +36,11 @@ sources, immuned, sinks, reported, unreported, sources_TnI, sinks_TnI, unreporte
 
 SP = shortestPath1(TS, sources, sinks, immuned, unreported)
 #SP holds the shortets paths between Source and Sink nodes.
-#Weight functions are in SP as well
+#[startOfPathNodeid][endOfPathNodeId] => (total weight of path,Last time of path from start to end,[path]). path is triples of (time of edge,startNodeId,endNodeId)
+
 
 cover, output_paths, cover_cost, legal_alpha = greedyBS(SP, len(sinks), K)
-
+#output_pats holds the infection paths.
 
 
 gt_cost, gt_interactions, gt_causality = get_GT_cost(TS, sources, sinks, unreported)

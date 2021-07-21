@@ -5,8 +5,14 @@ import uuid
 
 
 def greedyBS(SP, N, K = 10, la = 0.0, ua = 0.0):
-    norm = 0.0
-    maxCost = 0.0
+    #SP holds the shortets paths between Source and Sink nodes.
+    #[startOfPathNodeid][endOfPathNodeId] => (total weight of path,Last time of path from start to end,[path]). path is triples of (time of edge,startNodeId,endNodeId)
+    
+    #N = number of sinks
+    #K = number of paths
+    
+    norm = 0.0 #sum of all weights of all paths in SP
+    maxCost = 0.0 #maximum weight of a path in SP
     for src, sinks in SP.items():
         for sink, info in sinks.items():
             if np.isfinite(info[0]):
@@ -14,8 +20,10 @@ def greedyBS(SP, N, K = 10, la = 0.0, ua = 0.0):
                 if maxCost < info[0]:
                     maxCost = info[0]
 
+    #weights holds a dictionary where for each nodeid, it holds the sorted list of weights to a sink
     weights = {src: sorted([(info[0]/norm, sink, info[-1]) for sink, info in sinks.items()]) for src, sinks in SP.items()}
 
+    #maximal value
     ua = K*N*maxCost/norm
 
     open_cost = {s: 1.0 for s in weights}

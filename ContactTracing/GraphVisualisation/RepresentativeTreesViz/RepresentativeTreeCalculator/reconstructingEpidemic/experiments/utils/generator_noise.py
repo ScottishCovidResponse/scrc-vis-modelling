@@ -499,7 +499,6 @@ def readFile(filepath):
 
             info = list(map(int, items[3:]))
 
-            #record = items[1:3]+ map(int, items[3:])
             if n1 == n2:
                 continue
             TS.append([tstamp] + [n1, n2]+ info)

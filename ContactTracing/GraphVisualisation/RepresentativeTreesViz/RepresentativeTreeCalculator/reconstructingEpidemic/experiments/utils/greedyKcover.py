@@ -1,8 +1,6 @@
 __author__ = 'Polina'
-#from generator import *
 from utils.paths import *
 from utils.accuracy import *
-#from trees import *
 import uuid
 
 

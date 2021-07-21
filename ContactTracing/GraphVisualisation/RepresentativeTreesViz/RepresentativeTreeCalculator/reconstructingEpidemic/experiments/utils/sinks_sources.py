@@ -93,10 +93,10 @@ def get_sinks_and_sources(TS, mode = 'reported'):
             #default = TS[-1][0]
         #    sources[n1] = sources.get(n1, default)
 
-    #sources = infected
+    #mark all nodes not reported as unreported
     for n in nodes:
         if n not in sources:
-            unreported[n] = default
+            unreported[n] = default #set timestamp equal to last timestamp.
             unreported_TnI[n] = (default, default_itr)
             if mode == 'all':
                 sources[n] = sources.get(n, default)

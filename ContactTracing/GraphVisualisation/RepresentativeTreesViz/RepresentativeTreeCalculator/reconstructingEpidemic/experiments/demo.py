@@ -15,10 +15,10 @@ filepath = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisual
 TS, G, infection_order, infection_track, seeds = readFile(filepath)
 
 #G is a directed graph containing an edge between n1 and n2 if there is a contact between n1 and n2 in the data
-#TS contains a array of arrays of the inputdata. [time,id1,id2,status1,status2,report1,report2]
-#Infection_order is ???? Weird as hell and always known?
+#TS contains a array of arrays of the inputdata. [[time,id1,id2,status1,status2,report1,report2],...]
+#Seeds is a set of {nodeids} which representes  initial infections
+#Infection_order is ???? Weird as hell and always known? 
 #Infection track is ???? No idea
-#Seeds is the initial infections
 
 
 dt_sec = 100
@@ -27,12 +27,16 @@ dt_sec = 100
 sources, immuned, sinks, reported, unreported, sources_TnI, sinks_TnI, unreported_TnI = get_sinks_and_sources_shifted(
     TS, G=nx.Graph(), mode='all', dt_sec=dt_sec, rep_prob=reportingP)
 
-#Sources: Dictionary of {nodeid,latest time before report} of reported nodes
-#sinks: Dictionary of {nodeid,latest time before report} of reported nodes
-#reported: 
-#unreported: 
+#NOTE: Data should be preprocessed such that latest interaction before a report has a flag
+
+#Sources: Dictionary of {nodeid,latest interactiontime before report} of reported nodes
+#sinks: Dictionary of {nodeid,latest interactiontime before report} of reported nodes
+#reported: 'infected' contains a set with all infected nodes. 'recovered' contains a list with all immuned nodes
+#unreported: Dictionary of {nodeid, lastTime in interactions} of all nodes that have no reports
 
 SP = shortestPath1(TS, sources, sinks, immuned, unreported)
+#SP holds the shortets paths between Source and Sink nodes.
+#Weight functions are in SP as well
 
 cover, output_paths, cover_cost, legal_alpha = greedyBS(SP, len(sinks), K)
 

@@ -27,9 +27,17 @@ dt_sec = 100
 sources, immuned, sinks, reported, unreported, sources_TnI, sinks_TnI, unreported_TnI = get_sinks_and_sources_shifted(
     TS, G=nx.Graph(), mode='all', dt_sec=dt_sec, rep_prob=reportingP)
 
+#Sources: Dictionary of {nodeid,latest time before report} of reported nodes
+#sinks: Dictionary of {nodeid,latest time before report} of reported nodes
+#reported: 
+#unreported: 
+
 SP = shortestPath1(TS, sources, sinks, immuned, unreported)
 
 cover, output_paths, cover_cost, legal_alpha = greedyBS(SP, len(sinks), K)
+
+
+
 gt_cost, gt_interactions, gt_causality = get_GT_cost(TS, sources, sinks, unreported)
 print ('cost of GT', gt_cost)
 print (cover)

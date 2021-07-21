@@ -466,13 +466,40 @@ def readRealGraph(filepath):
     G.remove_edges_from(G.selfloop_edges())
     return edgesTS, G, nodes, edges
 
+
+
+#Input format:
+#Timestamp \t nodeid1 \t nodeid2 \t id1Status \t id2Status \t id1Report \t
+#idXState: 1 is infected at time t, 0 otherwise.
+#id1Report: 1 means that the node1 has been reported as active at this time
+def readRealFile(filepath):
+    TS = []
+    with open(filepath,'r') as fd:
+        for line in fd.readlines():
+            if line[0] == '#':
+                break
+            line = line.strip()
+            items = line.split('\t')
+            tstamp = datetime.strptime(items[0], '%Y-%m-%d %H:%M:%S')
+            ##print items
+            n1, n2 = int(items[1]), int(items[2])
+
+            info = list(map(int, items[3:]))
+
+            if n1 == n2:
+                continue
+            TS.append([tstamp] + [n1, n2]+ info)
+
+    fd.close()
+    return TS;
+	
+
+
 #Input format:
 #Timestamp \t nodeid1 \t nodeid2 \t id1Status \t id2Status \t id1Report \t id2Report
 #idXState: 1 is infected. -1 is recovered
 #if metadata#1 = 1 and metadata#2 = 1 then nodeid1 infected nodeid2
-#id1Report: 1 means it's a seed.
-
-#TODO: Reports do not seem used in demo?
+#idXReport: 1 means that the node1 has been reported as active at this time
 
 #mode options: "General, grid". Use grid if you have a gridgraph
 def readFile(filepath):

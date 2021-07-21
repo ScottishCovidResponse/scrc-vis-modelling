@@ -64,7 +64,7 @@ def get_sinks_and_sources_shifted(TS, G = nx.Graph(), mode = 'all', dt_sec = 1, 
 
     return sources, immuned, sinks, reported, unreported, sources_TnI, sinks_TnI, unreported_TnI
 
-def get_sinks_and_sources(TS, G = nx.Graph(), mode = 'reported'):
+def get_sinks_and_sources(TS, mode = 'reported'):
     immuned, sinks, sources, reported, unreported = {}, {}, {}, {}, {}
     sinks_TnI, sources_TnI, unreported_TnI = {}, {}, {}
     reported['infected'] = set()

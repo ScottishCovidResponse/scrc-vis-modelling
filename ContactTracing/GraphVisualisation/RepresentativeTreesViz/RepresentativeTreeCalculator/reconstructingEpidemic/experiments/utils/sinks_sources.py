@@ -89,11 +89,6 @@ def get_sinks_and_sources(TS, mode = 'reported'):
             elif status1 == -1 and n1 not in immuned:
                 immuned[n1] = t
                 reported['recovered'].add(n1)
-                if n1 not in sources:
-                    sources[n1] = TS[iter-1][0]
-                    sources_TnI[n1] = (TS[iter-1][0], iter-1)
-                    sinks[n1] = TS[iter-1][0]
-                    sinks_TnI[n1] = (TS[iter-1][0], iter-1)
         #elif mode == 'all':
             #default = TS[-1][0]
         #    sources[n1] = sources.get(n1, default)

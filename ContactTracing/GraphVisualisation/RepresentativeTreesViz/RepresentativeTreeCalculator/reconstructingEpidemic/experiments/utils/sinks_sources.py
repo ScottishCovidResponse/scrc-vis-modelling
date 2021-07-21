@@ -10,8 +10,6 @@ def get_sinks_and_sources_shifted(TS, G = nx.Graph(), mode = 'all', dt_sec = 1, 
     reported['infected'] = set()
     reported['recovered'] = set()
     default, default_itr = TS[-1][0], len(TS)-1
-    dt = timedelta(seconds = dt_sec)
-    max_t = TS[-1][0]
 
     nodes = set()
     infected = set()
@@ -87,10 +85,6 @@ def get_sinks_and_sources(TS, G = nx.Graph(), mode = 'reported'):
                 sources_TnI[n1] = (t, iter)
                 sinks[n1] = t
                 sinks_TnI[n1] = (t,iter)
-                # if time_only:
-                #     sinks[n1] = t
-                # else:
-                #     sinks[n1] = (t, iter)
                 reported['infected'].add(n1)
             elif status1 == -1 and n1 not in immuned:
                 immuned[n1] = t
@@ -100,10 +94,6 @@ def get_sinks_and_sources(TS, G = nx.Graph(), mode = 'reported'):
                     sources_TnI[n1] = (TS[iter-1][0], iter-1)
                     sinks[n1] = TS[iter-1][0]
                     sinks_TnI[n1] = (TS[iter-1][0], iter-1)
-                    # if time_only:
-                    #     sinks[n1] = TS[iter-1][0]
-                    # else:
-                    #     sinks[n1] = (TS[iter-1][0], iter-1)
         #elif mode == 'all':
             #default = TS[-1][0]
         #    sources[n1] = sources.get(n1, default)
@@ -116,10 +106,6 @@ def get_sinks_and_sources(TS, G = nx.Graph(), mode = 'reported'):
             if mode == 'all':
                 sources[n] = sources.get(n, default)
 
-    if mode == 'neigh':
-        for u in sources:
-            for v in G.neighbors_iter(u):
-                sources[v] = sources.get(v, default)
     #sinks = infected
 
     return sources, immuned, sinks, reported, unreported, sources_TnI, sinks_TnI, unreported_TnI

@@ -11,14 +11,14 @@ reportingP = 0.5
 K = srcN
 real = True
 dataset = 'flixter_1000_K9'
-filepath = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructing-an-epidemic-over-time/Data/flixter_1000_K9.txt";
+filepath = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/flixter_1000_K9.txt";
 TS, G, infection_order, infection_track, seeds = readFile(filepath)
 
-#G is a directed graph
-#TS is
-#Infection_order is
-#Infection track is
-#Seeds is
+#G is a directed graph containing an edge between n1 and n2 if there is a contact between n1 and n2 in the data
+#TS contains a array of arrays of the inputdata. [time,id1,id2,status1,status2,report1,report2]
+#Infection_order is ???? Weird as hell and always known?
+#Infection track is ???? No idea
+#Seeds is the initial infections
 
 
 dt_sec = 100

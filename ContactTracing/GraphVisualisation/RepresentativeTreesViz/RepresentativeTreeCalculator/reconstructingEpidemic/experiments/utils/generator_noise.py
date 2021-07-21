@@ -467,19 +467,22 @@ def readRealGraph(filepath):
     return edgesTS, G, nodes, edges
 
 #Input format:
-#Timestamp \t 
+#Timestamp \t nodeid1 \t nodeid2 \t id1Status \t id2Status \t id1Report \t id2Report
+#idXState: 1 is infected. -1 is recovered
+#if metadata#1 = 1 and metadata#2 = 1 then nodeid1 infected nodeid2
+#id1Report: 1 means it's a seed.
+
+#TODO: Reports do not seem used in demo?
+
 #mode options: "General, grid". Use grid if you have a gridgraph
 def readFile(filepath):
     G = nx.DiGraph()
     TS = []
-    snapshots = {}
     infected_set = set()
     recovered_set = set()
     reported_infection = set()
     reported_recovery = set()
-    snapshoted_set = {'infected': set(), 'recovered': set()}
 
-    #snapshoted_set = set()
     #infected = set()
     infection_order = []
     infection_track = {}
@@ -492,11 +495,8 @@ def readFile(filepath):
             items = line.split('\t')
             tstamp = datetime.strptime(items[0], '%Y-%m-%d %H:%M:%S')
             ##print items
-            #record = map(int, items[1:])
+            n1, n2 = int(items[1]), int(items[2])
 
-                n1, n2 = int(items[1]), int(items[2])
-            ##print n1, n2
-            #exit()
             info = list(map(int, items[3:]))
 
             #record = items[1:3]+ map(int, items[3:])
@@ -526,11 +526,6 @@ def readFile(filepath):
                 recovered_set.add(n2)
                 if n2 in infected_set:
                     infected_set.remove(n2)
-
-            if snapshoted_set['infected'] ^ infected_set or snapshoted_set['recovered'] ^ recovered_set:
-                snapshoted_set['infected'] = copy.deepcopy(infected_set)
-                snapshoted_set['recovered'] = copy.deepcopy(recovered_set)
-                snapshots[tstamp] = copy.deepcopy(snapshoted_set)
 
     fd.close()
     return TS, G, infection_order, infection_track, seeds

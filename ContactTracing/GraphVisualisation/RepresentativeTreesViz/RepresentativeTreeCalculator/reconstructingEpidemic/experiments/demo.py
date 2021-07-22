@@ -1,18 +1,16 @@
 import os
 
-from utils.generator_noise import *
+from utils.fileReader import *
 from utils.sinks_sources import *
 from utils.greedyKcover import *
 from utils.get_path_stats import *
 import pickle
 
-srcN = 9
-K = srcN
-dataset = 'flixter_1000_K9'
-filepath = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/flixter_1000_K9.txt";
+K = 1
+filepath = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/testData.txt";
 
 
-TS = readFile(filepath)
+TS = readRealFile(filepath)
 #TS contains a array of arrays of the inputdata. [[time,id1,id2,status1,status2,node 1 has reporeted],...]
 #Seeds is a set of {nodeids} which representes  initial infections
 

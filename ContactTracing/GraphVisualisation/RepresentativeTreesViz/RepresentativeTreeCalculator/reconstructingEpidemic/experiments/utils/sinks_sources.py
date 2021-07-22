@@ -8,8 +8,7 @@ def get_sinks_and_sources(TS, mode = 'reported'):
     sinks_TnI, sources_TnI, unreported_TnI = {}, {}, {}
     reported['infected'] = set()
     reported['recovered'] = set()
-    #delta = ((TS[-1][0] - TS[0][0]).total_seconds())/2
-    #default = TS[0][0] + timedelta(seconds = delta)
+
     default, default_itr = TS[-1][0], len(TS)-1
 
     nodes = set()

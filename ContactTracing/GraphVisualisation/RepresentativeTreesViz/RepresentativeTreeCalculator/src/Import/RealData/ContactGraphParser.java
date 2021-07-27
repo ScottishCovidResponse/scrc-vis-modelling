@@ -50,6 +50,11 @@ public class ContactGraphParser {
         for (int i = 2; i < nodeFileContent.size(); i++)//skip headers
         {
             String line = nodeFileContent.get(i);
+            
+            if (line.length() == 0) {
+                System.err.println("Node file has and empty line at line number "+i+". skipping line");
+                continue;
+            }
             String[] split = line.split(",");
             createNode(split);
         }
@@ -58,6 +63,11 @@ public class ContactGraphParser {
         for (int i = 2; i < edgeFileContent.size(); i++)//skip headers
         {
             String line = edgeFileContent.get(i);
+            if (line.length() == 0) {
+                System.err.println("Edge file has and empty line at line number "+i+". skipping line");
+                continue;
+            }
+
             String[] split = line.split(",");
             //create the edge with metadata
             createEdge(split);
@@ -78,7 +88,6 @@ public class ContactGraphParser {
             int testTime = Integer.parseInt(split[1]);
             n.setTestTime(testTime);
         }
-        
 
         //add metadata
         ArrayList<MetaData> metaDataList = new ArrayList();

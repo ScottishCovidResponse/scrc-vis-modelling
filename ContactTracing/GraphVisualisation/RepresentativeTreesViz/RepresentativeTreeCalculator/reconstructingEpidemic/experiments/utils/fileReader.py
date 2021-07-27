@@ -2,32 +2,40 @@ __author__ = 'Polina'
 from datetime import datetime
 
 
-#Input format:
-#Timestamp \t nodeid1 \t nodeid2 \t id1Status \t id2Status \t id1Report \t
-#idXState: 1 is infected at time t, 0 otherwise.
-#id1Report: 1 means that the node1 has been reported as active at this time
-def readRealFile(filepath):
+# Input format edges
+# time of transaction(unix timestamp), n1Id, n2Id
+#
+# Input format nodes
+# n1Id, report time(unix timestamp)
+def readRealFiles(filepath_edges, filepath_nodes):
     TS = []
-    with open(filepath,'r') as fd:
+    NS = []
+    with open(filepath_edges, 'r') as fd:
         for line in fd.readlines():
-            if line[0] == '#':
-                break
             line = line.strip()
             items = line.split('\t')
-            tstamp = datetime.strptime(items[0], '%Y-%m-%d %H:%M:%S')
-            ##print items
+
+            tstamp = int(items[0])
             n1, n2 = int(items[1]), int(items[2])
-            active1, active2 = int(items[3]), int(items[4])
-            report1, report2 = int(items[5]), int(items[6])
-            
-            #Unless we are evaluating an experiment data these should be equal for real data
-            assert active1 == report1
-            assert active2 == report2
 
             if n1 == n2:
                 continue
-            TS.append([tstamp] + [n1, n2]+ [active1,active2] + [report1,report2])
+            TS.append([tstamp] + [n1, n2])
 
     fd.close()
-    return TS;
-	
+
+    with open(filepath_nodes, 'r') as fd:
+        for line in fd.readlines():
+            line = line.strip()
+            items = line.split('\t')
+
+            n1 = int(items[0])
+            if(len(items) == 2):
+                tstamp = int(items[1])
+            else:
+                tstamp = ""
+            NS.append([n1]+[tstamp])
+
+    fd.close()
+
+    return TS, NS

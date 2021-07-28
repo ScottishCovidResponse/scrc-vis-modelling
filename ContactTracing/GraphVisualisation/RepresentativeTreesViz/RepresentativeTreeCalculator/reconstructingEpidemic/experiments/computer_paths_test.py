@@ -2,9 +2,7 @@ import unittest
 from compute_paths import *
 
 class test_compute_paths(unittest.TestCase):
-    def test_default(self):
-        #TODO: refactor this into a method I can call.
-        
+    def test_default(self):        
         #Data contains an index case, contacts are after reports. All nodes can be traced back to the origin and all active nodes are reported
         filepath_edges = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/TestCases/baseDataEdge.txt";
         filepath_nodes = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/TestCases/baseDataNode.txt";
@@ -28,8 +26,6 @@ class test_compute_paths(unittest.TestCase):
         self.assertEquals(output_paths[3][1], (1564750000,6,7))
         
     def test_unreported(self):
-        #TODO: refactor this into a method I can call.
-        
         #Data contains an index case, contacts are after reports. Node 6 is not reported to be active, but needs to be passed towards node 7
         filepath_edges = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/TestCases/unknownDataEdge.txt";
         filepath_nodes = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/TestCases/unknownDataNode.txt";
@@ -73,6 +69,8 @@ class test_compute_paths(unittest.TestCase):
         self.assertEquals(output_paths[2][1], (1564730000,2,7))
         
     def test_consistentPaths(self):
+        #TODO: Note currently failing at no post-processing step to consolidate when to take a path is made.
+        
         #test whether the same interactions paths are always chosen.
         filepath_edges = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/TestCases/consistentDataEdge.txt";
         filepath_nodes = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/TestCases/consistentDataNode.txt";
@@ -94,9 +92,7 @@ class test_compute_paths(unittest.TestCase):
         self.assertEquals(output_paths[2][0], (1564050000,1,2)) #going through 2 instead of 7
         self.assertEquals(output_paths[2][1], (1564060000,2,7))
 
-    def test_before_report(self):
-        #TODO: refactor this into a method I can call.
-        
+    def test_before_report(self):        
         #Data contains an index case, contacts are before reports. All nodes can be traced back to the origin and all active nodes are reported
         filepath_edges = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/TestCases/ContactBeforeReportDataEdge.txt";
         filepath_nodes = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/TestCases/ContactBeforeReportDataNode.txt";

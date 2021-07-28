@@ -10,6 +10,7 @@ def shortestPath1(TS, sources, sinks, unreported): #src: node -> time, sink: nod
     print(out_paths)
     
     
+    #set a path for self-infection to 0 weight. Note that this is never used in other paths, it's only used when this is selected as an origin node.
     for n in sources:
         t = sources[n]
         shortest_paths[n][n] = (0.0, t, [(t, n, n)])

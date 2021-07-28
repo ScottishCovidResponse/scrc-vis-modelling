@@ -1,1 +1,1 @@
-__author__ = 'Polina'
+__author__ = 'Polina (modified by Max Sondag)'

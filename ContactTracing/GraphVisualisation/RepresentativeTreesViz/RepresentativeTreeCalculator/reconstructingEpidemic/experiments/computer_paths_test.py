@@ -1,11 +1,7 @@
 import unittest
-from utils.fileReader import *
-from utils.sinks_sources import *
-from utils.greedyKcover import *
-from utils.get_path_stats import *
-from computePaths import *
+from compute_paths import *
 
-class test_demo(unittest.TestCase):
+class test_compute_paths(unittest.TestCase):
     def test_default(self):
         #TODO: refactor this into a method I can call.
         

@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 # Input format edges
-# time of transaction(unix timestamp), n1Id, n2Id
+# time of transaction(unix timestamp), n1Id, n2Id, weight
 #
 # Input format nodes
 # n1Id, report time(unix timestamp)
@@ -17,10 +17,11 @@ def readRealFiles(filepath_edges, filepath_nodes):
 
             tstamp = int(items[0])
             n1, n2 = int(items[1]), int(items[2])
+            weight = float(items[3])
 
             if n1 == n2:
                 continue
-            TS.append([tstamp] + [n1, n2])
+            TS.append([tstamp] + [n1, n2] + [weight])
 
     fd.close()
 

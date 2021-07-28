@@ -1,7 +1,6 @@
 from utils.fileReader import *
 from utils.sinks_sources import *
 from utils.greedyKcover import *
-from utils.get_path_stats import *
 
 
 def compute_output_paths(K,filepath_edges,filepath_nodes):
@@ -28,13 +27,11 @@ def compute_output_paths(K,filepath_edges,filepath_nodes):
     print(output_paths)
 
     #Note output_paths are not optimal as it is NP hard. Due to the method used for calculation, a node may be visited multiple times via different interactions as an interaction with time $t$ might be infesible.
-    #TODO: P
+    #TODO: Postprocessing could be done if needed. 
+    #       1) For any node, only use the earliest interaction. 
+    #       2) For any node, set the activation to the minimum of the earliest interaction of  the report time
 
-    #TODO: Weight function both in shortestpath and get_out_cost. 
-    out_cost, out_interactions, out_causality = get_out_cost(output_paths, sources, sinks, unreported)
-    print ('cost of our solution', out_cost)
-    #exit()
-    
+
     
     return output_paths;
 

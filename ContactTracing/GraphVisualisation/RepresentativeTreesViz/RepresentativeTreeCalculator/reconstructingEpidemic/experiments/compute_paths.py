@@ -3,6 +3,7 @@ from utils.sinks_sources import *
 from utils.greedyKcover import *
 
 
+
 def compute_output_paths(K,filepath_edges,filepath_nodes):
     print("TODO: Full automation from command line with arguments")
     TS,NS = readRealFiles(filepath_edges,filepath_nodes)

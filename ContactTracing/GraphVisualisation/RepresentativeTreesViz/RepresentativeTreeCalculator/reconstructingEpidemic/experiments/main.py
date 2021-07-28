@@ -10,16 +10,25 @@ args = parser.parse_args()
 
 #filepath_nodes = parser.nodes
 #filepath_edges = parser.edges
-#TODO Work in output file
 #filepath_output = parser.output
 
 
 filepath_edges = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/DataEdge.txt";
 filepath_nodes = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/DataNode.txt";
+filepath_output = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/output.txt";
 
 
-#TODO: Work away K
 K=1
-compute_output_paths(1,filepath_edges,filepath_nodes)
+output_paths = compute_output_paths(1,filepath_edges,filepath_nodes)
+
+#transform every path into a seperate line
+output_string = "\n".join(str(e) for e in output_paths)
+#remove braces
+output_string = output_string.replace("[","")
+output_string = output_string.replace("]","")
+
+f = open(filepath_output,"w")
+f.write(output_string)
+f.close()
 
 

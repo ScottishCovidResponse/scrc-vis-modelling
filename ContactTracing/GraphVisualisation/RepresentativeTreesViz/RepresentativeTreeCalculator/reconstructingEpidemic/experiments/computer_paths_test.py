@@ -117,5 +117,28 @@ class test_compute_paths(unittest.TestCase):
         self.assertEquals(output_paths[3][1], (1564750000,6,7))
         
         
+    def test_k2(self):        
+        #Data contains two index case, contacts are after reports. All nodes can be traced back to the origin and all active nodes are reported
+        #There is no viable connection between the two index cases. Needs at least 2 trees
+        filepath_edges = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/TestCases/k2DataEdge.txt";
+        filepath_nodes = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/TestCases/k2DataNode.txt";
+        K = 1
+        
+        output_paths = compute_output_paths(K,filepath_edges,filepath_nodes)
+        
+        self.assertEqual(len(output_paths),4)
+        
+        self.assertEquals(len(output_paths[0]),1)
+        self.assertEquals(output_paths[0][0], (1564040000,1,1))
+        
+        self.assertEquals(len(output_paths[1]),1)
+        self.assertEquals(output_paths[1][0], (1564050000,1,2))
+        
+        self.assertEquals(len(output_paths[2]),1)
+        self.assertEquals(output_paths[2][0], (1564370000,6,6))
+        
+        self.assertEquals(len(output_paths[3]),1)
+        self.assertEquals(output_paths[3][0], (1564750000,6,7))
+        
 if __name__ == '__main__':
     unittest.main()

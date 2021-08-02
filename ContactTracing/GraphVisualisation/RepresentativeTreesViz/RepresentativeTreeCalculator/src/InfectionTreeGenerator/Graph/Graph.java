@@ -53,6 +53,10 @@ public class Graph<N extends Node, E extends Edge> {
         }
     }
 
+    /**
+     * Adds the node if there is no node with the same id already present
+     * @param n 
+     */
     public void addNodeIfNotpresent(N n) {
         if (!nodeMapping.containsKey(n.id)) {
             nodeMapping.put(n.id, n);

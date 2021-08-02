@@ -12,7 +12,6 @@ def readRealFiles(filepath_edges, filepath_nodes):
     NS = []
     with open(filepath_edges, 'r') as fd:
         for line in fd.readlines():
-            line = line.strip()
             items = line.split('\t')
 
             tstamp = int(items[0])
@@ -27,7 +26,6 @@ def readRealFiles(filepath_edges, filepath_nodes):
 
     with open(filepath_nodes, 'r') as fd:
         for line in fd.readlines():
-            line = line.strip()
             items = line.split('\t')
 
             n1 = int(items[0])

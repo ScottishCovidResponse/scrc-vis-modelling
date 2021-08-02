@@ -5,6 +5,7 @@
  */
 package InfectionTreeGenerator.Graph;
 
+import InfectionTreeGenerator.Graph.Infection.InfectionEdge;
 import Utility.Pair;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,7 +56,8 @@ public class Graph<N extends Node, E extends Edge> {
 
     /**
      * Adds the node if there is no node with the same id already present
-     * @param n 
+     *
+     * @param n
      */
     public void addNodeIfNotpresent(N n) {
         if (!nodeMapping.containsKey(n.id)) {
@@ -81,6 +83,19 @@ public class Graph<N extends Node, E extends Edge> {
 
         e.source.addEdge(e);
         e.target.addEdge(e);
+    }
+
+    /**
+     * Adds and edge {@code e} to the graph if the pair
+     * ({@code e.source.id,e.target.id}) is not yet in the graph
+     *
+     * @param e
+     */
+    public void addEdgeIfNotPresent(E e) {
+        Pair pair = new Pair(e.source.id, e.target.id);
+        if (!edgeMapping.containsKey(pair)) {
+            addEdge(e);
+        }
     }
 
     /**

@@ -1,6 +1,8 @@
 from compute_paths import *
 from argparse import ArgumentParser
 
+print("python started and parsing")
+
 parser = ArgumentParser()
 parser.add_argument("-n","--nodes",required=True, help="Location of the inputfile for nodes. Format is (nid \t unixtimestamp). timestamp is time of report. Can be empty")
 parser.add_argument("-e","--edges",required=True, help="Location of the inputfile for edges. Format is (unixtimestamp \t n1id \t n2id \t weight). timestamp is time of interaction")
@@ -8,10 +10,15 @@ parser.add_argument("-o","--output",required=True, help="Location of the outputf
 
 args = parser.parse_args()
 
+
 filepath_nodes = args.nodes
 filepath_edges = args.edges
 filepath_output = args.output
 
+print("arguments of python program")
+print(filepath_nodes)
+print(filepath_edges)
+print(filepath_output)
 
 #filepath_edges = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/DataEdge.txt";
 #filepath_nodes = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/DataNode.txt";
@@ -31,4 +38,5 @@ f = open(filepath_output,"w")
 f.write(output_string)
 f.close()
 
-
+print("exiting python program")
+exit(0)

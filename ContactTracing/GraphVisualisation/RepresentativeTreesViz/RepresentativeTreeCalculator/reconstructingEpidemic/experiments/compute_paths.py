@@ -5,7 +5,9 @@ from utils.greedyKcover import *
 
 
 def compute_output_paths(K,filepath_edges,filepath_nodes):
-    print("TODO: Full automation from command line with arguments")
+    
+    print(filepath_nodes)
+    
     TS,NS = readRealFiles(filepath_edges,filepath_nodes)
     #TS contains a array of arrays of the transactions in the data. [[time,id1,id2]]
     #NS contains a array of arrays of the nodes and their report time in the input data. [[n1,time]]. Time might not be present

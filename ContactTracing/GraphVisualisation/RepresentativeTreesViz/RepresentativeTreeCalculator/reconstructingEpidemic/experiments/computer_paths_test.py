@@ -140,5 +140,22 @@ class test_compute_paths(unittest.TestCase):
         self.assertEquals(len(output_paths[3]),1)
         self.assertEquals(output_paths[3][0], (1564750000,6,7))
         
+def test_small(self):        
+        #Data only contains 2 nodes and 1 edge.
+        filepath_edges = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/TestCases/smallDataEdge.txt";
+        filepath_nodes = "F:/Development/Swansea/scrc-vis-modelling/ContactTracing/GraphVisualisation/RepresentativeTreesViz/RepresentativeTreeCalculator/reconstructingEpidemic/Data/TestCases/smallDataNode.txt";
+        K = 1
+
+        output_paths = compute_output_paths(K,filepath_edges,filepath_nodes)
+
+
+        self.assertEqual(len(output_paths),2)
+        
+        self.assertEquals(len(output_paths[0]),1)
+        self.assertEquals(output_paths[0][0], (1564910000,1,1)) #self infection path is always at report time if only a single edge is needed. 
+        
+        self.assertEquals(len(output_paths[1]),1)
+        self.assertEquals(output_paths[1][0], (1675770000,1,2)) #Only path available
+        
 if __name__ == '__main__':
     unittest.main()

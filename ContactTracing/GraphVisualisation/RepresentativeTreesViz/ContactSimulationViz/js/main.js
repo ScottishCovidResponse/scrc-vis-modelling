@@ -78,7 +78,7 @@ var recalculate = false; //Holds whether we need to recalculate the tree grid. C
 
 const maxParts = 10; //How many different parts we can have at maximum in the glyph.
 
-var repTreesData, allTreesData, metaData, simMetaData, originalExposedData;
+var repTreesData, allTreesData, metaData, originalExposedData;
 var d3;
 
 
@@ -86,26 +86,24 @@ var d3;
 
 //Load in all the javascript files
 requirejs(["js/d3/d3.js", "js/ColorSchemes.js", "js/BarChart.js", "js/LineChart.js", "js/StackedAreaChart.js", "js/dataQueries.js", "js/stateCounters.js", "js/nodeViz.js", "js/sidePanel.js", "js/treeLayout.js", "js/representativeGraph.js", "js/popup.js", "js/updateFunctions.js", "js/offsetCalculator.js"], function(d3Var) {
-    //load in all the data
-    d3 = d3Var;
-    d3.json(repTreesDataInputLocation).then(function(repTreesDataInput) {
-        d3.json(allTreesDataInputLocation).then(function(allTreesDataInput) {
-            d3.json(metaDataInputLocation).then(function(metaDataInput) {
-                d3.csv(simMetaDataInputLocation).then(function(simMetaDataInput) {
-                    // d3.csv(originalExposedDataInputLocation).then(function(originalExposedDataInput) {
-                    repTreesData = repTreesDataInput;
-                    allTreesData = allTreesDataInput;
-                    metaData = metaDataInput;
-                    simMetaData = simMetaDataInput;
-                    // originalExposedData = originalExposedDataInput;
-                    setVizSizes(nodeBaseSize);
-                    mainRepresentativeGraph();
-                    updateAll(); //update to use slider values
-                    // });
-                });
-            });
+//load in all the data
+d3 = d3Var;
+d3.json(repTreesDataInputLocation).then(function(repTreesDataInput) {
+    d3.json(allTreesDataInputLocation).then(function(allTreesDataInput) {
+        d3.json(metaDataInputLocation).then(function(metaDataInput) {
+            // d3.csv(originalExposedDataInputLocation).then(function(originalExposedDataInput) {
+            repTreesData = repTreesDataInput;
+            allTreesData = allTreesDataInput;
+            metaData = metaDataInput;
+            // originalExposedData = originalExposedDataInput;
+            setVizSizes(nodeBaseSize);
+            mainRepresentativeGraph();
+            updateAll(); //update to use slider values
+            // });
         });
     });
+});
+});
 });
 
 

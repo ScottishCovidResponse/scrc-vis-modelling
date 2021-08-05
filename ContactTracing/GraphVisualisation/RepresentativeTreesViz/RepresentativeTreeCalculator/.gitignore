@@ -46,7 +46,7 @@ Data/
 hs_err_pid*
 
 #Vscode ignore
-*.vscode/*
+reconstructingEpidemic/experiments/.vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json

@@ -83,13 +83,16 @@ public class InfectionChainCalculator {
     public InfectionGraph calculateInfectionGraph() {
         File f = new File(tempFolder);
         f.mkdir();
+        f.deleteOnExit();
 
         f = new File(pythonOutputFolderPrefix);
         f.mkdir();
+        f.deleteOnExit();
 
         int componentCount = writeComponentFiles();
         executeProgram(componentCount);
         InfectionGraph g = parseOutputFiles();
+
         return g;
     }
 
@@ -153,6 +156,7 @@ public class InfectionChainCalculator {
 
         String fileName = javaOutputEdgeFilePrefix + componentNumber + ".tsv";
         Files.write(Paths.get(fileName), edgeFileContent.getBytes());
+        new File(fileName).deleteOnExit();
     }
 
     private void writeNodeFile(ContactGraph g, Collection<ContactNode> nodes, Collection<ContactEdge> edges, int componentNumber) throws IOException {
@@ -195,6 +199,7 @@ public class InfectionChainCalculator {
 
         String fileName = javaOutputNodeFilePrefix + componentNumber + ".tsv";
         Files.write(Paths.get(fileName), nodeFileContent.getBytes());
+        new File(fileName).deleteOnExit();
     }
 
     private String getWeight(ContactGraph g, ContactEdge e) {
@@ -244,6 +249,11 @@ public class InfectionChainCalculator {
                 Logger.getLogger(InfectionChainCalculator.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+        }
+
+        //delete when done so we can delete the folder
+        for (File f : new File(pythonOutputFolderPrefix).listFiles()) {
+            f.deleteOnExit();
         }
 
     }

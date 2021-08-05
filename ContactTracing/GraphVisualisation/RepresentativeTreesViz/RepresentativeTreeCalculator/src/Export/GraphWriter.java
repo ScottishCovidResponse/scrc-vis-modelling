@@ -2,6 +2,9 @@ package Export;
 
 import Export.Json.TreeNodeJson;
 import Export.Json.RepresentativeNodeJson;
+import Import.RealData.MetaData;
+import InfectionTreeGenerator.Graph.ContactData.ContactGraph;
+import InfectionTreeGenerator.Graph.ContactData.ContactNode;
 import com.google.gson.Gson;
 import InfectionTreeGenerator.Graph.Graph;
 import InfectionTreeGenerator.Graph.GraphAlgorithms.RepresentativeTree.RepresentativeEdge;
@@ -123,10 +126,25 @@ public class GraphWriter {
             RepresentativeNodeJson rnj = new RepresentativeNodeJson(rt);
             trees.add(rnj);
         }
-        
-        
+
         FileWriter fw = new FileWriter(outputFileLocation);
         gson.toJson(trees, fw);
+        fw.flush();
+        fw.close();
+    }
+
+    /**
+     * Writes a json file containing all the contactnodes and their metadata.No
+ graph structure present
+     *
+     * @param outputFileLocation
+     * @param contactNodes
+     */
+    public void writeContactData(String outputFileLocation, List<ContactNode> contactNodes) throws IOException {
+        Gson gson = new Gson();
+        FileWriter fw = new FileWriter(outputFileLocation);
+        gson.toJson(contactNodes, fw);
+
         fw.flush();
         fw.close();
     }

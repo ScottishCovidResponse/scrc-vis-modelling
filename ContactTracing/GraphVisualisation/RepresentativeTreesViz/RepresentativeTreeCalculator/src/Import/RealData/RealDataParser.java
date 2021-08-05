@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -70,35 +71,47 @@ public class RealDataParser {
     final private String inputFolderLocation;
     final private String outputFileLocation;
 
-    private RealDataParser(String inputFolderLocation, String outputFileLocation, int startTreeSize, int endTreeSize) throws IOException {
+    int startTreeSize, endTreeSize;
+
+    protected RealDataParser(String inputFolderLocation, String outputFileLocation, int startTreeSize, int endTreeSize) throws IOException {
         this.inputFolderLocation = inputFolderLocation;
         this.outputFileLocation = outputFileLocation;
+        this.startTreeSize = startTreeSize;
+        this.endTreeSize = endTreeSize;
+    }
+
+    public void parseData() throws IOException {
         System.out.println("Working on data from: " + inputFolderLocation);
         //read data
 
         //gets the structure of the graph and the associated metadata
         ContactGraphParser gp = new ContactGraphParser(inputFolderLocation + "/NodeData.csv", inputFolderLocation + "/ContactEdgeData.csv");
         ContactGraph cg = gp.constructGraph();
-        cg.addContactsAmountToMetadata();//add the amount of contacts to the metadata
 
+//        addContactsAmountToMetadata(cg);//add the amount of contacts to the metadata?
         Log.printProgress("Calculate most likely infection chain");
         InfectionChainCalculator icc = new InfectionChainCalculator(cg);
         InfectionGraph ig = icc.calculateInfectionGraph();
+        addSourceIdToMetaData(cg, ig);
 
+        //write the metadata of the nodes that are infected to a json file
+        GraphWriter gw = new GraphWriter();
+        List<ContactNode> exposedContactNodes = getContactNodesInInfectionGraph(cg, ig);
+        gw.writeContactData(outputFileLocation + "/NodesAndMeta.json", exposedContactNodes);
+
+//        tw.writeInfectionGraph(outputFileLocation + "/NodesAndMeta.json", ig);
         Log.printProgress("Finding the forest");
         ForestFinder ff = new ForestFinder(ig, Tree.class);
         Set<Tree> forest = ff.getForest();
 
-        //write the forest to a file
-        GraphWriter tw = new GraphWriter();
-        tw.writeForest(outputFileLocation + "/AllTrees.json", forest);
+        //write the forest to a file. Note that AllTrees only contains infected nodes
+        gw.writeForest(outputFileLocation + "/AllTrees.json", forest);
 
         System.out.println("TODO: Set time windows automatically");
 
         //TODO: Spit out json files on infectionmap with extra field: Metadata with a hashmap.
         //Precalculated values that are required such as exposedtime, policies, and sourceInfection id in main, rest in metadata
         //Precalculated: {AmountOfUniqueContacts,SourceInfectionId,policies:[],
-        
         //make output dir for for distances
         File f = new File(outputFileLocation + "ReptreesRTDistance/");
         f.mkdir();
@@ -112,6 +125,23 @@ public class RealDataParser {
         JsonMerger merger = new JsonMerger(outputFileLocation + "/ReptreesRTDistance/", outputFileLocation + "/RepTrees.json");
         merger.mergeTrees();
         merger.cleanup();//delete the temporary output folder.
+
+    }
+
+    private void addSourceIdToMetaData(ContactGraph cg, InfectionGraph ig) {
+
+        for (InfectionNode in : ig.getNodes()) {
+            ContactNode cn = cg.getNode(in.id);
+            cn.sourceInfectionId = in.sourceInfectionId;
+        }
+
+    }
+
+    private List<ContactNode> getContactNodesInInfectionGraph(ContactGraph cg, InfectionGraph ig) {
+        List<ContactNode> filteredNodes = cg.getNodes().stream()
+                .filter((cn) -> ig.hasNodeWithId(cn.id))//keep only infected nodes
+                .collect(Collectors.toList());
+        return filteredNodes;
     }
 
 }

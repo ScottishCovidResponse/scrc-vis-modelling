@@ -100,9 +100,9 @@ public class DataToJsonTree {
 
         GraphWriter tw = new GraphWriter();
         tw.writeInfectionGraph(outputFileLocation + "/NodesAndMeta.json", ig);
-
-        SimMetaDataWriter gmdw = new SimMetaDataWriter(ig, events, contacts, policies);
-        gmdw.writeMetaDataFile(outputFileLocation + "/SimMeta.json");
+//
+//        SimMetaDataWriter gmdw = new SimMetaDataWriter(ig, events, contacts, policies);
+//        gmdw.writeMetaDataFile(outputFileLocation + "/SimMeta.json");
 
         System.out.println("Finding the forest");
         ForestFinder ff = new ForestFinder(ig, Tree.class);

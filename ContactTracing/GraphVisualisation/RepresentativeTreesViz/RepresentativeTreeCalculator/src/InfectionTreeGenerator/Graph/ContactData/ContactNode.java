@@ -6,15 +6,10 @@
 package InfectionTreeGenerator.Graph.ContactData;
 
 import Import.RealData.MetaData;
-import InfectionTreeGenerator.Graph.Infection.InfectionNode;
 import InfectionTreeGenerator.Graph.Node;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 
 /**
  *
@@ -26,6 +21,11 @@ public class ContactNode extends Node<ContactEdge> {
      * Holds when this node was exposed. Time is unix timestamp
      */
     public Integer positiveTestTime;
+
+    /**
+     * Null is unknown or it does not have one
+     */
+    public Integer sourceInfectionId;
 
     public ArrayList<MetaData> metaDataList;
 
@@ -41,7 +41,7 @@ public class ContactNode extends Node<ContactEdge> {
         this.metaDataList = metaDataList;
     }
 
-    public Set<ContactNode>  getUniqueContacts() {
+    public Set<ContactNode> getUniqueContacts() {
         //find the nodes that node n has been in contact with
         Set<ContactNode> nodesInContact = new HashSet();
         for (ContactEdge e : edges) {
@@ -63,5 +63,6 @@ public class ContactNode extends Node<ContactEdge> {
     protected void addToMetaData(MetaData md) {
         metaDataList.add(md);
     }
+
 
 }

@@ -12,6 +12,13 @@ def compute_output_paths(K,filepath_edges,filepath_nodes):
     #TS contains a array of arrays of the transactions in the data. [[time,id1,id2]]
     #NS contains a array of arrays of the nodes and their report time in the input data. [[n1,time]]. Time might not be present
 
+    if single_infected_node(NS):
+        return ([[(NS[0][1],NS[0][0],NS[0][0])]])
+    
+    
+        
+    
+
     sources, immuned, sinks, unreported = get_sinks_and_sources(TS,NS)
 
     #Sources: Dictionary of {nodeid,latest interactiontime before report} of reported nodes
@@ -39,3 +46,11 @@ def compute_output_paths(K,filepath_edges,filepath_nodes):
     return output_paths;
 
 
+#Returns true if there is only a single infected node
+def single_infected_node(NS):
+        count = 0;
+        for n in NS:
+            if n[1] != "":
+                count = count+1
+            
+        return (count == 1)

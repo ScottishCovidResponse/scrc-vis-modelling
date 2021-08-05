@@ -65,4 +65,5 @@ public class InfectionGraph extends Graph<InfectionNode, InfectionEdge> {
         return newG;
     }
 
+
 }

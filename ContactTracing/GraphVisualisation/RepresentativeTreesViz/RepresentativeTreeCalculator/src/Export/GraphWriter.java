@@ -123,6 +123,8 @@ public class GraphWriter {
             RepresentativeNodeJson rnj = new RepresentativeNodeJson(rt);
             trees.add(rnj);
         }
+        
+        
         FileWriter fw = new FileWriter(outputFileLocation);
         gson.toJson(trees, fw);
         fw.flush();

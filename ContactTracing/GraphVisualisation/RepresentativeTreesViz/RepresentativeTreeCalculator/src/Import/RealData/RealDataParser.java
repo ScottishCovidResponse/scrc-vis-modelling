@@ -26,6 +26,7 @@ import InfectionTreeGenerator.Graph.Tree;
 import Policy.Policy;
 import Policy.PolicySimulator;
 import Utility.Log;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -83,26 +84,28 @@ public class RealDataParser {
         Log.printProgress("Calculate most likely infection chain");
         InfectionChainCalculator icc = new InfectionChainCalculator(cg);
         InfectionGraph ig = icc.calculateInfectionGraph();
-        
-//        Log.printProgress("Finding the forest");
-//        ForestFinder ff = new ForestFinder(ig, Tree.class);
-//        Set<Tree> forest = ff.getForest();
-//
-//        //write the forest to a file
-//        GraphWriter tw = new GraphWriter();
-//        tw.writeForest(outputFileLocation + "/AllTrees.json", forest);
-//
-//        System.out.println("TODO: Set time windows automatically");
-        
+
+        Log.printProgress("Finding the forest");
+        ForestFinder ff = new ForestFinder(ig, Tree.class);
+        Set<Tree> forest = ff.getForest();
+
+        //write the forest to a file
+        GraphWriter tw = new GraphWriter();
+        tw.writeForest(outputFileLocation + "/AllTrees.json", forest);
+
+        System.out.println("TODO: Set time windows automatically");
+
         //TODO: Spit out json files on infectionmap with extra field: Metadata with a hashmap.
         //Precalculated values that are required such as exposedtime, policies, and sourceInfection id in main, rest in metadata
-        //Precalculated: {AmountOfUniqueContacts,ExposedTime,SourceInfectionId,policies:[],
-       
+        //Precalculated: {AmountOfUniqueContacts,SourceInfectionId,policies:[],
+        
+        //make output dir for for distances
+        File f = new File(outputFileLocation + "ReptreesRTDistance/");
+        f.mkdir();
 
-
-//        TreeDistanceMeasure tdm = new RtDistanceMeasure(100, 1);
-//        RepresentativeTreesFinder rgf = new RepresentativeTreesFinder();
-//        rgf.getAndWriteRepresentativeTreeData(forest, startTreeSize, endTreeSize, tdm, outputFileLocation + "/ReptreesRTDistance/");
+        TreeDistanceMeasure tdm = new RtDistanceMeasure(100, 1);
+        RepresentativeTreesFinder rgf = new RepresentativeTreesFinder();
+        rgf.getAndWriteRepresentativeTreeData(forest, startTreeSize, endTreeSize, tdm, outputFileLocation + "/ReptreesRTDistance/");
 //        
         //merge all the trees together in a single file.
         Log.printProgress("Merging trees");

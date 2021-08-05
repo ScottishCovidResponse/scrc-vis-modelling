@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- *
+ * Weight holds the type of edge
  * @author MaxSondag
  */
 public class ContactEdge extends Edge<ContactNode> {

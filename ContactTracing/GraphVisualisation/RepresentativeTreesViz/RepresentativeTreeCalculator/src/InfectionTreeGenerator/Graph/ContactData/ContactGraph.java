@@ -148,6 +148,19 @@ public class ContactGraph {
         return getEdges(cn);
     }
 
+    /**
+     * Get all edges starting or ending in any nodes in {@code nodeSet}
+     */
+    public Set<ContactEdge> getEdges(Collection<ContactNode> nodeSet) {
+        Set<ContactEdge> edges = new HashSet();
+        //iterate over all nodes in the nodeset, and add all adjacent edges.
+        for (ContactNode cn : nodeSet) {
+            Set<ContactEdge> nodeEdges = getEdges(cn);
+            edges.addAll(nodeEdges);
+        }
+        return edges;
+    }
+
     //Get all edges starting or ending in node n
     public Set<ContactEdge> getEdges(ContactNode n) {
         Set<ContactEdge> nEdges = new HashSet();

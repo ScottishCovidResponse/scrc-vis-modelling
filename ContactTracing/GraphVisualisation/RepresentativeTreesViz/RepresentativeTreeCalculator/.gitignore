@@ -24,6 +24,8 @@
 *OutputStream.txt
 
 
+#Temporary output files
+temporary/
 
 # Excel files
 *.xlsx
@@ -36,7 +38,6 @@ dist/
 *nbproject/
 *.vscode/launch.json
 
-
 #Data directory
 ContactSimulationViz/data/
 Data/
@@ -45,7 +46,7 @@ Data/
 hs_err_pid*
 
 #Vscode ignore
-.vscode/*
+*.vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json

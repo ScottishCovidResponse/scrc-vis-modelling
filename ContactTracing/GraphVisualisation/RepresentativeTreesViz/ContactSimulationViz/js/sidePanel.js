@@ -3,9 +3,6 @@ function createSidePanel() {
 
 
     console.log("Color legend needs to be reimplemented as well as distributionChart")
-    if (true) {
-        return
-    }
     createDistributionChartPanel();
     createColorLegends();
 }

@@ -246,10 +246,6 @@ function createColorLegends() {
 function updateColorLegend() {
 
     console.log("color legend needs to be fixed")
-    if (true) {
-        return;
-    }
-
 
     const colorLegendDiv = d3.select("#sidePanel").select("#colorLegendDiv");
     colorLegendDiv.selectAll("*").remove(); //remove current legend
@@ -261,59 +257,35 @@ function createStateColorLegend(colorLegendDiv, isLeft) {
     const halfColorDiv = colorLegendDiv.append("div")
         .attr("class", "halfColorLegendDiv")
 
-
-    let startI = 0;
-
-    //get the colorname and policy name
-    let currentColor, currentPolicy;
-    if (isLeft) {
-        currentColor = currentLeftAttributeName;
-        currentPolicy = currentLeftPolicy;
-    } else {
-        currentColor = currentRightColorname;
-        currentPolicy = currentRightPolicy;
-    }
-
     //get the colors and names to display
     let colors, names
-    if (currentColor == "Infector State") { //Color arc by infector state
-        colors = infectionColorScheme;
-        names = infectionColorSchemeOrderDisplay;
-    } else if (currentColor == "None") {
-        colors = noneColorScheme;
-        names = noneColorSchemeOrderDisplay;
-    } else if (currentColor == "Infection Location") {
-        colors = locationColorScheme;
-        names = locationColorSchemeOrderDisplay;
-    } else if (currentColor == "Age") {
-        colors = ageColorScheme;
-        names = ageColorSchemeOrderDisplay;
-    } else if (currentColor == "Infection Time") {
-        colors = infectionTimeColorScheme;
-        names = infectionTimeColorSchemeOrderDisplay;
-    }
 
-    if (currentPolicy == "None") {
-        startI = 2;
+    console.log("Make names better")
+    if (isLeft) {
+        colors = currentLeftColorScheme;
+        names = currentLeftColorSchemeValues;
+    } else {
+        colors = currentRightColorScheme
+        names = currentRightColorSchemeValues;
     }
 
 
 
-
-    for (let i = startI; i < names.length; i++) {
+    for (let i = 0; i < names.length; i++) {
         const color = colors[i];
         let name = names[i];
-        if (!splitPolicy) //If we aren't looking into the detailed split policy we merge them together
-        {
-            if (name == "Infection route prevented earlier") {
-                //skip the detailed view
-                continue;
-            }
-            if (name == "Contact avoided due to isolation") {
-                //rename as it now represents all states
-                name = "Infection route prevented";
-            }
-        }
+        console.log("get policies back in")
+            // if (!splitPolicy) //If we aren't looking into the detailed split policy we merge them together
+            // {
+            //     if (name == "Infection route prevented earlier") {
+            //         //skip the detailed view
+            //         continue;
+            //     }
+            //     if (name == "Contact avoided due to isolation") {
+            //         //rename as it now represents all states
+            //         name = "Infection route prevented";
+            //     }
+            // }
         createStateColorLegendItem(color, name, isLeft, halfColorDiv);
     }
 

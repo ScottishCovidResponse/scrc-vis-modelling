@@ -9,6 +9,8 @@ function getColorScheme(varType, values) {
     let colorScheme;
     let colorSchemeValues;
 
+    console.log("TODO: Make sure color schemes are only as large as needed")
+
     if (varType == "categorical") {
         //color scheme is defaulted
         colorScheme = categoricalColorScheme;

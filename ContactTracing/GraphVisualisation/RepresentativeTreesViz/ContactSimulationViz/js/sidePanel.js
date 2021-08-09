@@ -260,6 +260,7 @@ function createStateColorLegend(colorLegendDiv, isLeft) {
     //get the colors and names to display
     let colors, names
 
+    console.log("TODO: Make sure color schemes are only as large as needed")
     console.log("Make names better")
     if (isLeft) {
         colors = currentLeftColorScheme;

@@ -26,8 +26,19 @@ function updateAll() {
 
 
 function updateColors() {
+    updateColorSchemes()
     updateColorLegend(); //Make sure color legend is up to date
     updateNodeGlyphs(true); //update the glyphs for the visible trees. 
+}
+
+function updateColorSchemes() {
+
+    //Need to get the values as this determines which bins we have for the colors
+    leftValues = getMetaDataValues(currentLeftAttributeName, metaData);
+    [currentLeftColorScheme, currentLeftColorSchemeValues] = getColorScheme(currentLeftAttributeType, leftValues)
+
+    rightValues = getMetaDataValues(currentRightAttributeName, metaData);
+    [currentRightColorScheme, currentRightColorSchemeValues] = getColorScheme(currentRightAttributeType, rightValues)
 }
 
 function updatePositions() {

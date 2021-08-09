@@ -52,29 +52,48 @@ function updateNodeGlyphs(isRepTree) {
 }
 
 function getPartColor(index, isLeftChart) {
-    let color;
     if (isLeftChart) {
-        color = currentLeftColor;
+        return currentLeftColorScheme[index];
     } else {
-        color = currentRightColor;
+        return currentRightColorScheme[index];
     }
+}
 
-    if (color == "Infector State") { //Color part by infector state
-        return infectionColorScheme[index];
+
+function getRectGlyphXPositions(isLeftChart) {
+    let startX = getStartX(isLeftChart);
+    let rectWidth = nodeBaseSize;
+
+    return [startX, rectWidth];
+}
+
+
+function getRectGlyphYPositions(id, partIndex, isRepTree, isLeftChart) {
+
+    const partRange = getPartPercentages(id, partIndex, isRepTree, isLeftChart);
+    const rectSize = nodeBaseSize * 2; //nodeBaseSize is radius
+
+    const y1 = partRange[0] * rectSize - rectSize / 2;
+    const y2 = partRange[1] * rectSize - rectSize / 2;
+    const rectHeight = y2 - y1;
+
+    return [y1, rectHeight];
+}
+
+
+function isRectIndexFromLeftChart(rectIndex) {
+    return rectIndex < maxParts;
+}
+
+
+
+
+function getStartX(isLeftChart) {
+    if (isLeftChart) {
+        return -nodeBaseSize;
+    } else {
+        return 0;
     }
-    if (color == "None") {
-        return noneColorScheme[index];
-    }
-    if (color == "Infection Location") {
-        return locationColorScheme[index];
-    }
-    if (color == "Age") {
-        return ageColorScheme[index];
-    }
-    if (color == "Infection Time") {
-        return infectionTimeColorScheme[index];
-    }
-    console.error("No valid color selected")
 }
 
 
@@ -117,74 +136,34 @@ function getPartPercentages(id, partIndex, isRepTree, isLeftChart) {
 function getPartCounts(id, isRepTree, isLeftChart) {
     let partCounts = new Array(maxParts).fill(0); //array length equal to amount of parts. Fill them in one by one
 
-    let counts, color, policy, appPercentage;
 
-    if (isLeftChart) { //get the right data
-        color = currentLeftColor;
-        policy = currentLeftPolicy
-        appPercentage = currentLeftAppPercentage;
+
+    let colorSchemeType;
+    let colorSchemeValues;
+    let attributeName;
+    if (isLeftChart) {
+        colorSchemeType = currentLeftAttributeType;
+        colorSchemeValues = currentLeftColorSchemeValues;
+        attributeName = currentLeftAttributeName;
     } else {
-        color = currentRightColor;
-        policy = currentRightPolicy
-        appPercentage = currentRightAppPercentage;
+        colorSchemeType = currentRightAttributeType;
+        colorSchemeValues = currentRightColorSchemeValues;
+        attributeName = currentRightAttributeName;
     }
 
 
-    //get the array, some will have fewer values which we will pad. Each will have how many nodes are "saved" as the first entry
-    if (color == "Infector State") { //Color part by infector state
-        counts = infectorStateCount(id, isRepTree, policy, appPercentage);
-    } else if (color == "None") {
-        counts = noneCount(id, isRepTree, policy, appPercentage);
-    } else if (color == "Infection Location") {
-        counts = locationCount(id, isRepTree, policy, appPercentage);
-    } else if (color == "Age") {
-        counts = ageCount(id, isRepTree, policy, appPercentage);
-    } else if (color == "Infection Time") {
-        counts = timeCount(id, isRepTree, policy, appPercentage);
+    let values;
+    if (isRepTree) {
+        //get value of all nodes represented by this idea
+        values = getMetaDataValuesFromRepTrees(attributeName, id, currentEditDistance);
     } else {
-        console.error(currentLeftColor + "is not a valid node color and parts cannot be drawn");
-        counts = [0];
+        values = [getMetaDataValueFromId(attributeName, id)]; //put into arrow for consistency
     }
 
-    for (let i = 0; i < counts.length; i++) {
-        partCounts[i] = counts[i];
+
+    for (let val of values) {
+        const index = getIndexInColorScheme(val, colorSchemeType, colorSchemeValues)
+        partCounts[index]++;
     }
     return partCounts;
-}
-
-
-function getRectGlyphXPositions(isLeftChart) {
-    let startX = getStartX(isLeftChart);
-    let rectWidth = nodeBaseSize;
-
-    return [startX, rectWidth];
-}
-
-
-function getRectGlyphYPositions(id, partIndex, isRepTree, isLeftChart) {
-
-    const partRange = getPartPercentages(id, partIndex, isRepTree, isLeftChart);
-    const rectSize = nodeBaseSize * 2; //nodeBaseSize is radius
-
-    const y1 = partRange[0] * rectSize - rectSize / 2;
-    const y2 = partRange[1] * rectSize - rectSize / 2;
-    const rectHeight = y2 - y1;
-
-    return [y1, rectHeight];
-}
-
-
-function isRectIndexFromLeftChart(rectIndex) {
-    return rectIndex < maxParts;
-}
-
-
-
-
-function getStartX(isLeftChart) {
-    if (isLeftChart) {
-        return -nodeBaseSize;
-    } else {
-        return 0;
-    }
 }

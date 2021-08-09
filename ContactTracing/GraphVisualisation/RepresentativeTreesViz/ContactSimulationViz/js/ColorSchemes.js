@@ -1,31 +1,77 @@
-//Exposed should only ever a root node. Recovered and dead should not happen
-const infectionColorSchemeOrder = ["removedByPolicyOrigin", "removedByPolicy", "initial", "asymptomatic", "presymptomatic", "symptomatic", "severely_symptomatic"]
-const infectionColorScheme = ["#005a32", "#74c476", "#AAAAAA", "#ebd594", "#bcbddc", "#fcae91", "#fb6a4a", "#cb181d"];
-const infectionColorSchemeOrderDisplay = ["Contact avoided due to isolation", "Infection route prevented earlier", "Initial node", "Asymptomatic", "Presymptomatic", "Symptomatic", "Severely symptomatic"]
+/**
+ * Returns a [colorScheme,colorSchemeValues] pair. 
+ * colorScheme: the {maxParts} colors we are using in order.
+ * colorSchemeValue: The values used to determine which color to pick. For integers, these holds the upper bounds of the bin partitions. For categorical, these holds the 9 most frequent value names and "other" in the last bin
+ * @param {*} varType the type of the attribute we are coloring
+ * @param {*} values An array of all the values for the attribute we are visualizing
+ */
+function getColorScheme(varType, values) {
+    let colorScheme;
+    let colorSchemeValues;
 
-const noneColorSchemeOrder = ["removedByPolicyOrigin", "removedByPolicy", "initial", "other"]
-const noneColorScheme = ["#005a32", "#74c476", "#AAAAAA", "#fee0d2"];
-const noneColorSchemeOrderDisplay = ["Contact avoided due to isolation", "Infection route prevented earlier", "Initial node", "Node"]
+    if (varType == "categorical") {
+        //color scheme is defaulted
+        colorScheme = categoricalColorScheme;
+
+        //get which string goes at which position
+        let topKValues = getTopKValues(values, 9);
+        colorSchemeValues = topKValues;
+        //anything not in the top 9, gets shoved into the "other" cateogry
+        colorSchemeValues[9] = "Other";
+    } else if (varType == "None") {
+        colorScheme = noneColorScheme;
+        colorSchemeValues = ["none"];
+    } else {
+        console.error("Variable type " + varType + " is not implemented yet")
+    }
+
+    return [colorScheme, colorSchemeValues];
+}
+
+function getIndexInColorScheme(value, attributeType, colorSchemeValues) {
+    if (attributeType == "categorical") {
+        const index = colorSchemeValues.indexOf(value);
+        if (index == -1) {
+            return 9;
+        } else {
+            return index;
+        }
+    } else if (attributeType == "None") { //single color
+        return 0;
+    }
+    console.error("Type " + attributeType + " is not yet implemented");
+    return -1;
+}
 
 
-const locationColorSchemeOrder = ["removedByPolicyOrigin", "removedByPolicy", "initial", "School", "Restaurant", "Office", "Family", "Other"]
-const locationColorScheme = ["#005a32", "#74c476", "#AAAAAA", "#8dd3c7", "#bebada", "#fccde5", "#80b1d3", "#fb8072"];
-const locationColorSchemeOrderDisplay = ["Contact avoided due to isolation", "Infection route prevented earlier", "initial", "School", "Restaurant", "Office", "Family", "Other"]
 
-const ageColorSchemeOrder = ["removedByPolicyOrigin", "removedByPolicy", "0-20", "20-40", "40-60", "60-80", "80-100"]
-const ageColorScheme = ["#005a32", "#74c476", "#dadaeb", "#bcbddc", "#9e9ac8", "#807dba", "#6a51a3", "#4a1486"];
-const ageColorSchemeOrderDisplay = ["Contact avoided due to isolation", "Infection route prevented earlier", "0-20", "20-40", "40-60", "60-80", "80-100"]
+function getTopKValues(values, k) {
 
-const infectionTimeColorSchemeOrder = ["removedByPolicyOrigin", "removedByPolicy", "0-5", "5-10", "10-15", "15-20", "20-25", "25-30", "30-50", "50-100"]
-const infectionTimeColorScheme = ["#005a32", "#74c476", "#efedf5", "#dadaeb", "#bcbddc", "#9e9ac8", "#807dba", "#6a51a3", "#54278f", "#3f007d"];
-const infectionTimeColorSchemeOrderDisplay = ["Contact avoided due to isolation", "Infection route prevented earlier", "0-5", "5-10", "10-15", "15-20", "20-25", "25-30", "30-50", "50-100"]
+    let frequencyMap = {};
+    //count frequencies
+    for (let val in values) {
+        let name = values[val];
+        if (frequencyMap[name]) {
+            frequencyMap[name]++;
+        } else {
+            frequencyMap[name] = 1;
+        }
+    }
+    //convert to array of arrays instead of dictionary so that we can sort
+    //first value is key, second is frequency
+    let frequencyArray = Object.entries(frequencyMap);
+    frequencyArray.sort((a, b) => { return b[1] - a[1] });
 
-const familyStates = ["SmallFamily", "LargeTwoAdultFamily", "LargeManyAdultFamily", "SingleParent"]
+    //get only the k most frequent values
+    const kMostFrequent = frequencyArray.slice(0, k);
+
+    //trim of the frequencies to get only the keys in an array
+    const results1d = kMostFrequent.map(val => val[0])
+    return results1d;
+}
 
 
 
-//"DEAD", "RECOVERED", 
-const distributionChartColorSchemeOrder = ["EXPOSED", "ASYMPTOMATIC", "PRESYMPTOMATIC", "SYMPTOMATIC", "SEVERELY_SYMPTOMATIC"];
-const distributionChartColorScheme = ["#fee5d9", "#bcbddc", "#fcae91", "#fb6a4a", "#cb181d"];
-const distributionChartColorSchemeOrderDisplay = ["Exposed", "Asymptomatic", "Presymptomatic", "Symptomatic", "Severely symptomatic"];
-const distributionTimeStep = 0.5;
+function getPartColorSimple() {
+    return "#005a32";
+}

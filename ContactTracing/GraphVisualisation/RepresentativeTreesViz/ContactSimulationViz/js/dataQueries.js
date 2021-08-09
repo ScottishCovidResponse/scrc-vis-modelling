@@ -31,8 +31,16 @@ function preprocessData() {
         addDepthMetaData(tree, 0);
     }
 
-
-
+    //Save the names and types of metadata that we have. All nodes contain these in the same order (except policies)
+    const metaDataList = metaData[0].metaDataList;
+    for (let i = 0; i < metaDataList.length; i++) {
+        const metaDataVal = metaDataList[i]
+        const name = metaDataVal['attributeName'];
+        const type = metaDataVal['dataType'];
+        //save to variables
+        metaDataNames[i] = name;
+        metaDataTypes[i] = type;
+    }
 }
 
 function addDepthMetaData(tree, depth) {
@@ -172,6 +180,64 @@ function getRepresentedNodesMetaData(nodeId, editDistance) {
 
     return metaDataNodes;
 }
+
+
+/**
+ * 
+ * @param {name of the attribute we want to get the values from} name 
+ * @param {id of the node we want the data from} id 
+ * @returns a single value containing the value of the 'name' attribute of the node with the given id
+ */
+function getMetaDataValueFromId(name, id) {
+    const nameIndex = metaDataNames.indexOf(name);
+    const metaDataNode = metaDataFromNodeById.get(id);
+    return metaDataNode[nameIndex];
+}
+
+/**
+ * 
+ * @param {Name of the attribute we want to get the values from. In case name = "none", returns "None" for each metadata element} name  
+ * @param {An array of all metadata values to be considered}
+ * @returns An array of all values for this attribute from the metadata in metadataArray. Values can be present multiple times
+ */
+function getMetaDataValues(name, metaDataArray) {
+
+    //find the index of the string with the given name
+    const nameIndex = metaDataNames.indexOf(name);
+    if (nameIndex == -1) {
+        if (name == "None") //Special variable to visualize no data
+        {
+            return new Array(metaDataArray.length).fill("None"); //Fill array with "None" values
+        }
+
+        console.error("Name " + name + " was not found in the metadata")
+        return [];
+    }
+
+    let values = [];
+    for (let i = 0; i < metaDataArray.length; i++) {
+        const metaDataNode = metaDataArray[i];
+        const val = metaDataNode.metaDataList[nameIndex].valueString;
+        values[i] = val;
+    }
+
+    return values;
+}
+
+
+/**
+ * 
+ * @param {name of the attribute we want to get the values from} name  
+ * @param {Id of the node that is representing other nodes} id
+ * @param {The maximum edit distance to find trees represented by 'id'} editDistance
+ * @returns An array of all values for this attribute for all trees represented at the given editdistance by the node with the specified id. Values can be present multiple times
+ */
+function getMetaDataValuesFromRepTrees(name, id, editDistance) {
+    const repTreeMetaData = getRepresentedNodesMetaData(id, editDistance)
+    return getMetaDataValues(name, repTreeMetaData);
+}
+
+
 
 
 function getNodes(rootNode) {

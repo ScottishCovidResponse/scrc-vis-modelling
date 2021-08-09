@@ -1,5 +1,11 @@
 function createSidePanel() {
     createSelectors();
+
+
+    console.log("Color legend needs to be reimplemented as well as distributionChart")
+    if (true) {
+        return
+    }
     createDistributionChartPanel();
     createColorLegends();
 }
@@ -13,8 +19,10 @@ function createSelectors() {
     createDistanceSlider(selectorDiv);
     createSizeSlider(selectorDiv);
     createNodeColorSelectors(selectorDiv);
-    createPolicySelectors(selectorDiv);
-    createAppPercentageSelectors(selectorDiv);
+    if (policyDataPresent) {
+        createPolicySelectors(selectorDiv);
+        createAppPercentageSelectors(selectorDiv);
+    }
     // createSortOptions(selectorDiv);
     createRecalculateButton(selectorDiv);
 }
@@ -60,26 +68,27 @@ function createNodeColorSelectors(selectorDiv) {
 
     createLeftRightSubtitles(selectorDiv);
 
-    //get the properties of the selectors
-    const colorOptions = [
-        { "NAME": "None" },
-        { "NAME": "Infection Location" },
-        { "NAME": "Infection Time" },
-        { "NAME": "Age" },
-        { "NAME": "Infector State" }
-    ];
+    let colorOptions = [{ "NAME": "None" }];
+    for (let i = 0; i < metaDataNames.length; i++) {
+        const name = metaDataNames[i]
+        colorOptions[i + 1] = { "NAME": name } //0 is used by none
+    }
 
     const leftChangeFunction = function() {
-        currentLeftColor = this.value; //keep the color up to date
+        currentLeftAttributeName = this.value; //keep the color up to date
+        let i = metaDataNames.indexOf(this.value);
+        currentLeftAttributeType = metaDataTypes[i];
         changePending();
     };
 
     const rightChangeFunction = function() {
-        currentRightColor = this.value; //keep the color up to date
+        currentRightAttributeName = this.value; //keep the color up to date
+        let i = metaDataNames.indexOf(this.value);
+        currentRightAttributeType = metaDataTypes[i];
         changePending();
     };
 
-    createLeftRightComboBoxes(selectorDiv, colorOptions, "leftNodeColorSelector", "rightNodeColorSelector", currentLeftColor, currentRightColor, leftChangeFunction, rightChangeFunction);
+    createLeftRightComboBoxes(selectorDiv, colorOptions, "leftNodeColorSelector", "rightNodeColorSelector", currentLeftAttributeName, currentRightAttributeName, leftChangeFunction, rightChangeFunction);
 }
 
 
@@ -239,6 +248,12 @@ function createColorLegends() {
 
 function updateColorLegend() {
 
+    console.log("color legend needs to be fixed")
+    if (true) {
+        return;
+    }
+
+
     const colorLegendDiv = d3.select("#sidePanel").select("#colorLegendDiv");
     colorLegendDiv.selectAll("*").remove(); //remove current legend
     createStateColorLegend(colorLegendDiv, true);
@@ -255,10 +270,10 @@ function createStateColorLegend(colorLegendDiv, isLeft) {
     //get the colorname and policy name
     let currentColor, currentPolicy;
     if (isLeft) {
-        currentColor = currentLeftColor;
+        currentColor = currentLeftAttributeName;
         currentPolicy = currentLeftPolicy;
     } else {
-        currentColor = currentRightColor;
+        currentColor = currentRightColorname;
         currentPolicy = currentRightPolicy;
     }
 

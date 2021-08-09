@@ -1,5 +1,3 @@
-console.log("ensure all data is used")
-
 const repTreesDataInputLocation = "data/RealData/RepTrees.json";
 const allTreesDataInputLocation = "data/RealData/AllTrees.json";
 const metaDataInputLocation = "data/RealData/NodesAndMeta.json";

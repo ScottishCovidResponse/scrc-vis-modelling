@@ -189,9 +189,13 @@ function getRepresentedNodesMetaData(nodeId, editDistance) {
  * @returns a single value containing the value of the 'name' attribute of the node with the given id
  */
 function getMetaDataValueFromId(name, id) {
+    if (name == "None") {
+        return "None";
+    }
+
     const nameIndex = metaDataNames.indexOf(name);
     const metaDataNode = metaDataFromNodeById.get(id);
-    return metaDataNode[nameIndex];
+    return metaDataNode.metaDataList[nameIndex].valueString;
 }
 
 /**

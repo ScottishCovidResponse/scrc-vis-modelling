@@ -4,13 +4,16 @@ const treesPerSize = []; //for each R_t value (represented by the index), holds 
 
 function createScentedRtLineChart(chartDiv, scentIndex) {
 
-    for (let i = 0; i < 100; i++) {
+    console.log("For both the widget and the selector, automatically select maximum interesting edit distance")
+
+    for (let i = 0; i <= 100; i++) {
         treesPerSize[i] = 0;
     }
 
     for (let treeI = 0; treeI < repTreesData.length; treeI++) {
-        //tree exists up to maxEditDistance
-        for (let i = 0; i < repTreesData[treeI].maxEditDistance; i++) {
+        let maxDis = repTreesData[treeI].maxEditDistance;
+        //tree exists up to and includinc maxEditDistance. Add 1 to all values below
+        for (let i = 0; i <= maxDis; i++) {
             treesPerSize[i] = treesPerSize[i] + 1;
         }
     }

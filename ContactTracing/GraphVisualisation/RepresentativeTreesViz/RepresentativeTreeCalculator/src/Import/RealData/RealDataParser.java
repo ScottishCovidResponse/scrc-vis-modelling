@@ -54,13 +54,15 @@ public class RealDataParser {
      */
     public static void main(String[] args) {
         try {
+            System.out.println("TODO: Parse rom arguments");
             String inputFolderLocation = "./Data/RealData/";
             String outputFileLocation = inputFolderLocation;
 
             int startTreeSize = 1;//calculate starting from trees of size 1
             int endTreeSize = 2000; //stop calculating for trees of size 2000
 
-            new RealDataParser(inputFolderLocation, outputFileLocation, startTreeSize, endTreeSize);
+            RealDataParser rdp = new RealDataParser(inputFolderLocation, outputFileLocation, startTreeSize, endTreeSize);
+            rdp.parseData();
         } catch (IOException ex) {
             System.out.println("Invalid input or outputFileLocation");
             Logger.getLogger(DataToJsonTree.class.getName()).log(Level.SEVERE, null, ex);

@@ -55,6 +55,7 @@ var currentEditDistance = initEditDistanceSliderVal; //Current edit distance
 //color schemes
 const maxParts = 10; //How many different parts we can have at maximum in the glyph.
 const categoricalColorScheme = ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a"];
+const integerColorScheme = ["#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15"];
 const noneColorScheme = ["#888888"];
 
 
@@ -62,12 +63,13 @@ var currentLeftAttributeName = "None"; //What we are currently coloring the node
 var currentLeftAttributeType = "None" //what the type is of the variable we are coloring for the left side of the glyps
 var currentLeftColorScheme = noneColorScheme //the {maxParts} colors we are using in order.
 var currentLeftColorSchemeValues = []; //The values used to determine which color to pick for the left side of the glyhp. For integers, these holds the upper bounds of the bin partitions. For categorical, these holds the 9 most frequent value names and "other" in bin 10
+var currentLeftAttributeBounds = [-Infinity, Infinity]; //Holds the values for the minimum and maximum value for the current integer attribute
 
 var currentRightAttributeName = "None"; //What we are currently coloring the nodes by for the right sides of the glyphs
 var currentRightAttributeType = "None" //what the type is of the variable we are coloring for the right side of the glyps
 var currentRightColorScheme = noneColorScheme //the {maxParts} colors we are using in order.
 var currentRightColorSchemeValues = []; //The values used to determine which color to pick for the right side of the glyhp. For integers, these holds the upper bounds of the bin partitions. For categorical, these holds the 9 most frequent value names and "other" in bin 10
-
+var currentRightAttributeBounds = [-Infinity, Infinity]; //Holds the values for the minimum and maximum value for the current integer attribute
 
 
 //Policies

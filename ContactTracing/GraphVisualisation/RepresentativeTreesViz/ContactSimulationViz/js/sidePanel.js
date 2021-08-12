@@ -1,8 +1,5 @@
 function createSidePanel() {
     createSelectors();
-
-
-    console.log("Color legend needs to be reimplemented as well as distributionChart")
     createDistributionChartPanel();
     createColorLegends();
 }
@@ -258,23 +255,35 @@ function createStateColorLegend(colorLegendDiv, isLeft) {
         .attr("class", "halfColorLegendDiv")
 
     //get the colors and names to display
-    let colors, names
+    let colors, names, displayNames, type, bounds
 
-    console.log("TODO: Make sure color schemes are only as large as needed")
-    console.log("Make names better")
+
     if (isLeft) {
         colors = currentLeftColorScheme;
         names = currentLeftColorSchemeValues;
+        type = currentLeftAttributeType;
+        bounds = currentLeftAttributeBounds;
     } else {
         colors = currentRightColorScheme
         names = currentRightColorSchemeValues;
+        type = currentRightAttributeType;
+        bounds = currentRightAttributeBounds;
+    }
+    //Copy the array to get the values
+    displayNames = [...names]
+
+    if (type == "integer") {
+        displayNames[0] = bounds[0] + "-" + names[0];
+        for (let i = 1; i < (names.length - 1); i++) {
+            displayNames[i] = names[i - 1] + "-" + names[i];
+        }
+        displayNames[names.length - 1] = names[names.length - 1] + "-" + bounds[1];
     }
 
 
-
-    for (let i = 0; i < names.length; i++) {
+    for (let i = 0; i < displayNames.length; i++) {
         const color = colors[i];
-        let name = names[i];
+        let name = displayNames[i];
         console.log("get policies back in")
             // if (!splitPolicy) //If we aren't looking into the detailed split policy we merge them together
             // {

@@ -36,9 +36,15 @@ function updateColorSchemes() {
     //Need to get the values as this determines which bins we have for the colors
     leftValues = getMetaDataValues(currentLeftAttributeName, metaData);
     [currentLeftColorScheme, currentLeftColorSchemeValues] = getColorScheme(currentLeftAttributeType, leftValues)
+        //set the bounds for the bings
+    currentLeftAttributeBounds = [Math.min(...leftValues), Math.max(...leftValues)];
+
+
 
     rightValues = getMetaDataValues(currentRightAttributeName, metaData);
     [currentRightColorScheme, currentRightColorSchemeValues] = getColorScheme(currentRightAttributeType, rightValues)
+        //set the bounds for the bings
+    currentRightAttributeBounds = [Math.min(...rightValues), Math.max(...rightValues)];
 }
 
 function updatePositions() {

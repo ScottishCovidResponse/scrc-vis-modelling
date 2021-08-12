@@ -9,7 +9,6 @@ function getColorScheme(varType, values) {
     let colorScheme;
     let colorSchemeValues;
 
-    console.log("TODO: Make sure color schemes are only as large as needed")
 
     if (varType == "categorical") {
         //color scheme is defaulted
@@ -18,8 +17,20 @@ function getColorScheme(varType, values) {
         //get which string goes at which position
         let topKValues = getTopKValues(values, 9);
         colorSchemeValues = topKValues;
+
+        //make sure we only have colors for what we use
+        let valueLength = topKValues.length
+        colorScheme = colorScheme.slice(0, valueLength + 1)
+
         //anything not in the top 9, gets shoved into the "other" cateogry
-        colorSchemeValues[9] = "Other";
+        colorSchemeValues[valueLength] = "Other";
+    } else if (varType == "integer") {
+        colorScheme = integerColorScheme;
+
+        //calculate the upper bounds for the bins based on the numbers
+        let bins = calculateUpperboundsBins(values, 7);
+        colorSchemeValues = bins;
+
     } else if (varType == "None") {
         colorScheme = noneColorScheme;
         colorSchemeValues = ["none"];
@@ -38,6 +49,10 @@ function getIndexInColorScheme(value, attributeType, colorSchemeValues) {
         } else {
             return index;
         }
+    } else if (attributeType == "integer") {
+        //get the first value larger than x
+        const index = colorSchemeValues.findIndex(x => x > value)
+        return index;
     } else if (attributeType == "None") { //single color
         return 0;
     }
@@ -72,6 +87,40 @@ function getTopKValues(values, k) {
     return results1d;
 }
 
+/**
+ * 
+ * @param {integer values} values 
+ * @param {Amount of bins} binCount 
+ */
+function calculateUpperboundsBins(values, binCount) {
+
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+
+    //calculate the interval
+    let interval = (max - min) / binCount;
+
+    //smoothen it so that we have a nice round 10's interval with the right amount of digits
+    const digits = getDigitCount(interval)
+    console.log(digits)
+    if (digits > 1) {
+        const digitRounder = Math.pow(10, digits - 1);
+        interval = Math.floor(interval / digitRounder) * (digitRounder);
+    }
+
+
+    let bins = [];
+
+    for (let i = 0; i < binCount; i++) {
+        bins[i] = min + interval * (i + 1);
+    }
+
+    return bins;
+}
+
+function getDigitCount(number) {
+    return Math.floor(number).toString().length;
+}
 
 
 function getPartColorSimple() {

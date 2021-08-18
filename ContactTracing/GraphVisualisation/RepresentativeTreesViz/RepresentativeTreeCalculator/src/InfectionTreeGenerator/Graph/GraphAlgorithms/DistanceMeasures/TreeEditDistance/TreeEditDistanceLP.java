@@ -21,7 +21,8 @@ import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;
 
 /**
- *
+ * Method from paper by Kondo, Seiichi, et al. 
+ * "Fast computation of the tree edit distance between unordered trees using IP solvers." International Conference on Discovery Science. 2014. 
  * @author MaxSondag
  */
 public class TreeEditDistanceLP<N extends Node, E extends Edge> {

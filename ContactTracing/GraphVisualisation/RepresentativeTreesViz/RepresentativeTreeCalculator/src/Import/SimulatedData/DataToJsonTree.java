@@ -87,7 +87,6 @@ public class DataToJsonTree {
         PolicySimulator ps = new PolicySimulator(ig, events, contacts);
         ps.applyAllPolicies();//apply all policies to ig
         List<Policy> policies = ps.getAppliedPolicies();
-
         System.out.println("g.getNodes().size() = " + ig.getNodes().size());
         System.out.println("g.getEdges().size() = " + ig.getEdges().size());
 
@@ -109,9 +108,9 @@ public class DataToJsonTree {
         Set<Tree> forest = ff.getForest();
 
         tw.writeForest(outputFileLocation + "/AllTrees.json", forest);
-//        TreeDistanceMeasure tdm = new RtDistanceMeasure(100, 1);
-//        RepresentativeTreesFinder rgf = new RepresentativeTreesFinder();
-//        rgf.getAndWriteRepresentativeTreeData(forest, startTreeSize, endTreeSize, tdm, outputFileLocation + "/ReptreesRTDistance/");
+        TreeDistanceMeasure tdm = new RtDistanceMeasure(100, 1);
+        RepresentativeTreesFinder rgf = new RepresentativeTreesFinder();
+        rgf.getAndWriteRepresentativeTreeData(forest, startTreeSize, endTreeSize, tdm, outputFileLocation + "/ReptreesRTDistance/");
     }
 
     private void printStatistics(HashMap<Integer, Set<Contact>> contacts, InfectionGraph ig) {

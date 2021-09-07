@@ -11,7 +11,11 @@ import InfectionTreeGenerator.Graph.Edge;
 import InfectionTreeGenerator.Graph.Graph;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -33,6 +37,12 @@ public class DominatingSetCalculator {
         //nodes that are not connected always need to be in
         Collection<Node> nodes = g.getNodes();
 
+        boolean done = false;
+        while (!done) {
+            done = true;
+
+        }
+
         //Trivial algorithm. Go through the nodes. For each node if it is not yet dominated, add it to the set.
         for (Node n : nodes) {
             if (!isDominated(g, dominatingSet, n)) {
@@ -40,6 +50,29 @@ public class DominatingSetCalculator {
             }
         }
         return dominatingSet;
+    }
+
+    List<Node> sortNodesByUncoveredEdges(Collection<Node> nodes, ArrayList<Integer> dominatingSet) {
+        HashMap<Node, Integer> unconveredEdgesByNode = new HashMap();
+        for (Node n : nodes) {
+            List<Edge> edges = n.edges;
+            int count = 0;
+            for (Edge e : edges) {
+                Node otherEndPoint = e.getOtherEndpoint(n);
+                if (!dominatingSet.contains(otherEndPoint.id)) {
+                    count++;
+                }
+            }
+            unconveredEdgesByNode.put(n, count);
+        }
+
+        List<Node> sortedList = unconveredEdgesByNode.entrySet().stream()
+                .sorted((a,b) -> b.getValue().compareTo(a.getValue()))//sort descending based on values
+                .map(Map.Entry::getKey)//toss away the values
+                .collect(Collectors.toList());//collect them into a list
+
+        return sortedList;
+
     }
 
     /**

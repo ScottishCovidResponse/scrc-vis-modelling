@@ -32,6 +32,16 @@ public class Edge<N extends Node> {
         this.weight = weight;
     }
 
+    public N getOtherEndpoint(N endpoint) {
+        if (source == endpoint) {
+            return target;
+        }
+        if (target == endpoint) {
+            return source;
+        }
+        throw new IllegalArgumentException("endpoint is not the source or the target");
+    }
+
     @Override
     public String toString() {
         return "Edge{" + "start=" + source.id + ", end=" + target.id + '}';

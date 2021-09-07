@@ -155,10 +155,7 @@ public class RepresentativeTreesFinder {
             Tree t1 = trees.get(i);
             for (int j = i + 1; j < trees.size(); j++) {
 
-                count++;
-                if (count % 10 == 0) {
-                    Log.printProgress("Calculating distance " + count + " out of " + ((trees.size() * trees.size() - trees.size()) / 2), 1000);
-                }
+                Log.printProgress("Calculating distance " + count + " out of " + ((trees.size() * trees.size() - trees.size()) / 2), 1000);
 
                 Tree t2 = trees.get(j);
 

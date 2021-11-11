@@ -28,8 +28,8 @@ public class JsonMerger {
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
 
-        String inputFolderLocation = "F:\\Development\\Swansea\\ContactTracingViz\\CovidTracing\\EventToTree\\Data\\demoMultiScenario0\\RepTreesRTDistanceCopy";
-        String outputFileLocation = "F:\\Development\\Swansea\\ContactTracingViz\\CovidTracing\\EventToTree\\Data\\demoMultiScenario0\\RepTreesRTDistancePartial.json";
+        String inputFolderLocation = "F:\\Development\\Swansea\\scrc-vis-modelling\\ContactTracing\\GraphVisualisation\\RepresentativeTreesViz\\RepresentativeTreeCalculator\\Data\\demoMultiScenario0\\output\\ReptreesRTDistance";
+        String outputFileLocation = "F:\\Development\\Swansea\\scrc-vis-modelling\\ContactTracing\\GraphVisualisation\\RepresentativeTreesViz\\RepresentativeTreeCalculator\\Data\\demoMultiScenario0\\output\\RepTreesRTDistanceFull.json";
 
         JsonMerger jm = new JsonMerger(inputFolderLocation, outputFileLocation);
 //        jm.mergeNodesAndEdges();

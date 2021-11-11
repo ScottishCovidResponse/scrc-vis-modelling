@@ -1,10 +1,10 @@
 console.log("ensure all data is used")
 
-const repTreesDataInputLocation = "data/SimulatedData/RepTreesRTDistancePartial.json";
-const allTreesDataInputLocation = "data/SimulatedData/AllTrees.json";
-const metaDataInputLocation = "data/SimulatedData/NodesAndMeta.json";
-//const simMetaDataInputLocation = "SimulatedData/SimMeta.csv";
-//const originalExposedDataInputLocation = "SimulatedData/OriginalExposed.csv"
+const repTreesDataInputLocation = "data/SimulatedData/Backup/RepTreesRTDistancePartial.json";
+const allTreesDataInputLocation = "data/SimulatedData/Backup/AllTrees.json";
+const metaDataInputLocation = "data/SimulatedData/Backup/NodesAndMeta.json";
+const simMetaDataInputLocation = "data/SimulatedData/Backup/SimMeta.csv";
+// const originalExposedDataInputLocation = "data/SimulatedData/Backup/OriginalExposed.csv"
 
 //Visual variables
 //Variables for the tree visualization
@@ -84,18 +84,18 @@ requirejs(["js/d3/d3.js", "js/ColorSchemes.js", "js/LineChart.js", "js/StackedAr
     d3.json(repTreesDataInputLocation).then(function(repTreesDataInput) {
         d3.json(allTreesDataInputLocation).then(function(allTreesDataInput) {
             d3.json(metaDataInputLocation).then(function(metaDataInput) {
-                // d3.csv(simMetaDataInputLocation).then(function(simMetaDataInput) {
-                // d3.csv(originalExposedDataInputLocation).then(function(originalExposedDataInput) {
-                repTreesData = repTreesDataInput;
-                allTreesData = allTreesDataInput;
-                metaData = metaDataInput;
-                // simMetaData = simMetaDataInput;
-                // originalExposedData = originalExposedDataInput;
-                setVizSizes(nodeBaseSize);
-                mainRepresentativeGraph();
-                updateAll(); //update to use slider values
-                // });
-                // });
+                d3.csv(simMetaDataInputLocation).then(function(simMetaDataInput) {
+                    // d3.csv(originalExposedDataInputLocation).then(function(originalExposedDataInput) {
+                    repTreesData = repTreesDataInput;
+                    allTreesData = allTreesDataInput;
+                    metaData = metaDataInput;
+                    simMetaData = simMetaDataInput;
+                    // originalExposedData = originalExposedDataInput;
+                    setVizSizes(nodeBaseSize);
+                    mainRepresentativeGraph();
+                    updateAll(); //update to use slider values
+                    // });
+                });
             });
         });
     });

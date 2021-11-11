@@ -60,7 +60,6 @@ function createStackedAreaChart(chartDiv, usableWidth, usableHeight, data) {
 
 
     //TODO: Ensure that the max is done correctly
-
     const stackedData = d3.stack()
         .keys(keys)
         (data)

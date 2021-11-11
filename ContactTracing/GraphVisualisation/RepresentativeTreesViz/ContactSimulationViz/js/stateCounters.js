@@ -237,7 +237,7 @@ function getLocation(nodeMetaData) {
     let state = nodeMetaData.infectionLocation;
 
     //collapse familystates
-    if (state in familyStates) {
+    if (familyStates.indexOf(state) != -1) {
         state = "Family";
     }
 

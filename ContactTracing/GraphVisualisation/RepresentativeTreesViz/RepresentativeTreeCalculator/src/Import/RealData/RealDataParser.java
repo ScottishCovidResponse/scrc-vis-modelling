@@ -87,9 +87,12 @@ public class RealDataParser {
         //read data
 
         //gets the structure of the graph and the associated metadata
-        ContactGraphParser gp = new ContactGraphParser(inputFolderLocation + "/NodeData.csv", inputFolderLocation + "/ContactEdgeData.csv");
+        ContactGraphParser gp = new ContactGraphParser(inputFolderLocation + "/Wales_TTP_data_cases_contacts.csv", inputFolderLocation + "/Wales_TTP_data_exposures.csv");
+        gp.addMetaDataFiles(inputFolderLocation + "/NodeData.csv", inputFolderLocation + "/ContactEdgeData.csv");
         ContactGraph cg = gp.constructGraph();
 
+
+        
 //        addContactsAmountToMetadata(cg);//add the amount of contacts to the metadata?
         Log.printProgress("Calculate most likely infection chain");
         InfectionChainCalculator icc = new InfectionChainCalculator(cg);

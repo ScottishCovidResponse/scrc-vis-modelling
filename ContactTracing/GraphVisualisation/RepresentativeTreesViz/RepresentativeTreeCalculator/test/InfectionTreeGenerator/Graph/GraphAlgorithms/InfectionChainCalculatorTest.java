@@ -93,7 +93,7 @@ public class InfectionChainCalculatorTest {
         assertNotNull(result.getEdge(8, 9));
     }
 
-    private ContactNode createNode(ContactGraph g, int nodeId, int timestamp) {
+    private ContactNode createNode(ContactGraph g, int nodeId, long timestamp) {
         ContactNode cn = createNode(g, nodeId);
         cn.positiveTestTime = timestamp;
         return cn;

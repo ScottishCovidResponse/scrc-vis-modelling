@@ -20,7 +20,7 @@ public class ContactNode extends Node<ContactEdge> {
     /**
      * Holds when this node was exposed. Time is unix timestamp
      */
-    public Integer positiveTestTime;
+    public Long positiveTestTime;
 
     /**
      * Null is unknown or it does not have one
@@ -33,7 +33,7 @@ public class ContactNode extends Node<ContactEdge> {
         super(id);
     }
 
-    public void setTestTime(int positiveTestTime) {
+    public void setTestTime(long positiveTestTime) {
         this.positiveTestTime = positiveTestTime;
     }
 

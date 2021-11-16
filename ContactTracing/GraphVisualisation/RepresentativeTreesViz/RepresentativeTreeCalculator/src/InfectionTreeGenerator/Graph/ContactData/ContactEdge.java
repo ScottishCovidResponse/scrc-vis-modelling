@@ -19,10 +19,10 @@ import java.util.Objects;
  */
 public class ContactEdge extends Edge<ContactNode> {
 
-    public double contactTime;
+    public long contactTime;
     public ArrayList<MetaData> metaDataList;
 
-    public ContactEdge(ContactNode start, ContactNode target, double contactTime, int infectionChanceWeight) {
+    public ContactEdge(ContactNode start, ContactNode target, long contactTime, int infectionChanceWeight) {
         super(start, target);
         this.contactTime = contactTime;
         this.weight = infectionChanceWeight;

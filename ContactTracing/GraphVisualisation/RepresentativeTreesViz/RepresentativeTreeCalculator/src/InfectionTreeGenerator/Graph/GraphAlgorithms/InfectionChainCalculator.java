@@ -204,8 +204,8 @@ public class InfectionChainCalculator {
 
     private String getWeight(ContactGraph g, ContactEdge e) {
 
-        Integer sourceTestTime = e.source.positiveTestTime;
-        Integer targetTestTime = e.target.positiveTestTime;
+        Long sourceTestTime = e.source.positiveTestTime;
+        Long targetTestTime = e.target.positiveTestTime;
         double type = e.weight;
 
         //If test times are unknown, set them to the maximum considered value

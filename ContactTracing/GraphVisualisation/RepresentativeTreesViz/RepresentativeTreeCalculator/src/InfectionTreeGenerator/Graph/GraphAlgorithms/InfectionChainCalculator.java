@@ -108,7 +108,10 @@ public class InfectionChainCalculator {
                 continue;//already have the component containing n
             }
             Collection<ContactNode> componentNodes = g.getReachableNodes(n);
-            Collection<ContactEdge> componentEdges = g.getEdges(componentNodes);
+            Set<ContactEdge> componentEdges = new HashSet();
+            for (ContactNode node : componentNodes) {
+                componentEdges.addAll(node.edges);
+            }
 
             writeComponentFiles(g, componentNodes, componentEdges, componentNumber);
             nodesHandled.addAll(componentNodes);
@@ -204,15 +207,15 @@ public class InfectionChainCalculator {
 
     private String getWeight(ContactGraph g, ContactEdge e) {
 
-        Long sourceTestTime = e.source.positiveTestTime / (60 * 60 * 24); //convert seconds to days
-        Long targetTestTime = e.target.positiveTestTime / (60 * 60 * 24); //convert seconds days
+        Long sourceTestTime = e.source.positiveTestTime;
+        Long targetTestTime = e.target.positiveTestTime;
         double type = e.weight;
 
         //If test times are unknown, set them to the maximum considered value
         Double edgeWeight = (double) infectiousPeriod;
         if (sourceTestTime != null && targetTestTime != null) {
-            //get the difference,
-            double diff = targetTestTime - sourceTestTime;
+            //get the difference in days
+            double diff = (targetTestTime - sourceTestTime) / (60 * 60 * 24);
             //diff can be negative in which case it is going from a later test to an earlier. Much more unlikely so we penalize it
             if (diff < 0) {
                 diff = -diff * 2;//invert and multiply difference by two

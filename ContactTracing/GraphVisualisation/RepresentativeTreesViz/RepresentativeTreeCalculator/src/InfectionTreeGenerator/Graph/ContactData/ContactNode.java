@@ -28,6 +28,11 @@ public class ContactNode extends Node<ContactEdge> {
     public Integer sourceInfectionId;
 
     public ArrayList<MetaData> metaDataList;
+    
+    /**
+     * Debug purposes only
+     */
+    public String md5Hash;
 
     public ContactNode(int id) {
         super(id);

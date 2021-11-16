@@ -88,7 +88,7 @@ public class RealDataParser {
 
         //gets the structure of the graph and the associated metadata
         ContactGraphParser gp = new ContactGraphParser(inputFolderLocation + "/Wales_TTP_data_cases_contacts.csv", inputFolderLocation + "/Wales_TTP_data_exposures.csv");
-        gp.addMetaDataFiles(inputFolderLocation + "/NodeData.csv", inputFolderLocation + "/ContactEdgeData.csv");
+//        gp.addMetaDataFiles(inputFolderLocation + "/NodeData.csv", inputFolderLocation + "/ContactEdgeData.csv");
         ContactGraph cg = gp.constructGraph();
 
 

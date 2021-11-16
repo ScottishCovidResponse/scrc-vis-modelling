@@ -140,9 +140,9 @@ public class InfectionChainCalculator {
         sortedEdges.addAll(edges);
         Collections.sort(sortedEdges, (a, b) -> Double.compare(a.contactTime, b.contactTime));
 
+        StringBuilder edgeFileContent = new StringBuilder();
         //add content line by line
         boolean first = true;
-        String edgeFileContent = "";
         for (ContactEdge e : sortedEdges) {
             String time = "" + ((int) e.contactTime);
             String nodeId1 = "" + e.source.id;
@@ -152,13 +152,19 @@ public class InfectionChainCalculator {
             if (first) {
                 first = false;
             } else {
-                edgeFileContent += "\n";
+                edgeFileContent.append("\n");
             }
-            edgeFileContent += time + "\t" + nodeId1 + "\t" + nodeId2 + "\t" + weight;
+            edgeFileContent.append(time);
+            edgeFileContent.append("\t");
+            edgeFileContent.append(nodeId1);
+            edgeFileContent.append("\t");
+            edgeFileContent.append(nodeId2);
+            edgeFileContent.append("\t");
+            edgeFileContent.append(weight);
         }
 
         String fileName = javaOutputEdgeFilePrefix + componentNumber + ".tsv";
-        Files.write(Paths.get(fileName), edgeFileContent.getBytes());
+        Files.write(Paths.get(fileName), edgeFileContent.toString().getBytes());
         new File(fileName).deleteOnExit();
     }
 
@@ -174,8 +180,10 @@ public class InfectionChainCalculator {
                 .sorted((a, b) -> Double.compare(a.positiveTestTime, b.positiveTestTime))
                 .collect(Collectors.toList());
 
+        
+        
         //add content line by line
-        String nodeFileContent = "";
+        StringBuilder nodeFileContent = new StringBuilder();
         boolean first = true;
         for (ContactNode n : timeStampedNodes) {
             String nodeId = "" + n.id;
@@ -184,9 +192,11 @@ public class InfectionChainCalculator {
             if (first) {
                 first = false;
             } else {
-                nodeFileContent += "\n";//put this on a newline
+                nodeFileContent.append("\n");//put this on a newline
             }
-            nodeFileContent += nodeId + "\t" + testTime;
+            nodeFileContent.append(nodeId);
+            nodeFileContent.append("\t");
+            nodeFileContent.append(testTime);
         }
 
         //Add the remainder of the nodes that do not have a test time.
@@ -197,11 +207,12 @@ public class InfectionChainCalculator {
         //add content line by line
         for (ContactNode n : unknownNodes) {
             String nodeId = "" + n.id;
-            nodeFileContent += "\n" + nodeId; //no test time given, so leave it blank
+            nodeFileContent.append("\n");
+            nodeFileContent.append(nodeId); //no test time given, so leave it blank
         }
 
         String fileName = javaOutputNodeFilePrefix + componentNumber + ".tsv";
-        Files.write(Paths.get(fileName), nodeFileContent.getBytes());
+        Files.write(Paths.get(fileName), nodeFileContent.toString().getBytes());
         new File(fileName).deleteOnExit();
     }
 

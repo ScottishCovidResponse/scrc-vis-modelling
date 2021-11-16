@@ -204,8 +204,8 @@ public class InfectionChainCalculator {
 
     private String getWeight(ContactGraph g, ContactEdge e) {
 
-        Long sourceTestTime = e.source.positiveTestTime;
-        Long targetTestTime = e.target.positiveTestTime;
+        Long sourceTestTime = e.source.positiveTestTime / (60 * 60 * 24); //convert seconds to days
+        Long targetTestTime = e.target.positiveTestTime / (60 * 60 * 24); //convert seconds days
         double type = e.weight;
 
         //If test times are unknown, set them to the maximum considered value
@@ -217,8 +217,8 @@ public class InfectionChainCalculator {
             if (diff < 0) {
                 diff = -diff * 2;//invert and multiply difference by two
             }
-            //cap the value to be equal to an unknown difference.
-            edgeWeight = Math.min(infectiousPeriod, Math.abs(diff));
+            //Constrain value to [1,abs(diff),infectiousperiod]
+            edgeWeight = Math.max(1, Math.min(infectiousPeriod, Math.abs(diff)));
         }
 
         return "" + edgeWeight;

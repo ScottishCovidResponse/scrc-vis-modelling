@@ -65,8 +65,14 @@ public class ContactGraphParser {
                 System.err.println("Node file has and empty line at line number " + i + ". skipping line");
                 continue;
             }
-            String[] split = line.split(",");
-            createNode(split);
+            String[] split = line.split(",", -1);//-1 to catch trailing ","
+            try {
+                createNode(split);
+            } catch (Exception e) {
+                System.err.println("line " + line + "could not be parsed");
+                e.printStackTrace();
+                System.exit(-1);
+            }
         }
 
         //create the edges of the graph
@@ -78,9 +84,15 @@ public class ContactGraphParser {
                 continue;
             }
 
-            String[] split = line.split(",");
+            String[] split = line.split(",", -1);//-1 to catch trailing ","
             //create the edge with metadata
-            createEdge(split);
+            try {
+                createEdge(split);
+            } catch (Exception e) {
+                System.err.println("line " + line + "could not be parsed");
+                e.printStackTrace();
+                System.exit(-1);
+            }
         }
 
         return g;
@@ -91,13 +103,20 @@ public class ContactGraphParser {
         assert (g.getNode(id) == null);
 
         ContactNode n = new ContactNode(id);
-        g.addNode(n);
+        n.md5Hash = split[0];
+
+        if (split.length <= 3) {
+            System.out.println("");
+        }
 
         if (!split[3].isBlank()) {//testing time is not empty
             if ("\"Positive\"".equals(split[4])) {
                 //if this node has a time where it is tested positive
                 long testTime = TimeFunctions.dateToUnixTimestamp(split[3]);
                 n.setTestTime(testTime);
+
+                //only add a node if it was involved in a positive test (TODO: For now)
+                g.addNode(n);
             }
         }
 
@@ -117,6 +136,11 @@ public class ContactGraphParser {
 
     private void createEdge(String[] split) {
 
+        //We ignore edges that are not complete (some do not have time of contact)
+        if (split[2].isBlank() || split[3].isBlank() || split[4].isBlank()) {
+            return;
+        }
+
         int id1 = getIdFromCaseId(split[2]);
         int id2 = getIdFromCaseId(split[3]);
         long time = TimeFunctions.dateToUnixTimestamp(split[4]);
@@ -132,6 +156,10 @@ public class ContactGraphParser {
 
         ContactEdge e = new ContactEdge(n1, n2, time, weight);
         g.addEdge(e);
+
+        //need bidirectional edges
+        ContactEdge eI = new ContactEdge(n2, n1, time, weight);
+        g.addEdge(eI);
 
 //
 //        //add metadata

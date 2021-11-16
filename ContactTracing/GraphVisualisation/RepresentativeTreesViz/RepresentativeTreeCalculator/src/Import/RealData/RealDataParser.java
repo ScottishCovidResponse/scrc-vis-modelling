@@ -55,7 +55,8 @@ public class RealDataParser {
     public static void main(String[] args) {
         try {
             System.out.println("TODO: Parse rom arguments");
-            String inputFolderLocation = "./Data/RealData/";
+//            String inputFolderLocation = "./Data/RealData";
+            String inputFolderLocation = "E:/TTP/TTPData";
             String outputFileLocation = inputFolderLocation;
 
             int startTreeSize = 1;//calculate starting from trees of size 1
@@ -87,12 +88,14 @@ public class RealDataParser {
         //read data
 
         //gets the structure of the graph and the associated metadata
+//        ContactGraphParser gp = new ContactGraphParser(inputFolderLocation + "/TTPTestContacts.csv", inputFolderLocation + "/TTPTestExposures.csv");
         ContactGraphParser gp = new ContactGraphParser(inputFolderLocation + "/Wales_TTP_data_cases_contacts.csv", inputFolderLocation + "/Wales_TTP_data_exposures.csv");
 //        gp.addMetaDataFiles(inputFolderLocation + "/NodeData.csv", inputFolderLocation + "/ContactEdgeData.csv");
         ContactGraph cg = gp.constructGraph();
 
+        System.out.println(cg.getNodes().size() + " nodes with positive tests");
+        System.out.println(cg.getEdges().size() + " edges between nodes with positive tests");
 
-        
 //        addContactsAmountToMetadata(cg);//add the amount of contacts to the metadata?
         Log.printProgress("Calculate most likely infection chain");
         InfectionChainCalculator icc = new InfectionChainCalculator(cg);

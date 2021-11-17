@@ -14,6 +14,7 @@ import InfectionTreeGenerator.Graph.Infection.InfectionEdge;
 import InfectionTreeGenerator.Graph.Infection.InfectionGraph;
 import InfectionTreeGenerator.Graph.Infection.InfectionNode;
 import InfectionTreeGenerator.Graph.Node;
+import Utility.Log;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -40,7 +41,12 @@ import java.util.stream.Collectors;
  */
 public class InfectionChainCalculator {
 
-    private ContactGraph g;
+    /**
+     * Holds the most likely infectiongraph
+     */
+    private InfectionGraph mostLikelyInfectionGraph = new InfectionGraph();
+
+    private ContactGraph contactGraph;
     /**
      * How long a person is infectious after being exposed to the diseasee. Used
      * to configure weights. Around 10 for covid, but can be longer. Default to
@@ -49,12 +55,12 @@ public class InfectionChainCalculator {
     private double infectiousPeriod;
 
     //make the folder in the current working directory.
-    private String tempFolder = "E:/TTP/TTPData/temporary";
-    private String javaOutputEdgeFilePrefix = tempFolder + "/edge";
-    private String javaOutputNodeFilePrefix = tempFolder + "/node";
+    private String tempFolder;
+    private String javaOutputEdgeFilePrefix;
+    private String javaOutputNodeFilePrefix;
 
-    private String pythonOutputFolderPrefix = tempFolder + "/chain";//own folder
-    private String pythonOutputFilePrefix = pythonOutputFolderPrefix + "/chain";//own folder
+    private String pythonOutputFolderPrefix;
+    private String pythonOutputFilePrefix;
 
     /**
      * Holds where the python program to compute the infection chains is stored.
@@ -65,9 +71,14 @@ public class InfectionChainCalculator {
      *
      * @param g
      */
-    public InfectionChainCalculator(ContactGraph g) {
-        this.g = g;
+    public InfectionChainCalculator(ContactGraph g, String dataFolderLocation) {
+        this.contactGraph = g;
         this.infectiousPeriod = 16;
+        this.tempFolder = dataFolderLocation + "/temporary";
+        this.javaOutputEdgeFilePrefix = tempFolder + "/edge";
+        this.javaOutputNodeFilePrefix = tempFolder + "/node";
+        this.pythonOutputFolderPrefix = tempFolder + "/chain";//own folder
+        this.pythonOutputFilePrefix = pythonOutputFolderPrefix + "/chain";//own folder
     }
 
     /**
@@ -76,7 +87,7 @@ public class InfectionChainCalculator {
      * @param infectiousPeriod
      */
     public InfectionChainCalculator(ContactGraph g, double infectiousPeriod) {
-        this.g = g;
+        this.contactGraph = g;
         this.infectiousPeriod = infectiousPeriod;
     }
 
@@ -89,14 +100,14 @@ public class InfectionChainCalculator {
         f.mkdir();
 //        f.deleteOnExit();
 
-        System.err.println("Start writing components");
+        //write a temporary file for each non-trivial component. Directly add trivial components to the graph
         int componentCount = writeComponentFiles();
-        System.err.println("Start executing program");
+        //calculate most-likely-infection chains for each component. TODO: Allow for multiple index cases per component?
         executeProgram(componentCount);
-        System.err.println("Start parting output files");
-        InfectionGraph g = parseOutputFiles();
+        //Add the most-likely-infection chains to the mostLikelyInfectionGraph
+        parseOutputFiles();
 
-        return g;
+        return mostLikelyInfectionGraph;
     }
 
     /**
@@ -105,21 +116,33 @@ public class InfectionChainCalculator {
      */
     private int writeComponentFiles() {
         Set<ContactNode> nodesHandled = new HashSet();
-        int componentNumber = 0;//how many components we have already processed
-        for (ContactNode n : g.getNodes()) {
+        int componentNumber = 0;//how many components we have written files for processed
+
+        int trivalComponentNumber = 0;//how many components of size 1 we processed
+
+        for (ContactNode n : contactGraph.getNodes()) {
             if (nodesHandled.contains(n)) {
                 continue;//already have the component containing n
             }
-            Collection<ContactNode> componentNodes = g.getReachableNodes(n);
+            Collection<ContactNode> componentNodes = contactGraph.getReachableNodes(n);
             Set<ContactEdge> componentEdges = new HashSet();
             for (ContactNode node : componentNodes) {
                 componentEdges.addAll(node.edges);
             }
 
-            writeComponentFiles(g, componentNodes, componentEdges, componentNumber);
+            if (componentNodes.size() == 1) {
+                //Speedup. If there is only one node in the component only 1 tree can exists. No need to write files
+                mostLikelyInfectionGraph.addNode(new InfectionNode(n.id, n.positiveTestTime));
+                trivalComponentNumber++;
+                Log.printProgress("trivial component number: " + trivalComponentNumber + " is handled",1, 1000);
+                continue;
+            }
+
+            writeComponentFiles(contactGraph, componentNodes, componentEdges, componentNumber);
             nodesHandled.addAll(componentNodes);
 
             componentNumber++;
+            Log.printProgress("component number: " + componentNumber + " is written", 1000);
         }
 
         return componentNumber;
@@ -138,7 +161,7 @@ public class InfectionChainCalculator {
 
     private void writeEdgeFile(ContactGraph g, Collection<ContactNode> nodes, Collection<ContactEdge> edges, int componentNumber) throws IOException {
 
-        //Need to sort the edges by time for the file. 
+        //Need to sort the edges by time for the file.
         List<ContactEdge> sortedEdges = new ArrayList();
         sortedEdges.addAll(edges);
         Collections.sort(sortedEdges, (a, b) -> Double.compare(a.contactTime, b.contactTime));
@@ -167,14 +190,14 @@ public class InfectionChainCalculator {
         }
 
         String fileName = javaOutputEdgeFilePrefix + componentNumber + ".tsv";
-        Files.write(Paths.get(fileName), edgeFileContent.toString().getBytes());
-        File f = new File(fileName);
-//                f.deleteOnExit();
+        byte[] bytes = edgeFileContent.toString().getBytes();
+        Files.write(Paths.get(fileName), bytes);
+        Fnew File(fileName).deleteOnExit();
     }
 
     private void writeNodeFile(ContactGraph g, Collection<ContactNode> nodes, Collection<ContactEdge> edges, int componentNumber) throws IOException {
 
-        //Need to sort the nodes by reporting timefor the file. 
+        //Need to sort the nodes by reporting timefor the file.
         List<ContactNode> sortedNodes = new ArrayList();
         sortedNodes.addAll(nodes);
 
@@ -214,13 +237,15 @@ public class InfectionChainCalculator {
         }
 
         String fileName = javaOutputNodeFilePrefix + componentNumber + ".tsv";
-        Files.write(Paths.get(fileName), nodeFileContent.toString().getBytes());
-        File f = new File(fileName);
-//                f.deleteOnExit();
+
+        byte[] bytes = nodeFileContent.toString().getBytes();
+
+        Files.write(Paths.get(fileName), bytes);
+        new File(fileName).deleteOnExit();
     }
 
     private String getWeight(ContactGraph g, ContactEdge e) {
-
+        //TODO: Encode weight by type of edge. Not yet in the data.
         Long sourceTestTime = e.source.positiveTestTime;
         Long targetTestTime = e.target.positiveTestTime;
         double type = e.weight;
@@ -276,24 +301,22 @@ public class InfectionChainCalculator {
 
     }
 
-    private InfectionGraph parseOutputFiles() {
+    private void parseOutputFiles() {
 
         //get all the chain files, they all end with .txt and are the only ones to do so
         File folder = new File(pythonOutputFolderPrefix);
         File[] listFiles = folder.listFiles();
 
-        InfectionGraph g = new InfectionGraph();
         for (File f : listFiles) {
             try {
-                parseOutputFile(g, f);
+                parseOutputFile(f);
             } catch (IOException ex) {
                 Logger.getLogger(InfectionChainCalculator.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return g;
     }
 
-    private void parseOutputFile(InfectionGraph g, File f) throws IOException {
+    private void parseOutputFile(File f) throws IOException {
         List<String> lines = Files.readAllLines(f.toPath());
         for (String line : lines) {
             String[] split = line.split("\\(");
@@ -309,21 +332,21 @@ public class InfectionChainCalculator {
                 int id1 = Integer.parseInt(values[1]);
                 int id2 = Integer.parseInt(values[2]);
 
-                //add the nodes first to ensure they exists. 
+                //add the nodes first to ensure they exists.
                 //Node n1 only has this timestamp if it's a root node. Otherwise it's already set elsewhere.
                 InfectionNode n1 = new InfectionNode(id1, timestamp);
-                g.addNodeIfNotpresent(n1);
+                mostLikelyInfectionGraph.addNodeIfNotpresent(n1);
 
                 InfectionNode n2 = new InfectionNode(id2, timestamp);
-                g.addNodeIfNotpresent(n2);
+                mostLikelyInfectionGraph.addNodeIfNotpresent(n2);
 
                 if (id1 != id2) {
                     //add the edge if it is not a self-edge
-                    InfectionEdge e = new InfectionEdge(g.getNode(id1), g.getNode(id2), timestamp);
-                    g.addEdgeIfNotPresent(e);
+                    //Need to use getNode as nodes may already have existed.
+                    InfectionEdge e = new InfectionEdge(mostLikelyInfectionGraph.getNode(id1), mostLikelyInfectionGraph.getNode(id2), timestamp);
+                    mostLikelyInfectionGraph.addEdgeIfNotPresent(e);
                 }
             }
-
         }
     }
 

@@ -75,7 +75,7 @@ public class InfectionChainCalculatorTest {
         createNode(g, 9, 1667770000);
         createEdge(g, 8, 9, 1, 1665770000);
 
-        InfectionChainCalculator instance = new InfectionChainCalculator(g);
+        InfectionChainCalculator instance = new InfectionChainCalculator(g,"temp");
         InfectionGraph result = instance.calculateInfectionGraph();
 
         assertEquals(6, result.getNodes().size());

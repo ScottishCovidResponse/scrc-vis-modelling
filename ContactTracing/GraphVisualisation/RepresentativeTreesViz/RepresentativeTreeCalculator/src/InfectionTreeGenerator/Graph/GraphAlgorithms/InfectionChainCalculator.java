@@ -134,7 +134,7 @@ public class InfectionChainCalculator {
                 //Speedup. If there is only one node in the component only 1 tree can exists. No need to write files
                 mostLikelyInfectionGraph.addNode(new InfectionNode(n.id, n.positiveTestTime));
                 trivalComponentNumber++;
-                Log.printProgress("trivial component number: " + trivalComponentNumber + " is handled",1, 1000);
+                Log.printProgress("trivial component number: " + trivalComponentNumber + " is handled", 1, 1000);
                 continue;
             }
 
@@ -192,7 +192,8 @@ public class InfectionChainCalculator {
         String fileName = javaOutputEdgeFilePrefix + componentNumber + ".tsv";
         byte[] bytes = edgeFileContent.toString().getBytes();
         Files.write(Paths.get(fileName), bytes);
-        Fnew File(fileName).deleteOnExit();
+        File f = new File(fileName);
+//        f.deleteOnExit();
     }
 
     private void writeNodeFile(ContactGraph g, Collection<ContactNode> nodes, Collection<ContactEdge> edges, int componentNumber) throws IOException {
@@ -241,7 +242,8 @@ public class InfectionChainCalculator {
         byte[] bytes = nodeFileContent.toString().getBytes();
 
         Files.write(Paths.get(fileName), bytes);
-        new File(fileName).deleteOnExit();
+        File f = new File(fileName);
+//        f.deleteOnExit();
     }
 
     private String getWeight(ContactGraph g, ContactEdge e) {

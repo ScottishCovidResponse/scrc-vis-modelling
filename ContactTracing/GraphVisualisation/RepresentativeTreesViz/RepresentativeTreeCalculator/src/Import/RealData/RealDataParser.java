@@ -98,7 +98,7 @@ public class RealDataParser {
 
 //        addContactsAmountToMetadata(cg);//add the amount of contacts to the metadata?
         Log.printProgress("Calculate most likely infection chain");
-        InfectionChainCalculator icc = new InfectionChainCalculator(cg);
+        InfectionChainCalculator icc = new InfectionChainCalculator(cg, inputFolderLocation);
         InfectionGraph ig = icc.calculateInfectionGraph();
         addSourceIdToMetaData(cg, ig);
 

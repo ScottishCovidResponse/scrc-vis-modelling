@@ -5,6 +5,7 @@
  */
 package Utility;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -31,22 +32,36 @@ public class Log {
 
     }
 
-    private static long lastTime = System.currentTimeMillis();
-
     /**
      * Prints the message only if there has not been another message with a
-     * delay in the last {@code delay} milliseconds
+     * delay in the last {@code delay} milliseconds. Defaults to channel 0
      *
      * @param message
      * @param delay
      */
     public static void printProgress(String message, int delay) {
+        printProgress(message, 0, delay);
+    }
+
+    private static HashMap<Integer, Long> lastTimePerChannel = new HashMap();
+
+    /**
+     * Prints the message only if there has not been another message with a
+     * delay in the last {@code delay} milliseconds on channel with id
+     * {@code channelId}
+     *
+     * @param message
+     * @param delay
+     */
+    public static void printProgress(String message, int channelId, int delay) {
         long currentTime = System.currentTimeMillis();
+        long lastTime = lastTimePerChannel.getOrDefault(channelId, 0l);
+
         double difference = currentTime - lastTime;
         if ((currentTime - lastTime) > delay) {
             printProgress(message + ". Time since last message:" + difference);
-            lastTime = currentTime;
+            lastTimePerChannel.put(channelId, currentTime);
         }
-
     }
+
 }

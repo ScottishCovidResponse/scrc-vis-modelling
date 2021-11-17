@@ -351,3 +351,22 @@ Color legend
     stroke: black;
     fill: red;
 }
+
+
+/* Gridmap */
+
+#gridmapGrid {
+    width: 400px;
+}
+
+.bottomLevelGridCell {
+    stroke: black;
+    stroke-width: 0.001;
+    fill: gray;
+}
+
+.topLevelGridCell {
+    stroke: black;
+    stroke-width: 0.001;
+    fill: none;
+}

@@ -49,7 +49,7 @@ public class InfectionChainCalculator {
     private double infectiousPeriod;
 
     //make the folder in the current working directory.
-    private String tempFolder = System.getProperty("user.dir") + "/temporary";
+    private String tempFolder = "E:/TTP/TTPData/temporary";
     private String javaOutputEdgeFilePrefix = tempFolder + "/edge";
     private String javaOutputNodeFilePrefix = tempFolder + "/node";
 
@@ -83,14 +83,17 @@ public class InfectionChainCalculator {
     public InfectionGraph calculateInfectionGraph() {
         File f = new File(tempFolder);
         f.mkdir();
-        f.deleteOnExit();
+//        f.deleteOnExit();
 
         f = new File(pythonOutputFolderPrefix);
         f.mkdir();
-        f.deleteOnExit();
+//        f.deleteOnExit();
 
+        System.err.println("Start writing components");
         int componentCount = writeComponentFiles();
+        System.err.println("Start executing program");
         executeProgram(componentCount);
+        System.err.println("Start parting output files");
         InfectionGraph g = parseOutputFiles();
 
         return g;
@@ -165,7 +168,8 @@ public class InfectionChainCalculator {
 
         String fileName = javaOutputEdgeFilePrefix + componentNumber + ".tsv";
         Files.write(Paths.get(fileName), edgeFileContent.toString().getBytes());
-        new File(fileName).deleteOnExit();
+        File f = new File(fileName);
+//                f.deleteOnExit();
     }
 
     private void writeNodeFile(ContactGraph g, Collection<ContactNode> nodes, Collection<ContactEdge> edges, int componentNumber) throws IOException {
@@ -180,8 +184,6 @@ public class InfectionChainCalculator {
                 .sorted((a, b) -> Double.compare(a.positiveTestTime, b.positiveTestTime))
                 .collect(Collectors.toList());
 
-        
-        
         //add content line by line
         StringBuilder nodeFileContent = new StringBuilder();
         boolean first = true;
@@ -213,7 +215,8 @@ public class InfectionChainCalculator {
 
         String fileName = javaOutputNodeFilePrefix + componentNumber + ".tsv";
         Files.write(Paths.get(fileName), nodeFileContent.toString().getBytes());
-        new File(fileName).deleteOnExit();
+        File f = new File(fileName);
+//                f.deleteOnExit();
     }
 
     private String getWeight(ContactGraph g, ContactEdge e) {
@@ -261,13 +264,14 @@ public class InfectionChainCalculator {
                 assert (0 == exitCode);//no errors should occur
             } catch (InterruptedException | IOException ex) {
                 Logger.getLogger(InfectionChainCalculator.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error for file: " + nodeFileName);
             }
 
         }
 
         //delete when done so we can delete the folder
         for (File f : new File(pythonOutputFolderPrefix).listFiles()) {
-            f.deleteOnExit();
+//            f.deleteOnExit();
         }
 
     }

@@ -3,10 +3,10 @@ import networkx as nx
 from utils.accuracy import *
 
 
-def get_sinks_and_sources(TS,NS):
+def get_sinks_and_sources(contacts,NS):
     immuned, sinks, sources, unreported = {}, {}, {}, {}
 
-    default = TS[-1][0]
+    default = contacts[-1][0]
 
     nodes = set()
     for iter in range(len(NS)):

@@ -8,7 +8,7 @@ from datetime import datetime
 # Input format nodes
 # n1Id, report time(unix timestamp)
 def readRealFiles(filepath_edges, filepath_nodes):
-    TS = []
+    contacts = []
     NS = []
     with open(filepath_edges, 'r') as fd:
         for line in fd.readlines():
@@ -21,7 +21,7 @@ def readRealFiles(filepath_edges, filepath_nodes):
 
             if n1 == n2:
                 continue
-            TS.append([tstamp] + [n1, n2] + [weight])
+            contacts.append([tstamp] + [n1, n2] + [weight])
 
     fd.close()
 
@@ -39,4 +39,4 @@ def readRealFiles(filepath_edges, filepath_nodes):
 
     fd.close()
 
-    return TS, NS
+    return contacts, NS

@@ -8,7 +8,7 @@ def compute_output_paths(K,filepath_edges,filepath_nodes):
     
     print(filepath_nodes)
     
-    TS,NS = readRealFiles(filepath_edges,filepath_nodes)
+    contacts,NS = readRealFiles(filepath_edges,filepath_nodes)
     #TS contains a array of arrays of the transactions in the data. [[time,id1,id2]]
     #NS contains a array of arrays of the nodes and their report time in the input data. [[n1,time]]. Time might not be present
 
@@ -19,14 +19,14 @@ def compute_output_paths(K,filepath_edges,filepath_nodes):
         
     
 
-    sources, immuned, sinks, unreported = get_sinks_and_sources(TS,NS)
+    sources, immuned, sinks, unreported = get_sinks_and_sources(contacts,NS)
 
     #Sources: Dictionary of {nodeid,latest interactiontime before report} of reported nodes
     #sinks: Dictionary of {nodeid,latest interactiontime before report} of reported nodes
     #unreported: Dictionary of {nodeid, lastTime in interactions} of all nodes that have no reports
 
     print ("Todo: Update the weight data. Need to partially put this in the inputdata to be read.")
-    SP = shortestPath1(TS, sources, sinks, unreported)
+    SP = shortestPath1(contacts, sources, sinks, unreported)
     #SP holds the shortets paths between Source and Sink nodes.
     #[startOfPathNodeid][endOfPathNodeId] => (total weight of path,Last time of path from start to end,[path]). path is triples of (time of edge,startNodeId,endNodeId)
 

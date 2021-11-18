@@ -137,6 +137,8 @@ public class InfectionChainCalculator {
                 Log.printProgress("trivial component number: " + trivalComponentNumber + " is handled", 1, 1000);
                 continue;
             }
+            
+            
 
             writeComponentFiles(contactGraph, componentNodes, componentEdges, componentNumber);
             nodesHandled.addAll(componentNodes);
@@ -270,6 +272,8 @@ public class InfectionChainCalculator {
 
     private void executeProgram(int componentCount) {
 
+        //TODO: Speed up python. Likely need to make sure that it is not starting up over and over but batch processing.
+        
         //for every component we execute the python program and wait for it to complete before proceeding to not hog compute resources
         for (int i = 0; i < componentCount; i++) {
 

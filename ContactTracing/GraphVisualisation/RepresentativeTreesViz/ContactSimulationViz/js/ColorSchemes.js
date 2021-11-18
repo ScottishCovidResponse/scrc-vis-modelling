@@ -15,20 +15,20 @@ function getColorScheme(varType, values) {
         colorScheme = categoricalColorScheme;
 
         //get which string goes at which position
-        let topKValues = getTopKValues(values, 9);
+        let topKValues = getTopKValues(values, colorScheme.length - 1); //leave 1 color for the "other category"
         colorSchemeValues = topKValues;
 
         //make sure we only have colors for what we use
         let valueLength = topKValues.length
         colorScheme = colorScheme.slice(0, valueLength + 1)
 
-        //anything not in the top 9, gets shoved into the "other" cateogry
+        //anything not in the top values, gets shoved into the "other" cateogry
         colorSchemeValues[valueLength] = "Other";
     } else if (varType == "integer") {
         colorScheme = integerColorScheme;
 
         //calculate the upper bounds for the bins based on the numbers
-        let bins = calculateUpperboundsBins(values, 7);
+        let bins = calculateUpperboundsBins(values, integerColorScheme.length);
         colorSchemeValues = bins;
 
     } else if (varType == "None") {
@@ -51,7 +51,7 @@ function getIndexInColorScheme(value, attributeType, colorSchemeValues) {
         }
     } else if (attributeType == "integer") {
         //get the first value larger than x
-        const index = colorSchemeValues.findIndex(x => x > value)
+        const index = colorSchemeValues.findIndex(x => x >= value)
         return index;
     } else if (attributeType == "None") { //single color
         return 0;

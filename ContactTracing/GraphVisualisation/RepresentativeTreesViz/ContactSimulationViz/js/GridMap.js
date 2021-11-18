@@ -1,4 +1,4 @@
-let originDestinationMap = new Map();
+let odToSvgMap = new Map();
 
 
 function initGridMap(gridNames) {
@@ -37,7 +37,7 @@ function initGridMap(gridNames) {
                             const bottomSquareSvg = generateSquare(gridMapGrid, botX, botY, botCellWidth, botCellHeight, "bottomLevelGridCell");
 
                             const name = originName + "-" + destinationName;
-                            originDestinationMap.set(name, bottomSquareSvg);
+                            odToSvgMap.set(name, bottomSquareSvg);
                         }
                     }
                 }
@@ -57,6 +57,57 @@ function generateSquare(svg, x, y, width, height, className) {
         .attr("width", width)
         .attr("height", height)
         .attr("class", className)
+        .attr("fill", "lightgray"); //default color
 
     return square;
+}
+
+function updateOdMap(originDestinationName, color) {
+    odToSvgMap.get(originDestinationName).attr("fill", color)
+}
+
+function updateOdMapFromMap(originDestinationValueMap) {
+    const values = Array.from(originDestinationValueMap.values())
+
+    const minValue = Math.min(...values);
+    const maxValue = Math.max(...values);
+
+    const [colorScheme, colorSchemeValues] = getColorScheme("integer", values);
+
+
+    for (const [originDestination, value] of originDestinationValueMap.entries()) {
+        const colorIndex = getIndexInColorScheme(value, "integer", colorSchemeValues)
+        const color = colorScheme[colorIndex];
+        updateOdMap(originDestination, color);
+    }
+}
+
+/**
+ * Takes as input a number of d3 trees, and updates the the od-map based on the frequence 
+ * @param {*} trees 
+ */
+function updateODMapFromTrees(trees) {
+    let odCount = new Map();
+
+    for (const tree of trees) {
+        const links = tree.links;
+        for (const link of links) {
+            const sourceId = link.source.id;
+            const targetId = link.target.id;
+
+            const origin = getMetaDataValueFromId("location", sourceId);
+            const destination = getMetaDataValueFromId("location", targetId);
+
+            const name = origin + "-" + destination;
+
+
+            let count = 0;
+            if (odCount.has(name)) {
+                count = odCount.get(name);
+            }
+            count = count + 1;
+            odCount.set(name, count);
+        }
+    }
+    updateOdMap(odCount);
 }

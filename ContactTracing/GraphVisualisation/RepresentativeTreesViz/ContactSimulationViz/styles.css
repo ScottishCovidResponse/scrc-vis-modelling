@@ -362,7 +362,6 @@ Color legend
 .bottomLevelGridCell {
     stroke: black;
     stroke-width: 0.001;
-    fill: gray;
 }
 
 .topLevelGridCell {

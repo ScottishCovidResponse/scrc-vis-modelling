@@ -56,7 +56,7 @@ public class RealDataParser {
         try {
             System.out.println("TODO: Parse rom arguments");
 //            String inputFolderLocation = "./Data/RealData";
-            String inputFolderLocation = "E:/TTP/TTPData";
+            String inputFolderLocation = "E:/TTP/TTPDataPlus";
             String outputFileLocation = inputFolderLocation;
 
             int startTreeSize = 1;//calculate starting from trees of size 1

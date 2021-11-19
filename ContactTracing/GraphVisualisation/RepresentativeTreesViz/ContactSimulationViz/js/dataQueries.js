@@ -2,18 +2,18 @@
  * Preprocess the data to usefull datastructures
  */
 function preprocessData() {
-    for (let i = 0; i < repTreesData.length; i++) {
-        const repTree = repTreesData[i];
-        const treeId = repTree.id;
-        repTreeById.set(treeId, repTree);
+    // for (let i = 0; i < repTreesData.length; i++) {
+    //     const repTree = repTreesData[i];
+    //     const treeId = repTree.id;
+    //     repTreeById.set(treeId, repTree);
 
-        const nodes = getNodes(repTree);
-        for (let j = 0; j < nodes.length; j++) {
-            const repNode = nodes[j];
-            const repId = repNode.id;
-            repNodeById.set(repId, repNode);
-        }
-    }
+    //     const nodes = getNodes(repTree);
+    //     for (let j = 0; j < nodes.length; j++) {
+    //         const repNode = nodes[j];
+    //         const repId = repNode.id;
+    //         repNodeById.set(repId, repNode);
+    //     }
+    // }
 
 
     for (let i = 0; i < metaData.length; i++) {

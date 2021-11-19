@@ -63,7 +63,9 @@ function generateSquare(svg, x, y, width, height, className) {
 }
 
 function updateOdMap(originDestinationName, color) {
-    odToSvgMap.get(originDestinationName).attr("fill", color)
+    if (odToSvgMap.has(originDestinationName)) {
+        odToSvgMap.get(originDestinationName).attr("fill", color)
+    }
 }
 
 function updateOdMapFromMap(originDestinationValueMap) {
@@ -89,15 +91,17 @@ function updateOdMapFromMap(originDestinationValueMap) {
 function updateODMapFromTrees(trees) {
     let odCount = new Map();
 
-    for (const tree of trees) {
-        const links = tree.links;
-        for (const link of links) {
-            const sourceId = link.source.id;
-            const targetId = link.target.id;
 
-            const origin = getMetaDataValueFromId("location", sourceId);
-            const destination = getMetaDataValueFromId("location", targetId);
+    for (let tree of trees) {
+        const treeRoot = d3.hierarchy(tree);
+        const links = treeRoot.links();
+        for (let link of links) {
+            const originId = link.source.data.id;
+            const destinationid = link.target.data.id;
 
+            //TODO: Make location instead of attribute1
+            const origin = getMetaDataValueFromId("Location", originId);
+            const destination = getMetaDataValueFromId("Location", destinationid);
             const name = origin + "-" + destination;
 
 
@@ -109,5 +113,5 @@ function updateODMapFromTrees(trees) {
             odCount.set(name, count);
         }
     }
-    updateOdMap(odCount);
+    updateOdMapFromMap(odCount);
 }

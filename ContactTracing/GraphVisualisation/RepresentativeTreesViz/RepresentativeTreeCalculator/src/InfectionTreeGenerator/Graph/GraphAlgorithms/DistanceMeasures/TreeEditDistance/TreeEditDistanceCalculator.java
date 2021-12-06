@@ -48,8 +48,7 @@ public class TreeEditDistanceCalculator<N extends Node, E extends Edge> implemen
         TreeEditDistanceLPCplex lp = new TreeEditDistanceLPCplexPrioritizeDepth(t1, t2);
         int distance = lp.solve();
         TEDMapping<N, E> mapping = lp.getMapping();
-        tedMapping.put(new Pair(t1, t2), mapping);
-        tedMapping.put(new Pair(t2, t1), mapping.inverse());
+        addMapping(t1, t2, mapping);
 
         return distance;
     }
@@ -57,7 +56,16 @@ public class TreeEditDistanceCalculator<N extends Node, E extends Edge> implemen
     public void calculateMapping(Tree t1, Tree t2) {
         //automatically computes the mapping as well
         getTreeEditDistance(t1, t2);
+    }
 
+    /**
+     * Adds the specified mapping in a bidirectional fashion
+     * @param t1
+     * @param t2
+     */
+    public void addMapping(Tree t1, Tree t2, TEDMapping<N, E> mapping) {
+        tedMapping.put(new Pair(t1, t2), mapping);
+        tedMapping.put(new Pair(t2, t1), mapping.inverse());
     }
 
 }

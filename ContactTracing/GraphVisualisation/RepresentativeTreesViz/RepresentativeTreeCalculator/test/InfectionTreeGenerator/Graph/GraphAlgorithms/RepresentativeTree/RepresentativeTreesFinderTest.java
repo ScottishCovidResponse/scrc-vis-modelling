@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import org.junit.After;
@@ -97,6 +98,54 @@ public class RepresentativeTreesFinderTest {
 
     }
 
+    @Test
+    public void testCheckSingletonTrees() throws IOException {
+        Graph inputGraph = new Graph();
+        Node n1 = new Node(1);
+        Node n2 = new Node(2);
+        Node n3 = new Node(3);
+        Node n4 = new Node(4);
+        Node n5 = new Node(5);
+        Node n6 = new Node(6);
+        Edge e12 = new Edge(n1,n2);
+        inputGraph.addNodes(n1, n2, n3, n4, n5, n6);
+        inputGraph.addEdges(e12);
+        RepresentativeTreesFinder instance = new RepresentativeTreesFinder();
+
+        TreeEditDistanceCalculator tedC = new TreeEditDistanceCalculator();
+
+        ForestFinder ff = new ForestFinder(inputGraph, Tree.class);
+        Set<Tree> forest = ff.getForest();
+
+        List<RepresentativeTree> result = instance.getAndWriteRepresentativeTreeData(forest, 0, 100, tedC, outputPrefix);
+
+        assertEquals(2, result.size());
+
+        //check identical tree mapped correct
+        for (RepresentativeTree rt : result) {
+            if (rt.getNodes().size() == 1) {
+                assertEquals(instance.MAXEDITDISTANCE, rt.maxEditDistance);
+                Collection<RepresentativeNode> nodes = (Collection<RepresentativeNode>) rt.getNodes();
+                for (RepresentativeNode rn : nodes) {
+                    List<Node> representedNodes = rn.getRepresentNodes(0);
+                    assertEquals(4, representedNodes.size());
+                }
+                                    
+            }
+
+            if (rt.getNodes().size() == 2) {
+                //both nodes should only represent one node
+                assertEquals(instance.MAXEDITDISTANCE, rt.maxEditDistance);
+                Collection<RepresentativeNode> nodes = (Collection<RepresentativeNode>) rt.getNodes();
+                for (RepresentativeNode rn : nodes) {
+                    List<Node> representedNodes = rn.getRepresentNodes(0);
+                    assertEquals(1, representedNodes.size());
+
+                }
+            }
+        }
+    }
+
     /**
      * Test of getAndWriteRepresentativeTreeData method, of class
      * RepresentativeTreesFinder.
@@ -108,7 +157,8 @@ public class RepresentativeTreesFinderTest {
         instance = new RepresentativeTreesFinder();
         TreeEditDistanceCalculator tedC = new TreeEditDistanceCalculator();
 
-        ForestFinder ff = new ForestFinder(inputGraph, Tree.class);
+        ForestFinder ff = new ForestFinder(inputGraph, Tree.class
+        );
         Set<Tree> forest = ff.getForest();
 
         List<RepresentativeTree> result = instance.getAndWriteRepresentativeTreeData(forest, 0, 100, tedC, outputPrefix);
@@ -291,7 +341,8 @@ public class RepresentativeTreesFinderTest {
         //read the file for the trees of size 2
         JsonReader reader = new JsonReader(new FileReader(filePath + "2.json"));
         Gson gson = new Gson();
-        RepresentativeNodeJson[] jsonTreeList = gson.fromJson(reader, RepresentativeNodeJson[].class);
+        RepresentativeNodeJson[] jsonTreeList = gson.fromJson(reader, RepresentativeNodeJson[].class
+        );
 
         for (RepresentativeNodeJson rnj : jsonTreeList) {
             if (rnj.id == 7) {
@@ -310,7 +361,8 @@ public class RepresentativeTreesFinderTest {
         //read for trees of size 3
         reader = new JsonReader(new FileReader(filePath + "3.json"));
         gson = new Gson();
-        jsonTreeList = gson.fromJson(reader, RepresentativeNodeJson[].class);
+        jsonTreeList = gson.fromJson(reader, RepresentativeNodeJson[].class
+        );
         for (RepresentativeNodeJson rnj : jsonTreeList) {
             if (rnj.id == 1) {
                 rnj1 = rnj;

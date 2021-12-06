@@ -12,6 +12,7 @@ import InfectionTreeGenerator.Graph.Graph;
 import InfectionTreeGenerator.Graph.GraphAlgorithms.ForestFinder;
 import InfectionTreeGenerator.Graph.GraphAlgorithms.DominatingSetCalculator;
 import InfectionTreeGenerator.Graph.GraphAlgorithms.DistanceMeasures.TreeDistanceMeasure;
+import InfectionTreeGenerator.Graph.GraphAlgorithms.DistanceMeasures.TreeEditDistance.TEDMapping;
 import InfectionTreeGenerator.Graph.GraphAlgorithms.DistanceMeasures.TreeEditDistance.TreeEditDistanceCalculator;
 import InfectionTreeGenerator.Graph.Node;
 import InfectionTreeGenerator.Graph.Tree;
@@ -32,6 +33,19 @@ public class RepresentativeTreesFinder {
 
     public final int MAXEDITDISTANCE = 100;
 
+    /**
+     * Calculates and writes to file representative trees based on the specified
+     * distance measure. Trees of size 1 are always represented by a single
+     * representative tree
+     *
+     * @param forest
+     * @param startSize
+     * @param endSize
+     * @param dm
+     * @param outputFilePrefix
+     * @return
+     * @throws IOException
+     */
     public List<RepresentativeTree> getAndWriteRepresentativeTreeData(Set<Tree> forest, int startSize, int endSize, TreeDistanceMeasure dm, String outputFilePrefix) throws IOException {
 
         //get the forest
@@ -63,13 +77,16 @@ public class RepresentativeTreesFinder {
             }
 
             List<Tree> trees = treesBySizeMap.get(size);
-
-            Log.printProgress("Calculating for " + trees.size() + " trees with " + size + "nodes.");
-
-            //calculate the representative trees
-            Collection<RepresentativeTree> repTrees = calculateRepresentativeTrees(trees, dm);
+            Collection<RepresentativeTree> repTrees;
+            if (size == 1) {
+                System.out.println("Skipping " + trees.size() + " trivial cases");
+                repTrees = calculateTrivialCases(trees);
+            } else {
+                Log.printProgress("Calculating for " + trees.size() + " trees with " + size + "nodes.");
+                //calculate the representative trees
+                repTrees = calculateRepresentativeTrees(trees, dm);
+            }
             allRepTrees.addAll(repTrees);
-
             //write the representativeTrees
             GraphWriter tw = new GraphWriter();
             tw.writeRepresentativeTrees(outputFilePrefix + size + ".json", repTrees);
@@ -130,9 +147,7 @@ public class RepresentativeTreesFinder {
             }
             currentDsIds = dsTrimmed;
         }
-
         return repTrees.values();
-
     }
 
     private Graph makeWeightedGraph(List<Tree> trees, TreeDistanceMeasure tdm) {
@@ -264,4 +279,35 @@ public class RepresentativeTreesFinder {
         return null;
     }
 
+    /**
+     * Calculates trees that always have the same structure (size 1 and 2), and
+     * represents them by a single tree.
+     *
+     * @param trees
+     * @return
+     */
+    private Collection<RepresentativeTree> calculateTrivialCases(List<Tree> trees) {
+        ArrayList<RepresentativeTree> repTrees = new ArrayList();
+        if (trees.isEmpty()) {
+            return repTrees;
+        }
+        //all trees will be represented by this tree
+        RepresentativeTree repTree = new RepresentativeTree(trees.get(0));
+
+        //add the mappings in the tedC.
+        //TODO: Can be optimized further if needed by not calculating the LP at all.
+        TreeEditDistanceCalculator tedC = new TreeEditDistanceCalculator();
+        for (Tree tm : trees) {
+            if (!repTree.treesAlreadyMapped.contains(tm)) {//not mapped yet, so mapping isn't stored yet
+                tedC.calculateMapping(repTree.originalTree, tm);
+            }
+        }
+        //add it to distance 0 regardless of the distance so that all trees always map to repTree
+        repTree.addToMapping(0, trees, tedC);
+        repTree.maxEditDistance = MAXEDITDISTANCE;
+        
+        repTrees.add(repTree);
+
+        return repTrees;
+    }
 }

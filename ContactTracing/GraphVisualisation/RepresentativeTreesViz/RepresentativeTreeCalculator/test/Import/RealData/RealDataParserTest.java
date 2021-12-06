@@ -58,8 +58,9 @@ public class RealDataParserTest {
 
         int startTreeSize = 1;//calculate starting from trees of size 1
         int endTreeSize = 2000; //stop calculating for trees of size 2000
+        int timeWindowSize = 1;
 
-        RealDataParser instance = new RealDataParser(inputFolderLocation, outputFileLocation, startTreeSize, endTreeSize);
+        RealDataParser instance = new RealDataParser(inputFolderLocation, outputFileLocation, startTreeSize, endTreeSize, timeWindowSize);
         instance.parseData(false);
 
         //verify that the json is correct. Does not care about order of objects

@@ -108,7 +108,7 @@ public class DataToJsonTree {
         Set<Tree> forest = ff.getForest();
 
         tw.writeForest(outputFileLocation + "/AllTrees.json", forest);
-        TreeDistanceMeasure tdm = new RtDistanceMeasure(100, 1);
+        TreeDistanceMeasure tdm = new RtDistanceMeasure(1);
         RepresentativeTreesFinder rgf = new RepresentativeTreesFinder();
         rgf.getAndWriteRepresentativeTreeData(forest, startTreeSize, endTreeSize, tdm, outputFileLocation + "/ReptreesRTDistance/");
     }

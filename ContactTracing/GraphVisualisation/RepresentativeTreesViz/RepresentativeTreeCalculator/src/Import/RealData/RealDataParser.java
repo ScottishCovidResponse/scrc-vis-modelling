@@ -62,7 +62,9 @@ public class RealDataParser {
             int startTreeSize = 1;//calculate starting from trees of size 1
             int endTreeSize = 2000; //stop calculating for trees of size 2000
 
-            RealDataParser rdp = new RealDataParser(inputFolderLocation, outputFileLocation, startTreeSize, endTreeSize);
+            int timeWindowSize = 60 * 60 * 24;//Time window of 1 day
+
+            RealDataParser rdp = new RealDataParser(inputFolderLocation, outputFileLocation, startTreeSize, endTreeSize, timeWindowSize);
             rdp.parseData(true);
 //            rdp.parseTreeData(outputFileLocation + "/NodesAndMeta.json", outputFileLocation + "/AllTrees.json");
         } catch (IOException ex) {
@@ -76,12 +78,14 @@ public class RealDataParser {
     final private String outputFileLocation;
 
     int startTreeSize, endTreeSize;
+    int timeWindowSize;
 
-    protected RealDataParser(String inputFolderLocation, String outputFileLocation, int startTreeSize, int endTreeSize) throws IOException {
+    protected RealDataParser(String inputFolderLocation, String outputFileLocation, int startTreeSize, int endTreeSize, int timeWindowSize) throws IOException {
         this.inputFolderLocation = inputFolderLocation;
         this.outputFileLocation = outputFileLocation;
         this.startTreeSize = startTreeSize;
         this.endTreeSize = endTreeSize;
+        this.timeWindowSize = timeWindowSize;
     }
 
     public void parseData(boolean chainsAlreadyGenerated) throws IOException {
@@ -94,7 +98,6 @@ public class RealDataParser {
 
         cg.printStatistics();
 
-
 //        addContactsAmountToMetadata(cg);//add the amount of contacts to the metadata?
         Log.printProgress("Calculate most likely infection chain");
         InfectionChainCalculator icc = new InfectionChainCalculator(cg, inputFolderLocation);
@@ -102,7 +105,6 @@ public class RealDataParser {
 //        addSourceIdToMetaData(cg, ig);
 
         ig.printStatistics();
-        
 
         //write the metadata of the nodes that are infected to a json file
         GraphWriter gw = new GraphWriter();
@@ -130,7 +132,7 @@ public class RealDataParser {
         File f = new File(outputFileLocation + "/ReptreesRTDistance");
         f.mkdir();
 
-        TreeDistanceMeasure tdm = new RtDistanceMeasure(100, 1);
+        TreeDistanceMeasure tdm = new RtDistanceMeasure(timeWindowSize);
         RepresentativeTreesFinder rgf = new RepresentativeTreesFinder();
         rgf.getAndWriteRepresentativeTreeData(forest, startTreeSize, endTreeSize, tdm, outputFileLocation + "/ReptreesRTDistance/");
 
@@ -157,9 +159,8 @@ public class RealDataParser {
     private void printForestStatistics(Set<Tree> forest) {
         int nodes = 0;
         int edges = 0;
-        
-        for(Tree t : forest)
-        {
+
+        for (Tree t : forest) {
             nodes += t.getNodes().size();
             edges += t.getEdges().size();
         }

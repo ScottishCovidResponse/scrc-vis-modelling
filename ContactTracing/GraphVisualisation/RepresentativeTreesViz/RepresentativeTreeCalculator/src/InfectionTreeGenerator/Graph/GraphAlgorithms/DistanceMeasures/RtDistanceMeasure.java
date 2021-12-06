@@ -19,16 +19,12 @@ import java.util.Set;
 public class RtDistanceMeasure implements TreeDistanceMeasure {
 
     /**
-     * How many timewindows we have. Note that all trees are anchored at 0.
-     */
-    int totalTimeWindows;
-    /**
-     * How many timesteps we take in a single window. Note that all trees are anchored at 0.
+     * How many timesteps we take in a single window. Note that all trees are
+     * anchored at 0.
      */
     int timeWindowSize;
-    
-    public RtDistanceMeasure(int totalTimeWindows, int timeWindowSize) {
-        this.totalTimeWindows = totalTimeWindows;
+
+    public RtDistanceMeasure(int timeWindowSize) {
         this.timeWindowSize = timeWindowSize;
     }
 
@@ -37,12 +33,19 @@ public class RtDistanceMeasure implements TreeDistanceMeasure {
         Double[] rtT1 = getRtValuesPerStep(t1);
         Double[] rtT2 = getRtValuesPerStep(t2);
 
-        assert (rtT1.length == rtT2.length);
-        assert (rtT1.length == totalTimeWindows);
+        int totalTimeWindows = Math.max(rtT1.length, rtT2.length);
 
         double absoluteDiff = 0;
         for (int i = 0; i < totalTimeWindows; i++) {
-            absoluteDiff += Math.abs(rtT1[i] - rtT2[i]);
+            double rtT1Val = 0;
+            double rtT2Val = 0;
+            if (i < rtT1.length) {//still has a value
+                rtT1Val = rtT1[i];
+            }
+            if (i < rtT2.length) {//still has a value
+                rtT1Val = rtT2[i];
+            }
+            absoluteDiff += Math.abs(rtT1Val - rtT2Val);
         }
         return absoluteDiff;
     }
@@ -58,6 +61,8 @@ public class RtDistanceMeasure implements TreeDistanceMeasure {
     }
 
     protected Double[] getRtValuesPerStep(Tree<InfectionNode, InfectionEdge> t) {
+
+        int totalTimeWindows = getTotalTimeWindows(t);
 
         Double[] rtValues = new Double[totalTimeWindows];
 
@@ -100,6 +105,30 @@ public class RtDistanceMeasure implements TreeDistanceMeasure {
             }
         }
         return newINCount;
+    }
+
+    protected int getTotalTimeWindows(Tree<InfectionNode, InfectionEdge> t) {
+
+        double minExposedTime = Double.MAX_VALUE;
+        double maxExposedTime = Double.MIN_VALUE;
+
+        Collection<InfectionNode> nodes = (Collection<InfectionNode>) t.getNodes();
+
+        for (InfectionNode iN : nodes) {
+            minExposedTime = Math.min(minExposedTime, iN.exposedTime);
+            maxExposedTime = Math.max(maxExposedTime, iN.exposedTime);
+        }
+
+        double range = maxExposedTime - minExposedTime;
+        if (maxExposedTime == minExposedTime) {
+            range = 0.01;//avoid divide by 0
+        }
+
+        int timeWindowsRequired = (int) Math.ceil(range / timeWindowSize);
+        if (timeWindowsRequired == (range / timeWindowSize)) {
+            timeWindowsRequired++;//Need to include the last number as well
+        }
+        return timeWindowsRequired;
     }
 
 }

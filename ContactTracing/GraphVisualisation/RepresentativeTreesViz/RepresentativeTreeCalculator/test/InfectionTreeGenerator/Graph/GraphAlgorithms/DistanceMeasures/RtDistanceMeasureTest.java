@@ -42,23 +42,28 @@ public class RtDistanceMeasureTest {
         InfectionNode n2 = new InfectionNode(2, 3);
         InfectionNode n3 = new InfectionNode(3, 4);
         InfectionNode n4 = new InfectionNode(4, 4);
+        InfectionNode n5 = new InfectionNode(5, 7);
+
         InfectionEdge e12 = new InfectionEdge(n1, n2, 3);
         InfectionEdge e23 = new InfectionEdge(n2, n3, 4);
         InfectionEdge e24 = new InfectionEdge(n2, n4, 4);
-        t1.addNodes(n1, n2, n3, n4);
-        t1.addEdges(e12, e23, e24);
+        InfectionEdge e25 = new InfectionEdge(n2, n5, 7);
+        t1.addNodes(n1, n2, n3, n4, n5);
+        t1.addEdges(e12, e23, e24, e25);
 
-        InfectionNode n5 = new InfectionNode(5, 1);
-        InfectionNode n6 = new InfectionNode(6, 2);
-        InfectionNode n7 = new InfectionNode(7, 3);
-        InfectionNode n8 = new InfectionNode(8, 4);
-        InfectionNode n9 = new InfectionNode(9, 5);
-        InfectionEdge e56 = new InfectionEdge(n5, n6, 2);
-        InfectionEdge e57 = new InfectionEdge(n5, n7, 3);
-        InfectionEdge e59 = new InfectionEdge(n5, n9, 5);
-        InfectionEdge e67 = new InfectionEdge(n6, n8, 4);
-        t2.addNodes(n5, n6, n7, n8, n9);
-        t2.addEdges(e56, e57, e59, e67);
+        InfectionNode n6 = new InfectionNode(6, 1);
+        InfectionNode n7 = new InfectionNode(7, 2);
+        InfectionNode n8 = new InfectionNode(8, 3);
+        InfectionNode n9 = new InfectionNode(9, 4);
+        InfectionNode n10 = new InfectionNode(10, 5);
+
+        InfectionEdge e67 = new InfectionEdge(n6, n7, 2);
+        InfectionEdge e68 = new InfectionEdge(n6, n8, 3);
+        InfectionEdge e69 = new InfectionEdge(n6, n9, 4);
+        InfectionEdge e710 = new InfectionEdge(n7, n10, 5);
+
+        t2.addNodes(n6, n7, n8, n9, n10);
+        t2.addEdges(e67, e68, e69, e710);
     }
 
     @After
@@ -72,11 +77,10 @@ public class RtDistanceMeasureTest {
     public void testGetDistance() {
         System.out.println("getDistance");
 
-        int totalTimeWindows = 3;
         int timeWindowSize = 2;
-        RtDistanceMeasure instance = new RtDistanceMeasure(totalTimeWindows, timeWindowSize);
+        RtDistanceMeasure instance = new RtDistanceMeasure(timeWindowSize);
 
-        double expResult = 1.0 + 2.0 / 3.0;
+        double expResult = 1 + 1;
         double result = instance.getDistance(t1, t2);
         assertEquals(expResult, result, 0.01);
     }
@@ -87,18 +91,17 @@ public class RtDistanceMeasureTest {
     @Test
     public void testGetRtValues() {
         System.out.println("getRtValues");
-        int totalTimeWindows = 3;
         int timeWindowSize = 2;
-        RtDistanceMeasure instance = new RtDistanceMeasure(totalTimeWindows, timeWindowSize);
+        RtDistanceMeasure instance = new RtDistanceMeasure(timeWindowSize);
 
-        
-        Double[] expResult = new Double[]{1.0, 2.0 / 3.0, 0.0};
+        Double[] expResult = new Double[]{1.0 / 1.0, 3.0 / 3.0, 0.0, 0.0};
         Double[] result = instance.getRtValuesPerStep(t1);
         assertEquals(expResult[0], result[0], 0.01);
         assertEquals(expResult[1], result[1], 0.01);
         assertEquals(expResult[2], result[2], 0.01);
+        assertEquals(expResult[3], result[3], 0.01);
 
-        expResult = new Double[]{2.0, 0.0, 0.0};
+        expResult = new Double[]{4.0 / 2.0, 0.0, 0.0};
         result = instance.getRtValuesPerStep(t2);
         assertEquals(expResult[0], result[0], 0.01);
         assertEquals(expResult[1], result[1], 0.01);

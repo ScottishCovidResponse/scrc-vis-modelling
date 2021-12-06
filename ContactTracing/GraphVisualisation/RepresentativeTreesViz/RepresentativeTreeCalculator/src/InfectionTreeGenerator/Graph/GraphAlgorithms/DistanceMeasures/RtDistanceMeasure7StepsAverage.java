@@ -18,8 +18,8 @@ import java.util.Set;
  */
 public class RtDistanceMeasure7StepsAverage extends RtDistanceMeasure implements TreeDistanceMeasure {
 
-    public RtDistanceMeasure7StepsAverage(int totalTimeWindows, int timeWindowSize) {
-        super(totalTimeWindows, timeWindowSize);
+    public RtDistanceMeasure7StepsAverage(int timeWindowSize) {
+        super(timeWindowSize);
     }
 
     @Override

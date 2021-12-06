@@ -78,7 +78,7 @@ public class RepresentativeTreesFinder {
 
             List<Tree> trees = treesBySizeMap.get(size);
             Collection<RepresentativeTree> repTrees;
-            if (size == 1) {
+            if (size == 1 || size == 2) {
                 System.out.println("Skipping " + trees.size() + " trivial cases");
                 repTrees = calculateTrivialCases(trees);
             } else {
@@ -280,8 +280,8 @@ public class RepresentativeTreesFinder {
     }
 
     /**
-     * Calculates trees that always have the same structure (size 1 and 2), and
-     * represents them by a single tree.
+     * Calculates representative trees that always have the same structure (all
+     * of size 1 and 2), and represents them by a single tree.
      *
      * @param trees
      * @return
@@ -305,7 +305,7 @@ public class RepresentativeTreesFinder {
         //add it to distance 0 regardless of the distance so that all trees always map to repTree
         repTree.addToMapping(0, trees, tedC);
         repTree.maxEditDistance = MAXEDITDISTANCE;
-        
+
         repTrees.add(repTree);
 
         return repTrees;

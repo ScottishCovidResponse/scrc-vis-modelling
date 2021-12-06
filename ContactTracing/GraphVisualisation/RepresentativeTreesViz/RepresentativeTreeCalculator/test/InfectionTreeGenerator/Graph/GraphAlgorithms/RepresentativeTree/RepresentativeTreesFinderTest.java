@@ -107,9 +107,16 @@ public class RepresentativeTreesFinderTest {
         Node n4 = new Node(4);
         Node n5 = new Node(5);
         Node n6 = new Node(6);
-        Edge e12 = new Edge(n1,n2);
-        inputGraph.addNodes(n1, n2, n3, n4, n5, n6);
-        inputGraph.addEdges(e12);
+        Node n7 = new Node(7);
+        Node n8 = new Node(8);
+        Node n9 = new Node(9);
+        Node n10 = new Node(10);
+
+        Edge e12 = new Edge(n1, n2);
+        Edge e34 = new Edge(n3, n4);
+        Edge e56 = new Edge(n5, n6);
+        inputGraph.addNodes(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10);
+        inputGraph.addEdges(e12, e34,e56);
         RepresentativeTreesFinder instance = new RepresentativeTreesFinder();
 
         TreeEditDistanceCalculator tedC = new TreeEditDistanceCalculator();
@@ -130,7 +137,7 @@ public class RepresentativeTreesFinderTest {
                     List<Node> representedNodes = rn.getRepresentNodes(0);
                     assertEquals(4, representedNodes.size());
                 }
-                                    
+
             }
 
             if (rt.getNodes().size() == 2) {
@@ -139,8 +146,7 @@ public class RepresentativeTreesFinderTest {
                 Collection<RepresentativeNode> nodes = (Collection<RepresentativeNode>) rt.getNodes();
                 for (RepresentativeNode rn : nodes) {
                     List<Node> representedNodes = rn.getRepresentNodes(0);
-                    assertEquals(1, representedNodes.size());
-
+                    assertEquals(3, representedNodes.size());
                 }
             }
         }

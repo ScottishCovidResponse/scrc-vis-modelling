@@ -10,6 +10,7 @@ import InfectionTreeGenerator.Graph.Edge;
 import InfectionTreeGenerator.Graph.Graph;
 import InfectionTreeGenerator.Graph.Node;
 import InfectionTreeGenerator.Graph.Tree;
+import java.util.Arrays;
 import java.util.Set;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -24,13 +25,6 @@ import static org.junit.Assert.*;
  */
 public class ForestFinderTest {
 
-    Graph inputGraph;
-
-    Node n1, n2, n3, n4, n5, n6, n7;
-    Edge e12, e13, e24, e56;
-
-    ForestFinder instance;
-
     public ForestFinderTest() {
     }
 
@@ -44,29 +38,63 @@ public class ForestFinderTest {
 
     @Before
     public void setUp() {
-        inputGraph = new Graph();
-        n1 = new Node(1);
-        n2 = new Node(2);
-        n3 = new Node(3);
-        n4 = new Node(4);
-        e12 = new Edge(n1, n2);
-        e13 = new Edge(n1, n3);
-        e24 = new Edge(n2, n4);
 
-        n5 = new Node(5);
-        n6 = new Node(6);
-        e56 = new Edge(n5, n6);
-
-        n7 = new Node(7);
-
-        inputGraph.addNodes(n1, n2, n3, n4, n5, n6, n7);
-        inputGraph.addEdges(e12, e13, e24, e56);
-
-        instance = new ForestFinder(inputGraph, Tree.class);
     }
 
     @After
     public void tearDown() {
+    }
+
+    @Test
+    public void testSingletonsAndDuplicates() {
+        Graph inputGraph = new Graph();
+        Node n0 = new Node(0);
+        Node n1 = new Node(1);
+        Node n2 = new Node(2);
+
+        Node n3 = new Node(3);
+        Node n4 = new Node(4);
+        Edge e34 = new Edge(n3, n4);
+
+        Node n5 = new Node(5);
+        Node n6 = new Node(6);
+        Edge e56 = new Edge(n5, n6);
+
+        Node n7 = new Node(7);
+        Node n8 = new Node(8);
+        Edge e78 = new Edge(n7, n8);
+
+        inputGraph.addNodes(n0, n1, n2, n3, n4, n5, n6, n7, n8);
+        inputGraph.addEdges(e34, e56, e78);
+
+        ForestFinder instance = new ForestFinder(inputGraph, Tree.class);
+        Set<Tree> trees = instance.getForest();
+
+        //correct size
+        assertEquals(6, trees.size());
+
+        boolean[] nodesFound = new boolean[9];
+        Arrays.fill(nodesFound, false);
+
+        for (Tree t : trees) {
+            for (int i = 0; i < 9; i++) {
+                if (t.hasNodeWithId(i)) {//only find each nodes once
+                    assertFalse(nodesFound[i]);
+                    nodesFound[i] = true;
+                }
+                //trees are size 2 or 3
+                if (t.hasNodeWithId(3) || t.hasNodeWithId(5) || t.hasNodeWithId(7)) {
+                    assertTrue(t.hasNodeWithId(4) || t.hasNodeWithId(6) || t.hasNodeWithId(8));//must have one of the other
+                    assertEquals(2, t.getNodes().size());
+                } else {
+                    assertEquals(1, t.getNodes().size());
+                }
+            }
+        }
+        //all nodes found
+        for (boolean found : nodesFound) {
+            assertTrue(found);
+        }
     }
 
     /**
@@ -75,6 +103,25 @@ public class ForestFinderTest {
     @Test
     public void testGetForest() {
         System.out.println("getForest");
+        Graph inputGraph = new Graph();
+        Node n1 = new Node(1);
+        Node n2 = new Node(2);
+        Node n3 = new Node(3);
+        Node n4 = new Node(4);
+        Edge e12 = new Edge(n1, n2);
+        Edge e13 = new Edge(n1, n3);
+        Edge e24 = new Edge(n2, n4);
+
+        Node n5 = new Node(5);
+        Node n6 = new Node(6);
+        Edge e56 = new Edge(n5, n6);
+
+        Node n7 = new Node(7);
+
+        inputGraph.addNodes(n1, n2, n3, n4, n5, n6, n7);
+        inputGraph.addEdges(e12, e13, e24, e56);
+
+        ForestFinder instance = new ForestFinder(inputGraph, Tree.class);
         Set<Tree> trees = instance.getForest();
 
         //correct size

@@ -33,6 +33,8 @@ public class ContactNode extends Node<ContactEdge> {
      * Debug purposes only
      */
     public String md5Hash;
+    
+    public String location;
 
     public ContactNode(int id) {
         super(id);

@@ -8,6 +8,7 @@ package InfectionTreeGenerator.Graph.ContactData;
 import Import.RealData.MetaData;
 import InfectionTreeGenerator.Graph.Graph;
 import InfectionTreeGenerator.Graph.GraphFactory;
+import InfectionTreeGenerator.Graph.Infection.InfectionGraph;
 import InfectionTreeGenerator.Graph.Infection.InfectionNode;
 import Utility.Pair;
 import java.util.Collection;
@@ -17,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Temporal graph of contacts.
@@ -242,5 +244,18 @@ public class ContactGraph {
 
     }
 
-    
+    public List<ContactNode> getContactNodesInInfectionGraph(ContactGraph cg, InfectionGraph ig) {
+        List<ContactNode> filteredNodes = cg.getNodes().stream()
+                .filter((cn) -> ig.hasNodeWithId(cn.id))//keep only infected nodes
+                .collect(Collectors.toList());
+        return filteredNodes;
+    }
+
+    public void printStatistics() {
+        System.out.println(getNodes().size() + " nodes with positive tests");
+        System.out.println(getEdges().size() + " edges between nodes with positive tests");
+
+        System.out.println(edgeMapping.keySet().size() + " unique edges between nodes");
+    }
+
 }

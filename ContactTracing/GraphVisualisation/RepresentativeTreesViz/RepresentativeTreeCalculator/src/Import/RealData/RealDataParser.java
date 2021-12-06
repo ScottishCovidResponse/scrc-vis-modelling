@@ -55,15 +55,16 @@ public class RealDataParser {
     public static void main(String[] args) {
         try {
             System.out.println("TODO: Parse rom arguments");
-//            String inputFolderLocation = "./Data/RealData";
             String inputFolderLocation = "E:/TTP/TTPDataPlus";
+//            String inputFolderLocation = "E:/TTP/ContactTTPSimulationViz/data/TTPData";
             String outputFileLocation = inputFolderLocation;
 
             int startTreeSize = 1;//calculate starting from trees of size 1
             int endTreeSize = 2000; //stop calculating for trees of size 2000
 
             RealDataParser rdp = new RealDataParser(inputFolderLocation, outputFileLocation, startTreeSize, endTreeSize);
-            rdp.parseData();
+            rdp.parseData(true);
+//            rdp.parseTreeData(outputFileLocation + "/NodesAndMeta.json", outputFileLocation + "/AllTrees.json");
         } catch (IOException ex) {
             System.out.println("Invalid input or outputFileLocation");
             Logger.getLogger(DataToJsonTree.class.getName()).log(Level.SEVERE, null, ex);
@@ -83,31 +84,32 @@ public class RealDataParser {
         this.endTreeSize = endTreeSize;
     }
 
-    public void parseData() throws IOException {
+    public void parseData(boolean chainsAlreadyGenerated) throws IOException {
         System.out.println("Working on data from: " + inputFolderLocation);
-        //read data
 
         //gets the structure of the graph and the associated metadata
-//        ContactGraphParser gp = new ContactGraphParser(inputFolderLocation + "/TTPTestContacts.csv", inputFolderLocation + "/TTPTestExposures.csv");
         ContactGraphParser gp = new ContactGraphParser(inputFolderLocation + "/Wales_TTP_data_cases_contacts.csv", inputFolderLocation + "/Wales_TTP_data_exposures.csv");
 //        gp.addMetaDataFiles(inputFolderLocation + "/NodeData.csv", inputFolderLocation + "/ContactEdgeData.csv");
         ContactGraph cg = gp.constructGraph();
 
-        System.out.println(cg.getNodes().size() + " nodes with positive tests");
-        System.out.println(cg.getEdges().size() + " edges between nodes with positive tests");
+        cg.printStatistics();
+
 
 //        addContactsAmountToMetadata(cg);//add the amount of contacts to the metadata?
         Log.printProgress("Calculate most likely infection chain");
         InfectionChainCalculator icc = new InfectionChainCalculator(cg, inputFolderLocation);
-        InfectionGraph ig = icc.calculateInfectionGraph();
-        addSourceIdToMetaData(cg, ig);
+        InfectionGraph ig = icc.calculateInfectionGraph(!chainsAlreadyGenerated);//if chains are already geneerated, no need to execute the program again. Just read files
+//        addSourceIdToMetaData(cg, ig);
+
+        ig.printStatistics();
+        
 
         //write the metadata of the nodes that are infected to a json file
         GraphWriter gw = new GraphWriter();
-        List<ContactNode> exposedContactNodes = getContactNodesInInfectionGraph(cg, ig);
+        List<ContactNode> exposedContactNodes = cg.getContactNodesInInfectionGraph(cg, ig);
         gw.writeContactData(outputFileLocation + "/NodesAndMeta.json", exposedContactNodes);
+        //        tw.writeInfectionGraph(outputFileLocation + "/NodesAndMeta.json", ig);
 
-//        tw.writeInfectionGraph(outputFileLocation + "/NodesAndMeta.json", ig);
         Log.printProgress("Finding the forest");
         ForestFinder ff = new ForestFinder(ig, Tree.class);
         Set<Tree> forest = ff.getForest();
@@ -115,11 +117,15 @@ public class RealDataParser {
         //write the forest to a file. Note that AllTrees only contains infected nodes
         gw.writeForest(outputFileLocation + "/AllTrees.json", forest);
 
+        printForestStatistics(forest);
+
+        calculateRepTrees(forest);
+    }
+
+    public void calculateRepTrees(Set<Tree> forest) throws IOException {
+
         System.out.println("TODO: Set time windows automatically");
 
-        //TODO: Spit out json files on infectionmap with extra field: Metadata with a hashmap.
-        //Precalculated values that are required such as exposedtime, policies, and sourceInfection id in main, rest in metadata
-        //Precalculated: {AmountOfUniqueContacts,SourceInfectionId,policies:[],
         //make output dir for for distances
         File f = new File(outputFileLocation + "ReptreesRTDistance/");
         f.mkdir();
@@ -127,29 +133,39 @@ public class RealDataParser {
         TreeDistanceMeasure tdm = new RtDistanceMeasure(100, 1);
         RepresentativeTreesFinder rgf = new RepresentativeTreesFinder();
         rgf.getAndWriteRepresentativeTreeData(forest, startTreeSize, endTreeSize, tdm, outputFileLocation + "/ReptreesRTDistance/");
-//        
+
         //merge all the trees together in a single file.
         Log.printProgress("Merging trees");
         JsonMerger merger = new JsonMerger(outputFileLocation + "/ReptreesRTDistance/", outputFileLocation + "/RepTrees.json");
         merger.mergeTrees();
         merger.cleanup();//delete the temporary output folder.
-
     }
 
+//    public void parseTreeData(String forestLocation, String nodeMetaDataLocation) throws IOException {
+//
+//        ForestReader fr = new ForestReader();
+//        Set<Tree> forest = fr.readForest(forestLocation, nodeMetaDataLocation);
+//        calculateRepTrees(forest);
+//    }
     private void addSourceIdToMetaData(ContactGraph cg, InfectionGraph ig) {
-
         for (InfectionNode in : ig.getNodes()) {
             ContactNode cn = cg.getNode(in.id);
             cn.sourceInfectionId = in.sourceInfectionId;
         }
-
     }
 
-    private List<ContactNode> getContactNodesInInfectionGraph(ContactGraph cg, InfectionGraph ig) {
-        List<ContactNode> filteredNodes = cg.getNodes().stream()
-                .filter((cn) -> ig.hasNodeWithId(cn.id))//keep only infected nodes
-                .collect(Collectors.toList());
-        return filteredNodes;
+    private void printForestStatistics(Set<Tree> forest) {
+        int nodes = 0;
+        int edges = 0;
+        
+        for(Tree t : forest)
+        {
+            nodes += t.getNodes().size();
+            edges += t.getEdges().size();
+        }
+        System.out.println(forest.size() + " trees.");
+        System.out.println(nodes + " nodes in total in the trees.");
+        System.out.println(edges + " edges in total in the trees.");
     }
 
 }

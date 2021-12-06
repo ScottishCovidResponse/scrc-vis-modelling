@@ -11,6 +11,7 @@ import InfectionTreeGenerator.Graph.ContactData.ContactNode;
 import InfectionTreeGenerator.Graph.Graph;
 import InfectionTreeGenerator.Graph.Node;
 import Utility.TimeFunctions;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,6 +20,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -54,13 +56,20 @@ public class ContactGraphParser {
     }
 
     public ContactGraph constructGraph() {
+        return constructGraph(Integer.MAX_VALUE);
+    }
+
+    public ContactGraph constructGraph(int linesToProcess) {
+        //we can process less lines for debugging purposes;
+        linesToProcess = Math.min(nodeFileContent.size(), linesToProcess);
+
         System.out.println("TODO: There is more data to encode from the files.");
         System.out.println("TODO: Currently only taking positive nodes and edges into account. ");
         //create the nodes of the graph firsts
-        for (int i = 1; i < nodeFileContent.size(); i++)//skip headers
+        for (int i = 1; i < linesToProcess; i++)//skip headers
         {
             String line = nodeFileContent.get(i);
-
+            line = line.replace("\"", "");//remove extra " in the data.
             if (line.length() == 0) {
                 System.err.println("Node file has and empty line at line number " + i + ". skipping line");
                 continue;
@@ -76,9 +85,10 @@ public class ContactGraphParser {
         }
 
         //create the edges of the graph
-        for (int i = 1; i < edgeFileContent.size(); i++)//skip headers
+        for (int i = 1; i < linesToProcess; i++)//skip headers
         {
             String line = edgeFileContent.get(i);
+            line = line.replace("\"", "");//remove extra " in the data.
             if (line.length() == 0) {
                 System.err.println("Edge file has and empty line at line number " + i + ". skipping line");
                 continue;
@@ -110,7 +120,7 @@ public class ContactGraphParser {
         }
 
         if (!split[3].isBlank()) {//testing time is not empty
-            if ("\"Positive\"".equals(split[4])) {
+            if ("Positive".equals(split[4])) {
                 //if this node has a time where it is tested positive
                 long testTime = TimeFunctions.dateToUnixTimestamp(split[3]);
                 n.setTestTime(testTime);
@@ -118,6 +128,12 @@ public class ContactGraphParser {
                 //only add a node if it was involved in a positive test (TODO: For now)
                 g.addNode(n);
             }
+            //
+        }
+
+        if (!split[5].isBlank()) {
+            //add the location
+            n.location = split[5];
         }
 
         //add metadata

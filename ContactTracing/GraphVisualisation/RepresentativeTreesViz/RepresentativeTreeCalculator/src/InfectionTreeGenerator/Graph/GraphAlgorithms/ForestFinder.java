@@ -56,7 +56,7 @@ public class ForestFinder<G extends Graph, T extends Tree, N extends Node, E ext
         Collection<E> edges = completeGraph.getEdges();
         for (E e : edges) {
             T sourceTree = null; //holds the Tree the source of this edge is in.
-            T targetTree = null;//holds the Tree the source of this edge is in.
+            T targetTree = null;//holds the Tree the target of this edge is in.
 
             //check which trees the edge ends in
             for (T t : trees) {

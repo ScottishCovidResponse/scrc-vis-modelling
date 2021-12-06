@@ -60,7 +60,7 @@ public class RealDataParserTest {
         int endTreeSize = 2000; //stop calculating for trees of size 2000
 
         RealDataParser instance = new RealDataParser(inputFolderLocation, outputFileLocation, startTreeSize, endTreeSize);
-        instance.parseData();
+        instance.parseData(false);
 
         //verify that the json is correct. Does not care about order of objects
         verifyJson(inputFolderLocation + "RepTrees.json", outputFileLocation + "RepTrees.json");

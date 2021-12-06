@@ -91,7 +91,7 @@ public class InfectionChainCalculator {
         this.infectiousPeriod = infectiousPeriod;
     }
 
-    public InfectionGraph calculateInfectionGraph() {
+    public InfectionGraph calculateInfectionGraph(boolean programAlreadyExecuted) {
         File f = new File(tempFolder);
         f.mkdir();
 //        f.deleteOnExit();
@@ -100,22 +100,80 @@ public class InfectionChainCalculator {
         f.mkdir();
 //        f.deleteOnExit();
 
-        //write a temporary file for each non-trivial component. Directly add trivial components to the graph
-        int componentCount = writeComponentFiles();
-        //calculate most-likely-infection chains for each component. TODO: Allow for multiple index cases per component?
-        executeProgram(componentCount);
+        Set<ContactNode> nodesHandled = solveTrivialComponents();
+
+        if (!programAlreadyExecuted) {
+            //write a temporary file for each non-trivial component. Directly add trivial components to the graph
+            int componentCount = writeComponentFiles(nodesHandled);
+            //calculate most-likely-infection chains for each component. TODO: Allow for multiple index cases per component?
+            executeProgram(componentCount);
+        }
         //Add the most-likely-infection chains to the mostLikelyInfectionGraph
         parseOutputFiles();
 
         return mostLikelyInfectionGraph;
     }
 
+    private Set<ContactNode> solveTrivialComponents() {
+        Set<ContactNode> nodesHandled = new HashSet();
+        int trivialComponentNumber = 0;//how many components of size 1 we processed
+
+        for (ContactNode n : contactGraph.getNodes()) {
+            if (nodesHandled.contains(n)) {
+                continue;//already have the component containing n
+            }
+            Collection<ContactNode> componentNodes = contactGraph.getReachableNodes(n);
+
+            if (componentNodes.size() == 1) {
+                mostLikelyInfectionGraph.addNode(new InfectionNode(n.id, n.positiveTestTime));
+            }
+            if (componentNodes.size() == 2) {
+                //get the othernode and the componentEdges
+                Set<ContactEdge> componentEdges = new HashSet();
+                ContactNode otherN = null;
+                for (ContactNode cn : componentNodes) {
+                    componentEdges.addAll(cn.edges);
+                    if (cn != n) {
+                        otherN = cn;
+                    }
+                }
+
+                //add the infectionNodes
+                InfectionNode iN = new InfectionNode(n.id, n.positiveTestTime);
+                InfectionNode iOtherN = new InfectionNode(otherN.id, otherN.positiveTestTime);
+                mostLikelyInfectionGraph.addNode(iN);
+                mostLikelyInfectionGraph.addNode(iOtherN);
+
+                //use the earliest edge that is a contact for the graph
+                long earliestContact = Long.MAX_VALUE;
+                for (ContactEdge ce : componentEdges) {
+                    earliestContact = Math.min(earliestContact, ce.contactTime);
+                }
+
+                if (n.positiveTestTime < otherN.positiveTestTime) {
+                    mostLikelyInfectionGraph.addEdge(new InfectionEdge(iN, iOtherN, earliestContact));
+                } else {
+                    mostLikelyInfectionGraph.addEdge(new InfectionEdge(iOtherN, iN, earliestContact));
+                }
+            }
+
+            trivialComponentNumber++;
+            nodesHandled.addAll(componentNodes);
+            Log.printProgress("trivial component number: " + trivialComponentNumber + " is handled", 1, 1000);
+        }
+        System.out.println(trivialComponentNumber + " total trivial components handled");
+
+        return nodesHandled;
+    }
+
     /**
      * Writes an outputfile for each seperate component of the graph and returns
      * how many components there are
+     *
+     * @param nodesHandled Which nodes are already handled when parsing trivial
+     * components
      */
-    private int writeComponentFiles() {
-        Set<ContactNode> nodesHandled = new HashSet();
+    private int writeComponentFiles(Set<ContactNode> nodesHandled) {
         int componentNumber = 0;//how many components we have written files for processed
 
         int trivalComponentNumber = 0;//how many components of size 1 we processed
@@ -129,16 +187,6 @@ public class InfectionChainCalculator {
             for (ContactNode node : componentNodes) {
                 componentEdges.addAll(node.edges);
             }
-
-            if (componentNodes.size() == 1) {
-                //Speedup. If there is only one node in the component only 1 tree can exists. No need to write files
-                mostLikelyInfectionGraph.addNode(new InfectionNode(n.id, n.positiveTestTime));
-                trivalComponentNumber++;
-                Log.printProgress("trivial component number: " + trivalComponentNumber + " is handled", 1, 1000);
-                continue;
-            }
-            
-            
 
             writeComponentFiles(contactGraph, componentNodes, componentEdges, componentNumber);
             nodesHandled.addAll(componentNodes);
@@ -156,13 +204,14 @@ public class InfectionChainCalculator {
             writeEdgeFile(g, nodes, edges, componentNumber);
             writeNodeFile(g, nodes, edges, componentNumber);
         } catch (IOException ex) {
-            Logger.getLogger(InfectionChainCalculator.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InfectionChainCalculator.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     private void writeEdgeFile(ContactGraph g, Collection<ContactNode> nodes, Collection<ContactEdge> edges, int componentNumber) throws IOException {
 
+        System.out.println("TODO: Need to print all edges between them and take that into account in the program if possible");
         //Need to sort the edges by time for the file.
         List<ContactEdge> sortedEdges = new ArrayList();
         sortedEdges.addAll(edges);
@@ -273,7 +322,6 @@ public class InfectionChainCalculator {
     private void executeProgram(int componentCount) {
 
         //TODO: Speed up python. Likely need to make sure that it is not starting up over and over but batch processing.
-        
         //for every component we execute the python program and wait for it to complete before proceeding to not hog compute resources
         for (int i = 0; i < componentCount; i++) {
 
@@ -294,7 +342,8 @@ public class InfectionChainCalculator {
 
                 assert (0 == exitCode);//no errors should occur
             } catch (InterruptedException | IOException ex) {
-                Logger.getLogger(InfectionChainCalculator.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(InfectionChainCalculator.class
+                        .getName()).log(Level.SEVERE, null, ex);
                 System.out.println("Error for file: " + nodeFileName);
             }
 
@@ -317,7 +366,8 @@ public class InfectionChainCalculator {
             try {
                 parseOutputFile(f);
             } catch (IOException ex) {
-                Logger.getLogger(InfectionChainCalculator.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(InfectionChainCalculator.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

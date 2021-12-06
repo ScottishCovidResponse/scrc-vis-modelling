@@ -65,5 +65,10 @@ public class InfectionGraph extends Graph<InfectionNode, InfectionEdge> {
         return newG;
     }
 
+    public void printStatistics() {
+        System.out.println(getNodes().size() + " nodes in the infection graph");
+        System.out.println(getEdges().size() + " edges in the infection graph");
+    }
+
 
 }

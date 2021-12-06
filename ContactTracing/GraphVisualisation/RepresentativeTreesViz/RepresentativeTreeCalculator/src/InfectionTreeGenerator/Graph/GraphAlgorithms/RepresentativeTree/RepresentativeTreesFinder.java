@@ -168,6 +168,7 @@ public class RepresentativeTreesFinder {
                 Edge weIn = new Edge(n2, n1, distance);
                 g.addEdge(weOut);
                 g.addEdge(weIn);
+                count++;
             }
         }
         return g;

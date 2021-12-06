@@ -174,7 +174,7 @@ public class RepresentativeTreesFinder {
 
                 Tree t2 = trees.get(j);
 
-                int distance = tdm.getDistance(t1, t2);
+                double distance = tdm.getDistance(t1, t2);
 
                 Node n1 = nodeMapping.get(t1.id);
                 Node n2 = nodeMapping.get(t2.id);

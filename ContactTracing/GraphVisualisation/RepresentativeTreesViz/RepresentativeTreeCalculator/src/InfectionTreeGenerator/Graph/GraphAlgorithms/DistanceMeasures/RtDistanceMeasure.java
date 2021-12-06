@@ -19,21 +19,21 @@ import java.util.Set;
 public class RtDistanceMeasure implements TreeDistanceMeasure {
 
     /**
-     * How many timewindows we have
+     * How many timewindows we have. Note that all trees are anchored at 0.
      */
     int totalTimeWindows;
     /**
-     * How many timesteps we take in a single window
+     * How many timesteps we take in a single window. Note that all trees are anchored at 0.
      */
     int timeWindowSize;
-
+    
     public RtDistanceMeasure(int totalTimeWindows, int timeWindowSize) {
         this.totalTimeWindows = totalTimeWindows;
         this.timeWindowSize = timeWindowSize;
     }
 
     @Override
-    public int getDistance(Tree<InfectionNode, InfectionEdge> t1, Tree<InfectionNode, InfectionEdge> t2) {
+    public double getDistance(Tree<InfectionNode, InfectionEdge> t1, Tree<InfectionNode, InfectionEdge> t2) {
         Double[] rtT1 = getRtValuesPerStep(t1);
         Double[] rtT2 = getRtValuesPerStep(t2);
 
@@ -44,14 +44,14 @@ public class RtDistanceMeasure implements TreeDistanceMeasure {
         for (int i = 0; i < totalTimeWindows; i++) {
             absoluteDiff += Math.abs(rtT1[i] - rtT2[i]);
         }
-        return (int) Math.ceil(absoluteDiff);
+        return absoluteDiff;
     }
 
-    
     /**
      * Can be overriden to use a different method to calculate the difference
+     *
      * @param t
-     * @return 
+     * @return
      */
     protected Double[] getCalculatedRtValues(Tree<InfectionNode, InfectionEdge> t) {
         return getRtValuesPerStep(t);
@@ -61,12 +61,15 @@ public class RtDistanceMeasure implements TreeDistanceMeasure {
 
         Double[] rtValues = new Double[totalTimeWindows];
 
+        InfectionNode root = t.calculateRoot();
+        double startTime = root.exposedTime;
+
         for (int timeWindowI = 0; timeWindowI < totalTimeWindows; timeWindowI++) {
-            int timeStart = timeWindowSize * timeWindowI;
-            int timeEnd = timeWindowSize * (timeWindowI + 1);
+            double timeStart = timeWindowSize * timeWindowI + startTime;
+            double timeEnd = timeWindowSize * (timeWindowI + 1) + startTime;
 
             double futureIN = countFutureInfectedNodes(t, timeStart, timeEnd);
-            double newIN = countnewInfectedNodes(t, timeStart, timeEnd);
+            double newIN = countNewInfectedNodes(t, timeStart, timeEnd);
             double rt = futureIN / newIN;
             if (newIN == 0) {//ignore divide by 0.
                 assert (futureIN == 0);
@@ -77,7 +80,7 @@ public class RtDistanceMeasure implements TreeDistanceMeasure {
         return rtValues;
     }
 
-    protected double countFutureInfectedNodes(Tree<InfectionNode, InfectionEdge> t, int timeStart, int timeEnd) {
+    protected double countFutureInfectedNodes(Tree<InfectionNode, InfectionEdge> t, double timeStart, double timeEnd) {
         Collection<InfectionNode> nodes = t.getNodes();
         int futureINCount = 0;
         for (InfectionNode n : nodes) {
@@ -88,7 +91,7 @@ public class RtDistanceMeasure implements TreeDistanceMeasure {
         return futureINCount;
     }
 
-    protected double countnewInfectedNodes(Tree<InfectionNode, InfectionEdge> t, int timeStart, int timeEnd) {
+    protected double countNewInfectedNodes(Tree<InfectionNode, InfectionEdge> t, double timeStart, double timeEnd) {
         Collection<InfectionNode> nodes = t.getNodes();
         int newINCount = 0;
         for (InfectionNode n : nodes) {

@@ -31,7 +31,7 @@ public class TreeEditDistanceCalculator<N extends Node, E extends Edge> implemen
     }
 
     @Override
-    public int getDistance(Tree t1, Tree t2) {
+    public double getDistance(Tree t1, Tree t2) {
         return getTreeEditDistance(t1, t2);
     }
 

@@ -38,17 +38,17 @@ public class RtDistanceMeasure7StepsAverageTest {
 
     @Before
     public void setUp() {
-        InfectionNode n5 = new InfectionNode(5, 0.0);
-        InfectionNode n6 = new InfectionNode(6, 1.0);
-        InfectionNode n7 = new InfectionNode(7, 2.0);
-        InfectionNode n8 = new InfectionNode(8, 7.0);
-        InfectionNode n9 = new InfectionNode(9, 4.0);
-        InfectionNode n10 = new InfectionNode(10, 8.0);
-        InfectionEdge e56 = new InfectionEdge(n5, n6, 1.0);
-        InfectionEdge e57 = new InfectionEdge(n5, n7, 2.0);
-        InfectionEdge e59 = new InfectionEdge(n5, n9, 4.0);
-        InfectionEdge e67 = new InfectionEdge(n6, n8, 7.0);
-        InfectionEdge e810 = new InfectionEdge(n8, n10, 8.0);
+        InfectionNode n5 = new InfectionNode(5, 1);
+        InfectionNode n6 = new InfectionNode(6, 2);
+        InfectionNode n7 = new InfectionNode(7, 3);
+        InfectionNode n8 = new InfectionNode(8, 8);
+        InfectionNode n9 = new InfectionNode(9, 5);
+        InfectionNode n10 = new InfectionNode(10, 9);
+        InfectionEdge e56 = new InfectionEdge(n5, n6, 2);
+        InfectionEdge e57 = new InfectionEdge(n5, n7, 3);
+        InfectionEdge e59 = new InfectionEdge(n5, n9, 5);
+        InfectionEdge e67 = new InfectionEdge(n6, n8, 8);
+        InfectionEdge e810 = new InfectionEdge(n8, n10, 9);
         t.addNodes(n5, n6, n7, n8, n9, n10);
         t.addEdges(e56, e57, e59, e67, e810);
     }

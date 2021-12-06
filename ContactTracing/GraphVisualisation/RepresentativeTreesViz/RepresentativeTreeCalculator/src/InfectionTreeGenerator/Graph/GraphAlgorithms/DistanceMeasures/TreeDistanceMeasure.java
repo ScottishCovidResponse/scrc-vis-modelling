@@ -16,13 +16,12 @@ import InfectionTreeGenerator.Graph.Tree;
 public interface TreeDistanceMeasure {
 
     /**
-     * Distance between two infectionTrees. Values are rounded up in case of
-     * internal double values
+     * Distance between two infectionTrees.
      *
      * @param t1
      * @param t2
      * @return
      */
-    public abstract int getDistance(Tree<InfectionNode, InfectionEdge> t1, Tree<InfectionNode, InfectionEdge> t2);
+    public abstract double getDistance(Tree<InfectionNode, InfectionEdge> t1, Tree<InfectionNode, InfectionEdge> t2);
 
 }

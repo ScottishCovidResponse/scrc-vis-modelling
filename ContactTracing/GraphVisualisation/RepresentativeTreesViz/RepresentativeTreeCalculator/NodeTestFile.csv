@@ -1,0 +1,8 @@
+id,timeOfPositiveTest,Attribute1,Attribute2,Attribute3
+integer,integer,integer,categorical,e;f;g
+1,5,2,test1,e
+2,12,3,test2,f
+3,20,4,test3,g
+4,,5,test4,f
+5,,6,test5,e
+6,,7,test6,e

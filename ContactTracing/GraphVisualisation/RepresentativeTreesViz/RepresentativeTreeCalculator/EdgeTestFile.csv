@@ -1,0 +1,8 @@
+node1Id,node2Id,timeOfPositiveTest,infectionWeight,Attribute1,Attribute2,Attribute3
+integer,integer,integer,integer,integer,categorical,a;b;c
+1,2,3,1,2,testE12t3,a
+1,2,5,2,3,testE12t5,b
+2,4,3,3,4,testE24t3,c
+4,5,3,4,5,testE45t3,b
+5,4,4,5,6,testE54t4,a
+3,6,4,6,7,testE36t5,b

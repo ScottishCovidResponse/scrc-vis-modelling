@@ -127,7 +127,7 @@ public class RealDataParser {
         System.out.println("TODO: Set time windows automatically");
 
         //make output dir for for distances
-        File f = new File(outputFileLocation + "ReptreesRTDistance/");
+        File f = new File(outputFileLocation + "/ReptreesRTDistance");
         f.mkdir();
 
         TreeDistanceMeasure tdm = new RtDistanceMeasure(100, 1);

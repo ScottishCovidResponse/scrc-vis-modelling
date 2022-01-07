@@ -113,6 +113,7 @@ function createSingleTree(svgToAddTo, xOffset, yOffset, root, treeId, isRepTree)
         const text = textG.append("text")
             .attr("class", "textRepAmount")
             .attr("font-size", fontSizeRepAmount)
+            // .attr("font-size", "60vw")
             .text(repNumber)
 
 

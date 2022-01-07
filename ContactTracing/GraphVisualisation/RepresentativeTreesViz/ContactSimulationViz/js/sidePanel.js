@@ -56,11 +56,7 @@ function createSizeSlider(selectorDiv) {
 
 function createNodeColorSelectors(selectorDiv) {
 
-    selectorDiv.append("p")
-        .attr("class", "text title")
-        .text("Node Property")
-
-    createLeftRightSubtitles(selectorDiv);
+    createLeftRightSubtitles(selectorDiv, "Node Property");
 
     let colorOptions = [{ "NAME": "None" }];
     for (let i = 0; i < metaDataNames.length; i++) {
@@ -88,11 +84,7 @@ function createNodeColorSelectors(selectorDiv) {
 
 function createPolicySelectors(selectorDiv) {
 
-    selectorDiv.append("p")
-        .attr("class", "text title")
-        .text("Policy")
-
-    createLeftRightSubtitles(selectorDiv);
+    createLeftRightSubtitles(selectorDiv, "Policy");
 
     //get the properties of the selectors
     var colorOptions = [
@@ -111,7 +103,6 @@ function createPolicySelectors(selectorDiv) {
         { "NAME": "1cX3Y14", },
         { "NAME": "1cX7Y14", },
         { "NAME": "1cX14Y14", },
-        // { "NAME": "1x", }
     ];
 
     const leftChangeFunction = function() {
@@ -142,11 +133,7 @@ function createPolicySelectors(selectorDiv) {
 
 function createAppPercentageSelectors(selectorDiv) {
 
-    selectorDiv.append("p")
-        .attr("class", "text title")
-        .text("App percentage")
-
-    createLeftRightSubtitles(selectorDiv);
+    createLeftRightSubtitles(selectorDiv, "App percentage");
 
     //get the properties of the selectors
     var colorOptions = [
@@ -250,13 +237,14 @@ function updateColorLegend() {
     createStateColorLegend(colorLegendDiv, false);
 }
 
+const maxIntegerBinsToDispaly = 10;
+
 function createStateColorLegend(colorLegendDiv, isLeft) {
     const halfColorDiv = colorLegendDiv.append("div")
         .attr("class", "halfColorLegendDiv")
 
     //get the colors and names to display
     let colors, names, displayNames, type, bounds
-
 
     if (isLeft) {
         colors = currentLeftColorScheme;
@@ -274,32 +262,53 @@ function createStateColorLegend(colorLegendDiv, isLeft) {
 
     if (type == "integer") {
         displayNames[0] = bounds[0] + "-" + names[0];
-        for (let i = 1; i < (names.length - 1); i++) {
+        for (let i = 1; i < names.length; i++) {
             displayNames[i] = names[i - 1] + "-" + names[i];
         }
-        displayNames[names.length - 1] = names[names.length - 1] + "-" + bounds[1];
     }
 
+    if (type == "date") {
+        displayNames[0] = getDate(bounds[0]) + "-" + getDate(names[0]);
+        for (let i = 1; i < names.length; i++) {
+            displayNames[i] = getDate(names[i - 1]) + "-" + getDate(names[i]);
+        }
+    }
 
     for (let i = 0; i < displayNames.length; i++) {
         const color = colors[i];
         let name = displayNames[i];
-        console.log("get policies back in")
-            // if (!splitPolicy) //If we aren't looking into the detailed split policy we merge them together
-            // {
-            //     if (name == "Infection route prevented earlier") {
-            //         //skip the detailed view
-            //         continue;
-            //     }
-            //     if (name == "Contact avoided due to isolation") {
-            //         //rename as it now represents all states
-            //         name = "Infection route prevented";
-            //     }
-            // }
+        // if (!splitPolicy) //If we aren't looking into the detailed split policy we merge them together
+        // {
+        //     if (name == "Infection route prevented earlier") {
+        //         //skip the detailed view
+        //         continue;
+        //     }
+        //     if (name == "Contact avoided due to isolation") {
+        //         //rename as it now represents all states
+        //         name = "Infection route prevented";
+        //     }
+        // }
         createStateColorLegendItem(color, name, isLeft, halfColorDiv);
     }
 
 }
+
+function getDate(unixTimeStampInSeconds) {
+    return new Date(unixTimeStampInSeconds * 1000).ddmmyyyy();
+}
+
+//convert date to human readable
+Date.prototype.ddmmyyyy = function() {
+    var mm = this.getMonth() + 1; // getMonth() is zero-based
+    var dd = this.getDate();
+
+    return [
+        (dd > 9 ? '' : '0') + dd,
+        (mm > 9 ? '' : '0') + mm,
+        this.getFullYear(),
+    ].join('.');
+};
+
 
 function createStateColorLegendItem(color, name, isLeft, divToAddTo) {
     const item = divToAddTo.insert("div")
@@ -408,7 +417,7 @@ function createDistributionLegend(distributionDiv) {
     }
 }
 
-function createLeftRightSubtitles(sidePanelDiv) {
+function createLeftRightSubtitles(sidePanelDiv, title) {
 
     const subTitleDiv = sidePanelDiv.append("div")
         .attr("class", "subtitleDiv");
@@ -416,6 +425,10 @@ function createLeftRightSubtitles(sidePanelDiv) {
     subTitleDiv.append("p")
         .attr("class", "text subtitle")
         .text("Left");
+
+    subTitleDiv.append("p")
+        .attr("class", "text title")
+        .text(title);
 
     subTitleDiv.append("p")
         .attr("class", "text subtitle")

@@ -42,15 +42,31 @@ function updateColorSchemes() {
     //Need to get the values as this determines which bins we have for the colors
     leftValues = getMetaDataValues(currentLeftAttributeName, metaData);
     [currentLeftColorScheme, currentLeftColorSchemeValues] = getColorScheme(currentLeftAttributeType, leftValues)
-        //set the bounds for the bings
-    currentLeftAttributeBounds = [Math.min(...leftValues), Math.max(...leftValues)];
 
-
+    if (currentLeftAttributeType == "integer" || currentLeftAttributeType == "date") {
+        //set the bounds for the bins
+        let minLeftVal = Number.MAX_VALUE;
+        let maxLeftVal = Number.MIN_VALUE;
+        for (let val of leftValues) {
+            minLeftVal = Math.min(minLeftVal, val);
+            maxLeftVal = Math.max(maxLeftVal, val);
+        }
+        currentLeftAttributeBounds = [minLeftVal, maxLeftVal];
+    }
 
     rightValues = getMetaDataValues(currentRightAttributeName, metaData);
     [currentRightColorScheme, currentRightColorSchemeValues] = getColorScheme(currentRightAttributeType, rightValues)
-        //set the bounds for the bings
-    currentRightAttributeBounds = [Math.min(...rightValues), Math.max(...rightValues)];
+
+    if (currentRightAttributeType == "integer" || currentRightAttributeType == "date") {
+        //set the bounds for the bins
+        let minRightVal = Number.MAX_VALUE;
+        let maxRightVal = Number.MIN_VALUE;
+        for (let val of rightValues) {
+            minRightVal = Math.min(minRightVal, val);
+            maxRightVal = Math.max(maxRightVal, val);
+        }
+        currentRightAttributeBounds = [minRightVal, maxRightVal];
+    }
 }
 
 function updatePositions(animate = true) {

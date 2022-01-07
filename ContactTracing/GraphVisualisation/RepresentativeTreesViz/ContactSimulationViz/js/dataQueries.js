@@ -2,18 +2,18 @@
  * Preprocess the data to usefull datastructures
  */
 function preprocessData() {
-    // for (let i = 0; i < repTreesData.length; i++) {
-    //     const repTree = repTreesData[i];
-    //     const treeId = repTree.id;
-    //     repTreeById.set(treeId, repTree);
+    for (let i = 0; i < repTreesData.length; i++) {
+        const repTree = repTreesData[i];
+        const treeId = repTree.id;
+        repTreeById.set(treeId, repTree);
 
-    //     const nodes = getNodes(repTree);
-    //     for (let j = 0; j < nodes.length; j++) {
-    //         const repNode = nodes[j];
-    //         const repId = repNode.id;
-    //         repNodeById.set(repId, repNode);
-    //     }
-    // }
+        const nodes = getNodes(repTree);
+        for (let j = 0; j < nodes.length; j++) {
+            const repNode = nodes[j];
+            const repId = repNode.id;
+            repNodeById.set(repId, repNode);
+        }
+    }
 
 
     for (let i = 0; i < metaData.length; i++) {
@@ -31,16 +31,32 @@ function preprocessData() {
         addDepthMetaData(tree, 0);
     }
 
-    //Save the names and types of metadata that we have. All nodes contain these in the same order (except policies)
-    const metaDataList = metaData[0].metaDataList;
-    for (let i = 0; i < metaDataList.length; i++) {
-        const metaDataVal = metaDataList[i]
-        const name = metaDataVal['attributeName'];
-        const type = metaDataVal['dataType'];
-        //save to variables
-        metaDataNames[i] = name;
-        metaDataTypes[i] = type;
-    }
+
+    console.log("Get metadata from data directly")
+    metaDataNames = ["positiveTestTime", "location"];
+    metaDataTypes = ["date", "categorical"];
+
+    //    //Save the names and types of metadata that we have. All nodes contain these in the same order (except policies)
+    //     metaDataNames = Object.getOwnPropertyNames(metaData[0]);
+    //     console.log(metaDataNames);
+    //     for (let i = 0; i < metaDataNames.length; i++) {
+    //         const val = metaData[0][metaDataNames[i]];
+    //         if (Number.isInteger(val)) {
+    //             metaDataTypes[i] = "integer";
+    //         } else {
+    //             metaDataTypes[i] = "categorical"
+    //         }
+    //     }
+
+
+    // for (let i = 0; i < metaData.length; i++) {
+    //     const metaDataVal = metaData[i]
+    //     const name = metaDataVal['attributeName'];
+    //     const type = metaDataVal['dataType'];
+    //     //save to variables
+    //     metaDataNames[i] = name;
+    //     metaDataTypes[i] = type;
+    // }
 }
 
 function addDepthMetaData(tree, depth) {
@@ -193,9 +209,13 @@ function getMetaDataValueFromId(name, id) {
         return "None";
     }
 
-    const nameIndex = metaDataNames.indexOf(name);
+
     const metaDataNode = metaDataFromNodeById.get(id);
-    return metaDataNode.metaDataList[nameIndex].valueString;
+    return metaDataNode[name];
+
+    // const nameIndex = metaDataNames.indexOf(name);
+    // const metaDataNode = metaDataFromNodeById.get(id);
+    // return metaDataNode.metaDataList[nameIndex].valueString;
 }
 
 /**
@@ -221,7 +241,8 @@ function getMetaDataValues(name, metaDataArray) {
     let values = [];
     for (let i = 0; i < metaDataArray.length; i++) {
         const metaDataNode = metaDataArray[i];
-        const val = metaDataNode.metaDataList[nameIndex].valueString;
+        // const val = metaDataNode.metaDataList[nameIndex].valueString;
+        const val = metaDataNode[name];
         values[i] = val;
     }
 

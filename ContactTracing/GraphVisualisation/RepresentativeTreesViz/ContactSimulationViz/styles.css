@@ -21,6 +21,10 @@
     flex-direction: column;
 }
 
+#gridmap {
+    margin-top: 20px;
+}
+
 #treeGridDiv {
     height: 100%;
     flex-grow: 1;
@@ -121,7 +125,7 @@ Slider
 .sliderdiv {
     width: 200px;
     margin: auto;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 .slidecontainer {
@@ -311,6 +315,7 @@ Color legend
     justify-content: flex-start;
     align-items: center;
     margin-bottom: 5px;
+    height: 30px
 }
 
 .colorLegendDot {
@@ -367,5 +372,5 @@ Color legend
 .topLevelGridCell {
     stroke: black;
     stroke-width: 0.001;
-    fill: none;
+    /* fill: none; */
 }

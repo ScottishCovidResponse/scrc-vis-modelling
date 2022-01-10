@@ -1,7 +1,18 @@
+export let repTreeById = new Map(); //holds the representative tree data by id of the root
+export let repNodeById = new Map(); //holds all node data represented by the specified node
+export let allTreeById = new Map(); //holds the alltree data by id of the root
+export let metaDataFromNodeById = new Map(); //holds the meta data for each node by id of the node.
+
+
+
+//Metadata
+export let metaDataNames = []; //names of the metadatafields
+export let metaDataTypes = []; //types of the metadatafield
+
 /**
  * Preprocess the data to usefull datastructures
  */
-function preprocessData() {
+export function preprocessData(repTreesData, allTreesData, metaData) {
     for (let i = 0; i < repTreesData.length; i++) {
         const repTree = repTreesData[i];
         const treeId = repTree.id;
@@ -59,6 +70,17 @@ function preprocessData() {
     // }
 }
 
+/**
+ * Returns the maximum depth of any tree
+ */
+export function getMaxDepth() {
+    let maxDepth = 0;
+    for (let tree of allTreeById.values()) {
+        maxDepth = Math.max(maxDepth, getTreeHeight(tree))
+    }
+    return maxDepth;
+}
+
 function addDepthMetaData(tree, depth) {
     //save node reference
     metaDataFromNodeById.get(tree.id).depth = depth;
@@ -69,16 +91,7 @@ function addDepthMetaData(tree, depth) {
     }
 }
 
-/**
- * Returns the maximum depth of any tree
- */
-function getMaxDepth() {
-    let maxDepth = 0;
-    for (let tree of allTreeById.values()) {
-        maxDepth = Math.max(maxDepth, getTreeHeight(tree))
-    }
-    return maxDepth;
-}
+
 
 /**
  * 
@@ -99,7 +112,7 @@ function getTreeHeight(treeNode) {
  * Gets the amount of trees represented by the tree {@code d} before editdistance {@code editDistance}
  * @param {*} editDistance 
  */
-function getAmountOfTreesRepresented(d, editDistance) {
+export function getAmountOfTreesRepresented(d, editDistance) {
     let count = 0;
     let reps = d.data.representations;
     for (let repI = 0; repI < reps.length; repI++) {
@@ -116,7 +129,7 @@ function getAmountOfTreesRepresented(d, editDistance) {
  * Gets the amount of trees represented by the tree with id {@code id} before editdistance {@code editDistance}
  * @param {*} editDistance 
  */
-function getAmountOfTreesRepresentedById(id, editDistance) {
+export function getAmountOfTreesRepresentedById(id, editDistance) {
     const repTree = repTreeById.get(id);
     if (repTree === undefined) { //Occurs when looking at Alltrees which do not have representations
         return 1;
@@ -137,7 +150,7 @@ function getAmountOfTreesRepresentedById(id, editDistance) {
  * Gets the amount of trees represented by the tree with id {@code id} before editdistance {@code editDistance}
  * @param {*} editDistance 
  */
-function getTreesRepresentedById(id, editDistance) {
+export function getTreesRepresentedById(id, editDistance) {
     const repTree = repTreeById.get(id);
     let reps = repTree.representations;
 
@@ -204,7 +217,7 @@ function getRepresentedNodesMetaData(nodeId, editDistance) {
  * @param {id of the node we want the data from} id 
  * @returns a single value containing the value of the 'name' attribute of the node with the given id
  */
-function getMetaDataValueFromId(name, id) {
+export function getMetaDataValueFromId(name, id) {
     if (name == "None") {
         return "None";
     }
@@ -224,7 +237,7 @@ function getMetaDataValueFromId(name, id) {
  * @param {An array of all metadata values to be considered}
  * @returns An array of all values for this attribute from the metadata in metadataArray. Values can be present multiple times
  */
-function getMetaDataValues(name, metaDataArray) {
+export function getMetaDataValues(name, metaDataArray) {
 
     //find the index of the string with the given name
     const nameIndex = metaDataNames.indexOf(name);
@@ -257,7 +270,7 @@ function getMetaDataValues(name, metaDataArray) {
  * @param {The maximum edit distance to find trees represented by 'id'} editDistance
  * @returns An array of all values for this attribute for all trees represented at the given editdistance by the node with the specified id. Values can be present multiple times
  */
-function getMetaDataValuesFromRepTrees(name, id, editDistance) {
+export function getMetaDataValuesFromRepTrees(name, id, editDistance) {
     const repTreeMetaData = getRepresentedNodesMetaData(id, editDistance)
     return getMetaDataValues(name, repTreeMetaData);
 }
@@ -265,7 +278,7 @@ function getMetaDataValuesFromRepTrees(name, id, editDistance) {
 
 
 
-function getNodes(rootNode) {
+export function getNodes(rootNode) {
     let nodeList = [rootNode]; //add the current node to the list
     //recurse in all children
     for (let i = 0; i < rootNode.children.length; i++) {
@@ -278,7 +291,7 @@ function getNodes(rootNode) {
 }
 
 
-function getNodeFromTree(rootNode, nodeId) {
+export function getNodeFromTree(rootNode, nodeId) {
     const nodes = getNodes(rootNode);
     for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i];

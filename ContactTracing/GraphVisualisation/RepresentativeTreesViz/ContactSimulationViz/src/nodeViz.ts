@@ -1,10 +1,23 @@
+import { getMetaDataValueFromId, getMetaDataValuesFromRepTrees} from './dataQueries';
+import { getIndexInColorScheme } from './ColorSchemes';
+import {
+    // currentLeftColorScheme, currentRightColorScheme,
+    // currentLeftColorSchemeValues, currentRightColorSchemeValues,
+    // currentLeftAttributeName, currentRightAttributeName,
+    // currentLeftAttributeType, currentRightAttributeType, maxParts
+    vars
+} from './vizVariables';
+import * as d3 from 'd3';
+
+
+
 /**
  * Creates the stacked chart glyph for each node
  * @param {*} gElement 
  * @param {*} nodeId 
  * @param {*} isRepTree 
  */
-function makeNodeGlyph(gElement, nodeId, isRepTree) {
+export function makeNodeGlyph(gElement, nodeId, isRepTree) {
     //make left chart
     makeStackedChart(gElement, nodeId, isRepTree, true);
 
@@ -15,7 +28,7 @@ function makeNodeGlyph(gElement, nodeId, isRepTree) {
 function makeStackedChart(gElement, nodeId, isRepTree, isLeftChart) {
     let [startX, rectWidth] = getRectGlyphXPositions(isLeftChart)
 
-    for (let partI = 0; partI < maxParts; partI++) {
+    for (let partI = 0; partI < vars.maxParts; partI++) {
         constructRect(gElement, nodeId, isRepTree, isLeftChart, partI, startX, rectWidth);
     }
 }
@@ -37,7 +50,7 @@ function constructRect(gElement, nodeId, isRepTree, isLeftChart, partIndex, star
     }
 }
 
-function updateNodeGlyphs(isRepTree) {
+export function updateNodeGlyphs(isRepTree) {
     const gElements = d3.select("#treeGrid") //do not animate these. d3 animations break down at around 20000 svg elements. The largest tree alone has 100 nodes with 10 parts each.
         .selectAll(".svgtree.visible")
         .selectAll(".node")
@@ -45,24 +58,24 @@ function updateNodeGlyphs(isRepTree) {
 
     gElements.selectAll("*").remove(); //remove all rectangles so we can add only those that are needed again
 
-    gElements.each(function() {
+    gElements.each(function () {
         const nodeId = parseInt(d3.select(this).attr("id"));
         makeNodeGlyph(d3.select(this), nodeId, isRepTree)
     });
 }
 
-function getPartColor(index, isLeftChart) {
+export function getPartColor(index, isLeftChart) {
     if (isLeftChart) {
-        return currentLeftColorScheme[index];
+        return vars.currentLeftColorScheme[index];
     } else {
-        return currentRightColorScheme[index];
+        return vars.currentRightColorScheme[index];
     }
 }
 
 
 function getRectGlyphXPositions(isLeftChart) {
     let startX = getStartX(isLeftChart);
-    let rectWidth = nodeBaseSize;
+    let rectWidth = vars.nodeBaseSize;
 
     return [startX, rectWidth];
 }
@@ -71,7 +84,7 @@ function getRectGlyphXPositions(isLeftChart) {
 function getRectGlyphYPositions(id, partIndex, isRepTree, isLeftChart) {
 
     const partRange = getPartPercentages(id, partIndex, isRepTree, isLeftChart);
-    const rectSize = nodeBaseSize * 2; //nodeBaseSize is radius
+    const rectSize = vars.nodeBaseSize * 2; //nodeBaseSize is radius
 
     const y1 = partRange[0] * rectSize - rectSize / 2;
     const y2 = partRange[1] * rectSize - rectSize / 2;
@@ -82,7 +95,7 @@ function getRectGlyphYPositions(id, partIndex, isRepTree, isLeftChart) {
 
 
 function isRectIndexFromLeftChart(rectIndex) {
-    return rectIndex < maxParts;
+    return rectIndex < vars.maxParts;
 }
 
 
@@ -90,7 +103,7 @@ function isRectIndexFromLeftChart(rectIndex) {
 
 function getStartX(isLeftChart) {
     if (isLeftChart) {
-        return -nodeBaseSize;
+        return -vars.nodeBaseSize;
     } else {
         return 0;
     }
@@ -133,8 +146,8 @@ function getPartPercentages(id, partIndex, isRepTree, isLeftChart) {
 
 
 
-function getPartCounts(id, isRepTree, isLeftChart) {
-    let partCounts = new Array(maxParts).fill(0); //array length equal to amount of parts. Fill them in one by one
+export function getPartCounts(id, isRepTree, isLeftChart) {
+    let partCounts = new Array(vars.maxParts).fill(0); //array length equal to amount of parts. Fill them in one by one
 
 
 
@@ -142,20 +155,20 @@ function getPartCounts(id, isRepTree, isLeftChart) {
     let colorSchemeValues;
     let attributeName;
     if (isLeftChart) {
-        colorSchemeType = currentLeftAttributeType;
-        colorSchemeValues = currentLeftColorSchemeValues;
-        attributeName = currentLeftAttributeName;
+        colorSchemeType = vars.currentLeftAttributeType;
+        colorSchemeValues = vars.currentLeftColorSchemeValues;
+        attributeName = vars.currentLeftAttributeName;
     } else {
-        colorSchemeType = currentRightAttributeType;
-        colorSchemeValues = currentRightColorSchemeValues;
-        attributeName = currentRightAttributeName;
+        colorSchemeType = vars.currentRightAttributeType;
+        colorSchemeValues = vars.currentRightColorSchemeValues;
+        attributeName = vars.currentRightAttributeName;
     }
 
 
     let values;
     if (isRepTree) {
         //get value of all nodes represented by this idea
-        values = getMetaDataValuesFromRepTrees(attributeName, id, currentEditDistance);
+        values = getMetaDataValuesFromRepTrees(attributeName, id, vars.currentEditDistance);
     } else {
         values = [getMetaDataValueFromId(attributeName, id)]; //put into arrow for consistency
     }

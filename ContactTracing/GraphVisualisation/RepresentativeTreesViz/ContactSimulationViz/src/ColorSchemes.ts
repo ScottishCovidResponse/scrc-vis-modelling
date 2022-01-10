@@ -1,3 +1,9 @@
+import { vars } from './vizVariables';
+
+export let categoricalColorScheme = ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f"];
+export let integerColorScheme = ["#feedde", "#fdd0a2", "#fdae6b", "#fd8d3c", "#f16913", "#d94801", "#8c2d04"]
+export let noneColorScheme = ["#888888"];
+
 /**
  * Returns a [colorScheme,colorSchemeValues] pair. 
  * colorScheme: the {maxParts} colors we are using in order.
@@ -5,7 +11,7 @@
  * @param {*} varType the type of the attribute we are coloring
  * @param {*} values An array of all the values for the attribute we are visualizing
  */
-function getColorScheme(varType, values) {
+export function getColorScheme(varType, values) {
     let colorScheme;
     let colorSchemeValues;
 
@@ -41,11 +47,11 @@ function getColorScheme(varType, values) {
     return [colorScheme, colorSchemeValues];
 }
 
-function getIndexInColorScheme(value, attributeType, colorSchemeValues) {
+export function getIndexInColorScheme(value, attributeType, colorSchemeValues) {
     if (attributeType == "categorical") {
         const index = colorSchemeValues.indexOf(value);
         if (index == -1) {
-            return maxParts - 1; //can't find it, so "other" category
+            return vars.maxParts - 1; //can't find it, so "other" category
         } else {
             return index;
         }

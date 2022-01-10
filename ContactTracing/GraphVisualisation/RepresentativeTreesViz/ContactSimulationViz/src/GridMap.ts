@@ -1,8 +1,9 @@
-let odToSvgMap = new Map();
+import * as d3 from 'd3';
+
 let gridToSvgMap = new Map();
 
 
-function initGridMap(gridNames) {
+export function initGridMap(gridNames) {
     const sidePanelDiv = d3.select("#sidePanel");
     const gridMapDiv = sidePanelDiv.append("div").attr("id", "gridmap");
     const gridMapGrid = gridMapDiv.append("svg").attr("id", "gridmapGrid");
@@ -31,22 +32,6 @@ function initGridMap(gridNames) {
                 const topX = columnI * (topCellWidth + spacing);
                 const topY = rowI * (topCellHeight + spacing);
 
-                // //Draw lower level first to get correct outlines
-                // //make lower level cell
-                // for (let rowI2 = 0; rowI2 < rows; rowI2++) {
-                //     for (let columnI2 = 0; columnI2 < columns; columnI2++) {
-                //         const destinationName = gridNames[rowI2][columnI2];
-                //         if (destinationName !== "Empty") {
-                //             const botX = topX + (columnI2 * botCellWidth);
-                //             const botY = topY + (rowI2 * botCellHeight);
-
-                //             const bottomSquareSvg = generateSquare(gridMapGrid, botX, botY, botCellWidth, botCellHeight, "bottomLevelGridCell");
-
-                //             const name = originName + "-" + destinationName;
-                //             odToSvgMap.set(name, bottomSquareSvg);
-                //         }
-                //     }
-                // }
                 //draw top level
                 const topSquareGroupSvg = generateSquareGroup(gridMapGrid, topX, topY, topCellWidth, topCellHeight, "topLevelGridCell");
                 gridToSvgMap.set(originName, topSquareGroupSvg);
@@ -77,66 +62,6 @@ function generateSquareGroup(svg, x, y, width, height, className) {
 
 
     return g;
-}
-
-function updateOdMap(originDestinationName, color) {
-    if (odToSvgMap.has(originDestinationName)) {
-        odToSvgMap.get(originDestinationName).attr("fill", color)
-    } else {
-        console.log("can't find " + originDestinationName);
-    }
-}
-
-function updateOdMapFromMap(originDestinationValueMap) {
-    const values = Array.from(originDestinationValueMap.values())
-
-
-    const [colorScheme, colorSchemeValues] = getColorScheme("integer", values);
-
-
-    for (const [originDestination, value] of originDestinationValueMap.entries()) {
-        const colorIndex = getIndexInColorScheme(value, "integer", colorSchemeValues)
-        const color = colorScheme[colorIndex];
-        updateOdMap(originDestination, color);
-    }
-}
-
-/**
- * Takes as input a number of d3 trees, and updates the the od-map based on the frequence 
- * @param {*} trees 
- */
-function updateODMapFromTrees(trees, startTime, endTime) {
-    let odCount = new Map();
-
-
-    for (let tree of trees) {
-        const treeRoot = d3.hierarchy(tree);
-        const links = treeRoot.links();
-        for (let link of links) {
-            const originId = link.source.data.id;
-            const destinationid = link.target.data.id;
-
-            const origin = getMetaDataValueFromId("location", originId);
-            const destination = getMetaDataValueFromId("location", destinationid);
-            s
-            const name = origin + "-" + destination;
-
-            //Only show values between the start and end time
-            const positiveTestTime = getMetaDataValueFromId("positiveTestTime", destinationid);
-            if (positiveTestTime < startTime || positiveTestTime > endTime) {
-                continue;
-            }
-
-
-            let count = 0;
-            if (odCount.has(name)) {
-                count = odCount.get(name);
-            }
-            count = count + 1;
-            odCount.set(name, count);
-        }
-    }
-    updateOdMapFromMap(odCount);
 }
 
 

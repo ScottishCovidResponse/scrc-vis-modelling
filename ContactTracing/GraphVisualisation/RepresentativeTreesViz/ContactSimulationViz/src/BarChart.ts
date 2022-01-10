@@ -1,31 +1,40 @@
+import * as d3 from 'd3';
+import { 
+    // maxParts, currentLeftDistributionSelection, currentRightDistributionSelection, normalizeComponentChart 
+    vars
+} from './vizVariables';
+import { getPartColor, getPartCounts } from './nodeViz';
+import { metaDataFromNodeById } from './dataQueries'
+
+
 const barChartHeight = 100;
 
-function createComponentBarChart(divToAddTo) {
+export function createComponentBarChart(divToAddTo) {
 
     let leftColors = [];
     let rightColors = [];
-    for (let i = 0; i < maxParts; i++) {
+    for (let i = 0; i < vars.maxParts; i++) {
         leftColors[i] = getPartColor(i, true);
         rightColors[i] = getPartColor(i, false);
     }
 
     //get the distribution
-    let leftValues = new Array(maxParts).fill(0);
-    let rightValues = new Array(maxParts).fill(0);
+    let leftValues = new Array(vars.maxParts).fill(0);
+    let rightValues = new Array(vars.maxParts).fill(0);
     metaDataFromNodeById.forEach((metaData, id) => {
         //only count it this node is at the right depth
         const nodeDepth = metaData.depth;
 
-        if (currentLeftDistributionSelection.includes("All") || currentLeftDistributionSelection.includes(nodeDepth)) {
+        if (vars.currentLeftDistributionSelection.includes("All") || vars.currentLeftDistributionSelection.includes(nodeDepth)) {
             const partCountsLeft = getPartCounts(id, false, true);
-            for (let i = 0; i < maxParts; i++) {
+            for (let i = 0; i < vars.maxParts; i++) {
                 leftValues[i] += partCountsLeft[i];
             }
         }
 
-        if (currentRightDistributionSelection.includes("All") || currentRightDistributionSelection.includes(nodeDepth)) {
+        if (vars.currentRightDistributionSelection.includes("All") || vars.currentRightDistributionSelection.includes(nodeDepth)) {
             const partCountsRight = getPartCounts(id, false, false);
-            for (let i = 0; i < maxParts; i++) {
+            for (let i = 0; i < vars.maxParts; i++) {
                 rightValues[i] += partCountsRight[i];
             }
         }
@@ -34,7 +43,7 @@ function createComponentBarChart(divToAddTo) {
     //add an additional normalizing step as we are only showing the values from a single level which is confusing.
     //Bar charts need to display height proportional to the total.
     let totalNodes;
-    if (normalizeComponentChart) { //if normalize is true, simply show each level by itself
+    if (vars.normalizeComponentChart) { //if normalize is true, simply show each level by itself
         totalNodes = -1;
     } else {
         totalNodes = metaDataFromNodeById.size;

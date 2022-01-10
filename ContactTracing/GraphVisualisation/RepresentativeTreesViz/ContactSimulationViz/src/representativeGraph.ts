@@ -1,4 +1,13 @@
-function generateTreeGrid() {
+import * as d3 from 'd3';
+import { showTreesRepresented } from './popup';
+import { createSingleTree, getDisplayHeight, getDisplayWidth, getOffSets, getTreeRoots } from './treeLayout';
+
+export var treeOrder = []; //order of the trees in the viz
+export var treeBaseWidthById = new Map(); //Base width of the tree by id of the root. Uses nodes of {@code nodeBaseSize} size
+export var treeBaseHeightById = new Map(); //Base  height of the tree by id of the root. Uses nodes of {@code nodeBaseSize} size
+
+
+export function generateTreeGrid(repTreesData) {
     //get the svg grid where the trees will be added to.
     //using svg instead of flexbox for animations purposes.
     const treeGridSVG = d3.select("#treeGrid");
@@ -11,7 +20,7 @@ function generateTreeGrid() {
     setBaseWidthAndHeightById(treeRoots); //used later when scaling nodes
 
 
-    const offSets = getOffSets(treeRoots, targetContainerWidth, true);
+    const offSets = getOffSets(treeRoots, treeBaseWidthById, treeBaseHeightById, targetContainerWidth, true);
 
     for (let i = 0; i < treeRoots.length; i++) {
         const xOffset = offSets[i][0];
@@ -20,8 +29,7 @@ function generateTreeGrid() {
         const id = treeRoot.data.id;
 
         const treeSvg = createSingleTree(treeGridSVG, xOffset, yOffset, treeRoot, id, true);
-        treeSvg
-            .on("click", function(event) { showTreesRepresented(event, treeRoot) }) //TODO: Change click function to work on all of svg, not just nodes.
+        treeSvg.on("click", function (event) { showTreesRepresented(event, treeRoot) }) //TODO: Change click function to work on all of svg, not just nodes.
 
     }
 
@@ -31,17 +39,13 @@ function generateTreeGrid() {
 }
 
 
-function getScaleFactorByRepAmount(repAmount) {
 
-    const scaleFactor = 1 + Math.log10(repAmount);
-    return scaleFactor
-}
 
 /**
  * Sets the width and height of the svg element to fit the content
  * @param {The d3 svg element we are resizing} svg 
  */
-function resizeSVG(svg) {
+export function resizeSVG(svg) {
     //size svg according to it's bounding box
     const bbox = svg.node().getBBox();
     svg.attr("width", bbox.width);

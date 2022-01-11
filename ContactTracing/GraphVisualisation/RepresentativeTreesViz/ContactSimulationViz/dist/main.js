@@ -323,9 +323,11 @@ function initGridMap(gridNames) {
         topSquareGroupSvg.on("click", function () {
           if (_vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.locationToVisualize != name) {
             _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.locationToVisualize = name;
+            d3__WEBPACK_IMPORTED_MODULE_0__.select(this).select("rect").classed("selectedRectangle", true);
           } else {
             //clicked on it while active, disable
             _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.locationToVisualize = "All";
+            d3__WEBPACK_IMPORTED_MODULE_0__.select(this).select("rect").classed("selectedRectangle", false);
           }
 
           console.log(_vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.locationToVisualize);

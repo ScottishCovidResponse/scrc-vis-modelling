@@ -43,8 +43,10 @@ export function initGridMap(gridNames) {
                 topSquareGroupSvg.on("click", function () {
                     if (vars.locationToVisualize != name) {
                         vars.locationToVisualize = name;
+                        d3.select(this).select("rect").classed("selectedRectangle", true)
                     } else {//clicked on it while active, disable
                         vars.locationToVisualize = "All";
+                        d3.select(this).select("rect").classed("selectedRectangle", false);
                     }
                     console.log(vars.locationToVisualize);
                     updateAll();
@@ -57,7 +59,7 @@ export function initGridMap(gridNames) {
 
 
 
-function generateSquareGroup(svg, x, y, width, height, className) {
+function generateSquareGroup(svg, x: number, y: number, width: number, height: number, className: string) {
     const g = svg.append("g")
     const square = g.append("rect")
         .attr("x", x)

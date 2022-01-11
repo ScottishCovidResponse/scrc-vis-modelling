@@ -364,13 +364,13 @@ Color legend
     width: 400px;
 }
 
-.bottomLevelGridCell {
-    stroke: black;
-    stroke-width: 0.001;
-}
-
 .topLevelGridCell {
     stroke: black;
     stroke-width: 0.001;
     /* fill: none; */
+}
+
+.selectedRectangle {
+    stroke: black;
+    stroke-width: 0.005;
 }

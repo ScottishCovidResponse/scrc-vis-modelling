@@ -25,7 +25,7 @@ export function getOffSets(treeRoots, treeBaseWidthById, treeBaseHeightById, con
     for (let i = 0; i < treeRoots.length; i++) {
         if (representativeTrees) {
             const id = treeRoots[i].data.id;
-            const repAmount = getAmountOfTreesRepresentedById(id, vars.currentEditDistance);
+            const repAmount = getAmountOfTreesRepresentedById(id, vars.currentEditDistance,vars.locationToVisualize);
             const scaleFactor = getScaleFactorByRepAmount(repAmount);
             widths[i] = treeBaseWidthById.get(id) * scaleFactor;
             heights[i] = treeBaseHeightById.get(id) * scaleFactor; //get base height
@@ -58,7 +58,7 @@ export function createSingleTree(svgToAddTo, xOffset, yOffset, root, treeId, isR
 
     let scaleFactor = 1;
     if (isRepTree) {
-        const repAmount = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance);
+        const repAmount = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance,vars.locationToVisualize);
         scaleFactor = getScaleFactorByRepAmount(repAmount);
     }
 

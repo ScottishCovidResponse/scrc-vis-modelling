@@ -250,6 +250,186 @@ function getPartColorSimple() {
 
 /***/ }),
 
+/***/ "./src/GridMap.ts":
+/*!************************!*\
+  !*** ./src/GridMap.ts ***!
+  \************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "initGridMap": () => (/* binding */ initGridMap),
+/* harmony export */   "updateGridMapFromTrees": () => (/* binding */ updateGridMapFromTrees),
+/* harmony export */   "updateGridMapFromMap": () => (/* binding */ updateGridMapFromMap)
+/* harmony export */ });
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
+/* harmony import */ var _ColorSchemes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ColorSchemes */ "./src/ColorSchemes.ts");
+/* harmony import */ var _dataQueries__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dataQueries */ "./src/dataQueries.ts");
+/* harmony import */ var _vizVariables__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./vizVariables */ "./src/vizVariables.ts");
+/* harmony import */ var _updateFunctions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./updateFunctions */ "./src/updateFunctions.ts");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+
+
+
+
+
+var gridToSvgMap = new Map();
+function initGridMap(gridNames) {
+  var sidePanelDiv = d3__WEBPACK_IMPORTED_MODULE_0__.select("#sidePanel");
+  var gridMapDiv = sidePanelDiv.append("div").attr("id", "gridmap");
+  var gridMapGrid = gridMapDiv.append("svg").attr("id", "gridmapGrid");
+  var rows = gridNames.length;
+  var columns = gridNames[0].length;
+  var topCellWidth = 0.6 / columns;
+  var topCellHeight = 0.6 / rows;
+  var spacing = Math.min(topCellWidth / columns * 0.5, topCellHeight / rows * 0.5);
+  var botCellWidth = topCellWidth * topCellWidth;
+  var botCellHeight = topCellHeight * topCellHeight; //make the svg fit the grid exactly. Spacing 
+
+  gridMapGrid.attr("viewBox", [0, 0, 1 + spacing * (columns - 1), 1 + spacing * (rows - 1)]);
+
+  for (var rowI = 0; rowI < rows; rowI++) {
+    var _loop = function _loop(columnI) {
+      //make top level cell
+      var name = gridNames[rowI][columnI];
+
+      if (name !== "Empty") {
+        var topX = columnI * (topCellWidth + spacing);
+        var topY = rowI * (topCellHeight + spacing); //draw top level
+
+        var topSquareGroupSvg = generateSquareGroup(gridMapGrid, topX, topY, topCellWidth, topCellHeight, "topLevelGridCell");
+        gridToSvgMap.set(name, topSquareGroupSvg);
+        topSquareGroupSvg.on("click", function () {
+          if (_vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.locationToVisualize != name) {
+            _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.locationToVisualize = name;
+          } else {
+            //clicked on it while active, disable
+            _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.locationToVisualize = "All";
+          }
+
+          console.log(_vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.locationToVisualize);
+          (0,_updateFunctions__WEBPACK_IMPORTED_MODULE_4__.updateAll)();
+        });
+      }
+    };
+
+    for (var columnI = 0; columnI < columns; columnI++) {
+      _loop(columnI);
+    }
+  }
+}
+
+function generateSquareGroup(svg, x, y, width, height, className) {
+  var g = svg.append("g");
+  var square = g.append("rect").attr("x", x).attr("y", y).attr("width", width).attr("height", height).attr("class", className).attr("fill", "#FEFEFE"); //default color
+
+  var text = g.append("text").attr("x", x + width / 2).attr("y", y + height / 2).attr("text-anchor", "middle").attr("dominant-baseline", "middle").attr("font-size", "0.002em");
+  return g;
+}
+/**
+ * Takes as input a number of d3 trees, and updates the the od-map based on the frequence 
+ * @param {*} trees 
+ */
+
+
+function updateGridMapFromTrees(startTime, endTime) {
+  var gridCount = new Map();
+  var totalCount = 0;
+
+  var _iterator = _createForOfIteratorHelper(_dataQueries__WEBPACK_IMPORTED_MODULE_2__.metaDataFromNodeById.values()),
+      _step;
+
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var metaData = _step.value;
+      var name = metaData.location; //Only show values between the start and end time
+
+      var positiveTestTime = metaData.positiveTestTime;
+
+      if (positiveTestTime < startTime || positiveTestTime > endTime) {
+        continue;
+      }
+
+      var count = 0;
+
+      if (gridCount.has(name)) {
+        count = gridCount.get(name);
+      }
+
+      count = count + 1;
+      gridCount.set(name, count);
+      totalCount++;
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+
+  console.log("total nodes in grid: " + totalCount);
+  updateGridMapFromMap(gridCount);
+}
+function updateGridMapFromMap(gridCount) {
+  var values = Array.from(gridCount.values());
+
+  var _getColorScheme = (0,_ColorSchemes__WEBPACK_IMPORTED_MODULE_1__.getColorScheme)("integer", values),
+      _getColorScheme2 = _slicedToArray(_getColorScheme, 2),
+      colorScheme = _getColorScheme2[0],
+      colorSchemeValues = _getColorScheme2[1];
+
+  var maxVal = Math.max.apply(Math, _toConsumableArray(values));
+
+  var _iterator2 = _createForOfIteratorHelper(gridCount.entries()),
+      _step2;
+
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var _step2$value = _slicedToArray(_step2.value, 2),
+          name = _step2$value[0],
+          value = _step2$value[1];
+
+      var colorIndex = (0,_ColorSchemes__WEBPACK_IMPORTED_MODULE_1__.getIndexInColorScheme)(value, "integer", colorSchemeValues);
+      var color = colorScheme[colorIndex];
+      updateGridMap(name, color, value);
+    }
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+}
+
+function updateGridMap(name, color, value) {
+  if (gridToSvgMap.has(name)) {
+    gridToSvgMap.get(name).select("rect").attr("fill", color);
+    gridToSvgMap.get(name).select("text").text(value);
+  } else {// console.log("can't find " + name);
+  }
+}
+
+/***/ }),
+
 /***/ "./src/LineChart.ts":
 /*!**************************!*\
   !*** ./src/LineChart.ts ***!
@@ -551,9 +731,11 @@ function getAmountOfTreesRepresented(d, editDistance) {
 /**
  * Gets the amount of trees represented by the tree with id {@code id} before editdistance {@code editDistance}
  * @param {*} editDistance 
+ * @param {Which location we are visualizing} locationToVisualize
  */
 
 function getAmountOfTreesRepresentedById(id, editDistance) {
+  var locationToVisualize = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "All";
   var repTree = repTreeById.get(id);
 
   if (repTree === undefined) {
@@ -565,10 +747,29 @@ function getAmountOfTreesRepresentedById(id, editDistance) {
   var count = 0;
 
   for (var repI = 0; repI < reps.length; repI++) {
+    //go through the various edit distances
     var repIData = reps[repI];
 
     if (repIData.editDistance <= editDistance) {
-      count += repIData.representationIds.length;
+      //Representative trees are represented by this tree
+      //must be of the current location visualized (or All are visualized)
+      var _iterator4 = _createForOfIteratorHelper(repIData.representationIds),
+          _step4;
+
+      try {
+        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+          var repId = _step4.value;
+          var location = metaDataFromNodeById.get(repId).location;
+
+          if (locationToVisualize == location || locationToVisualize == "All") {
+            count += 1;
+          }
+        }
+      } catch (err) {
+        _iterator4.e(err);
+      } finally {
+        _iterator4.f();
+      }
     }
   }
 
@@ -610,9 +811,11 @@ function getTreesRepresentedById(id, editDistance) {
  * @param {} treeId 
  * @param {} nodeId 
  * @param {} editDistance
+ * @param {} location
  */
 
 function getRepresentedNodesMetaData(nodeId, editDistance) {
+  var location = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "All";
   var node = repNodeById.get(nodeId);
   var reps = node.representations;
   var repNodeIds = [];
@@ -623,8 +826,22 @@ function getRepresentedNodesMetaData(nodeId, editDistance) {
     if (repIData.editDistance <= editDistance) {
       var repIds = repIData.representationIds;
 
-      for (var j = 0; j < repIds.length; j++) {
-        repNodeIds.push(repIds[j]);
+      var _iterator5 = _createForOfIteratorHelper(repIData.representationIds),
+          _step5;
+
+      try {
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+          var repId = _step5.value;
+          var repLocation = metaDataFromNodeById.get(repId).location;
+
+          if (location == repLocation || location == "All") {
+            repNodeIds.push(repId);
+          }
+        }
+      } catch (err) {
+        _iterator5.e(err);
+      } finally {
+        _iterator5.f();
       }
     }
   }
@@ -699,11 +916,13 @@ function getMetaDataValues(name, metaDataArray) {
  * @param {name of the attribute we want to get the values from} name  
  * @param {Id of the node that is representing other nodes} id
  * @param {The maximum edit distance to find trees represented by 'id'} editDistance
+ * @param {Only get data from nodes matching location (or if location is All) } location
  * @returns An array of all values for this attribute for all trees represented at the given editdistance by the node with the specified id. Values can be present multiple times
  */
 
 function getMetaDataValuesFromRepTrees(name, id, editDistance) {
-  var repTreeMetaData = getRepresentedNodesMetaData(id, editDistance);
+  var location = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "All";
+  var repTreeMetaData = getRepresentedNodesMetaData(id, editDistance, location);
   return getMetaDataValues(name, repTreeMetaData);
 }
 function getNodes(rootNode) {
@@ -753,9 +972,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _dataQueries__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dataQueries */ "./src/dataQueries.ts");
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
-/* harmony import */ var _sidePanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sidePanel */ "./src/sidePanel.ts");
-/* harmony import */ var _representativeGraph__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./representativeGraph */ "./src/representativeGraph.ts");
-/* harmony import */ var _updateFunctions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./updateFunctions */ "./src/updateFunctions.ts");
+/* harmony import */ var _GridMap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./GridMap */ "./src/GridMap.ts");
+/* harmony import */ var _sidePanel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sidePanel */ "./src/sidePanel.ts");
+/* harmony import */ var _representativeGraph__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./representativeGraph */ "./src/representativeGraph.ts");
+/* harmony import */ var _updateFunctions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./updateFunctions */ "./src/updateFunctions.ts");
+/* harmony import */ var _ColorSchemes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ColorSchemes */ "./src/ColorSchemes.ts");
+/* harmony import */ var _vizVariables__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./vizVariables */ "./src/vizVariables.ts");
+
+
+
 
 
 
@@ -777,7 +1002,10 @@ d3__WEBPACK_IMPORTED_MODULE_1__.json(repTreesDataInputLocation).then(function (r
       d3__WEBPACK_IMPORTED_MODULE_1__.text(gridNamesInputLocation).then(function (gridNamesInput) {
         repTreesData = repTreesDataInput;
         allTreesData = allTreesDataInput;
-        metaData = metaDataInput;
+        metaData = metaDataInput; //Not the way this should be done, but breaks cyclic dependency. Needs to be refactored properly
+
+        _vizVariables__WEBPACK_IMPORTED_MODULE_7__.vars.currentLeftColorScheme = _ColorSchemes__WEBPACK_IMPORTED_MODULE_6__.noneColorScheme;
+        _vizVariables__WEBPACK_IMPORTED_MODULE_7__.vars.currentRightColorScheme = _ColorSchemes__WEBPACK_IMPORTED_MODULE_6__.noneColorScheme;
         (0,_dataQueries__WEBPACK_IMPORTED_MODULE_0__.preprocessData)(repTreesData, allTreesData, metaData);
         gridNames = d3__WEBPACK_IMPORTED_MODULE_1__.csvParseRows(gridNamesInput);
 
@@ -788,22 +1016,25 @@ d3__WEBPACK_IMPORTED_MODULE_1__.json(repTreesDataInputLocation).then(function (r
         }
 
         mainRepresentativeGraph();
-        (0,_updateFunctions__WEBPACK_IMPORTED_MODULE_4__.updateAll)(); //update to use slider values
-        // // preprocessData();
-        // initGridMap(gridNames);
-        // const june1 = 1622505600;
-        // // const june28 = 1623456000;
-        // const december1 = 1638316800;
-        // createTimeSlider(d3.select("#sidePanel"));
-        // updateGridMapFromTrees(june1, december1);
+        (0,_updateFunctions__WEBPACK_IMPORTED_MODULE_5__.updateAll)(); //update to use slider values
+
+        (0,_GridMap__WEBPACK_IMPORTED_MODULE_2__.initGridMap)(gridNames);
+        var june1 = 1622505600; // // const june28 = 1623456000;
+
+        var december1 = 1638316800; // createTimeSlider(d3.select("#sidePanel"));
+
+        (0,_GridMap__WEBPACK_IMPORTED_MODULE_2__.updateGridMapFromTrees)(june1, december1);
       });
     });
   });
 });
 
 function mainRepresentativeGraph() {
-  (0,_sidePanel__WEBPACK_IMPORTED_MODULE_2__.createSidePanel)(repTreesData);
-  (0,_representativeGraph__WEBPACK_IMPORTED_MODULE_3__.generateTreeGrid)(repTreesData); // window.addEventListener('resize', function() { updatePositions() }, true);
+  (0,_sidePanel__WEBPACK_IMPORTED_MODULE_3__.createSidePanel)(repTreesData);
+  (0,_representativeGraph__WEBPACK_IMPORTED_MODULE_4__.generateTreeGrid)(repTreesData);
+  window.addEventListener('resize', function () {
+    (0,_updateFunctions__WEBPACK_IMPORTED_MODULE_5__.updatePositions)();
+  }, true);
 } // sliderValue = 1628985600;
 // function createTimeSlider(selectorDiv) {
 //     createSlider(selectorDiv, "TimeSlider", "time", 1628985600, 1635638400, sliderValue)
@@ -972,10 +1203,6 @@ function getRectGlyphYPositions(id, partIndex, isRepTree, isLeftChart) {
   return [y1, rectHeight];
 }
 
-function isRectIndexFromLeftChart(rectIndex) {
-  return rectIndex < _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.maxParts;
-}
-
 function getStartX(isLeftChart) {
   if (isLeftChart) {
     return -_vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.nodeBaseSize;
@@ -1038,8 +1265,8 @@ function getPartCounts(id, isRepTree, isLeftChart) {
   var values;
 
   if (isRepTree) {
-    //get value of all nodes represented by this idea
-    values = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_0__.getMetaDataValuesFromRepTrees)(attributeName, id, _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.currentEditDistance);
+    //get value of all nodes represented by this id
+    values = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_0__.getMetaDataValuesFromRepTrees)(attributeName, id, _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.locationToVisualize);
   } else {
     values = [(0,_dataQueries__WEBPACK_IMPORTED_MODULE_0__.getMetaDataValueFromId)(attributeName, id)]; //put into arrow for consistency
   }
@@ -1968,7 +2195,7 @@ function getOffSets(treeRoots, treeBaseWidthById, treeBaseHeightById, containerW
   for (var i = 0; i < treeRoots.length; i++) {
     if (representativeTrees) {
       var id = treeRoots[i].data.id;
-      var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_2__.getAmountOfTreesRepresentedById)(id, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.currentEditDistance);
+      var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_2__.getAmountOfTreesRepresentedById)(id, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.locationToVisualize);
       var scaleFactor = getScaleFactorByRepAmount(repAmount);
       widths[i] = treeBaseWidthById.get(id) * scaleFactor;
       heights[i] = treeBaseHeightById.get(id) * scaleFactor; //get base height
@@ -2000,7 +2227,7 @@ function createSingleTree(svgToAddTo, xOffset, yOffset, root, treeId, isRepTree)
   var scaleFactor = 1;
 
   if (isRepTree) {
-    var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_2__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.currentEditDistance);
+    var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_2__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.locationToVisualize);
     scaleFactor = getScaleFactorByRepAmount(repAmount);
   }
 
@@ -2151,6 +2378,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "setRecalculate": () => (/* binding */ setRecalculate),
 /* harmony export */   "updateSliderPreview": () => (/* binding */ updateSliderPreview),
 /* harmony export */   "updateAll": () => (/* binding */ updateAll),
+/* harmony export */   "updatePositions": () => (/* binding */ updatePositions),
 /* harmony export */   "updateGlobalChart": () => (/* binding */ updateGlobalChart),
 /* harmony export */   "changePending": () => (/* binding */ changePending)
 /* harmony export */ });
@@ -2204,12 +2432,12 @@ function setRecalculate() {
  */
 
 function updateSliderPreview() {
-  var idsToHide = getIdsToHide(_vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance);
-  hideTrees(idsToHide);
   updateRepresentationText();
   updateScentWidget(_vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance);
 }
 function updateAll() {
+  var idsToHide = getIdsToHide(_vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance);
+  hideTrees(idsToHide);
   updateSliderPreview();
   updateColors();
 
@@ -2310,7 +2538,6 @@ function updatePositions() {
   var idsToHide = getIdsToHide(_vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance);
   updateTreesAnimated(idsToHide, animate);
 }
-
 function updateGlobalChart() {
   //TODO: Not optimized at all, but works
   var distributionDiv = d3__WEBPACK_IMPORTED_MODULE_0__.select("#sidePanel").select("#distributionChartPanel");
@@ -2343,7 +2570,7 @@ function hideTrees(idsToHide) {
 function updateRepresentationText() {
   d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGrid").selectAll(".svgtree").selectAll(".textG").select("text").text(function () {
     var treeId = parseInt(d3__WEBPACK_IMPORTED_MODULE_0__.select(this).node().parentNode.parentNode.getAttribute("id").substring(3));
-    var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_3__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance);
+    var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_3__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.locationToVisualize);
     return repAmount;
   });
 }
@@ -2384,7 +2611,7 @@ function recalculatePlacement(idsToHide) {
 
   for (var i = 0; i < _representativeGraph__WEBPACK_IMPORTED_MODULE_7__.treeOrder.length; i++) {
     var id = _representativeGraph__WEBPACK_IMPORTED_MODULE_7__.treeOrder[i];
-    var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_3__.getAmountOfTreesRepresentedById)(id, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance);
+    var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_3__.getAmountOfTreesRepresentedById)(id, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.locationToVisualize);
     var width = _representativeGraph__WEBPACK_IMPORTED_MODULE_7__.treeBaseWidthById.get(id); //get base width
 
     var height = _representativeGraph__WEBPACK_IMPORTED_MODULE_7__.treeBaseHeightById.get(id); //get base height
@@ -2460,13 +2687,29 @@ function animateChanges(widthArray, heightArray, offsetArray, transitionTime) {
     //case there is no need to resize
   });
 }
+/**
+ * Hide either when they are not represnted at the edit distance or if they have no nodes with the right location
+ * @param editDistance 
+ * @returns 
+ */
+
 
 function getIdsToHide(editDistance) {
   var idsToHide = [];
 
   for (var i = 0; i < _index__WEBPACK_IMPORTED_MODULE_1__.repTreesData.length; i++) {
+    var id = _index__WEBPACK_IMPORTED_MODULE_1__.repTreesData[i].id; // //quick determine if we can hide this tree by edit distance along
+
     if (_index__WEBPACK_IMPORTED_MODULE_1__.repTreesData[i].maxEditDistance < editDistance) {
-      idsToHide.push(_index__WEBPACK_IMPORTED_MODULE_1__.repTreesData[i].id);
+      idsToHide.push(id);
+      continue;
+    } //repIData.editDistance <= editDistance
+    //These are represnted
+    //trees always represent themselves
+
+
+    if ((0,_dataQueries__WEBPACK_IMPORTED_MODULE_3__.getAmountOfTreesRepresentedById)(id, editDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.locationToVisualize) == 0) {
+      idsToHide.push(id);
     }
   }
 
@@ -2487,7 +2730,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "setNodeBaseSize": () => (/* binding */ setNodeBaseSize),
 /* harmony export */   "setVizSizes": () => (/* binding */ setVizSizes)
 /* harmony export */ });
-/* harmony import */ var _ColorSchemes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ColorSchemes */ "./src/ColorSchemes.ts");
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -2496,7 +2738,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-
+// import { noneColorScheme } from "./ColorSchemes";
 var vars = /*#__PURE__*/_createClass(function vars() {
   _classCallCheck(this, vars);
 });
@@ -2507,11 +2749,11 @@ _defineProperty(vars, "currentEditDistance", vars.initEditDistanceSliderVal);
 
 _defineProperty(vars, "maxParts", 7);
 
+_defineProperty(vars, "locationToVisualize", "All");
+
 _defineProperty(vars, "currentLeftAttributeName", "None");
 
 _defineProperty(vars, "currentLeftAttributeType", "None");
-
-_defineProperty(vars, "currentLeftColorScheme", _ColorSchemes__WEBPACK_IMPORTED_MODULE_0__.noneColorScheme);
 
 _defineProperty(vars, "currentLeftColorSchemeValues", []);
 
@@ -2522,8 +2764,6 @@ _defineProperty(vars, "currentLeftDistributionSelection", ["All"]);
 _defineProperty(vars, "currentRightAttributeName", "None");
 
 _defineProperty(vars, "currentRightAttributeType", "None");
-
-_defineProperty(vars, "currentRightColorScheme", _ColorSchemes__WEBPACK_IMPORTED_MODULE_0__.noneColorScheme);
 
 _defineProperty(vars, "currentRightColorSchemeValues", []);
 

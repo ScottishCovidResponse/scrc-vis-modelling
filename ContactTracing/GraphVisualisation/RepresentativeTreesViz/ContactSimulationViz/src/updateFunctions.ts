@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { metaData, repTreesData } from "./index";
 import { getColorScheme } from "./ColorSchemes";
-import { getAmountOfTreesRepresentedById, getMetaDataValues } from "./dataQueries";
+import { getAmountOfTreesRepresentedById, getMetaDataValues, metaDataFromNodeById } from "./dataQueries";
 import { createScentedRtLineChart } from "./LineChart";
 import { vars } from "./vizVariables";
 import { updateColorLegend } from "./sidePanel";
@@ -20,8 +20,6 @@ export function setRecalculate() { recalculate = true }
  * Updates the visualization without changing the layout of the trees
  */
 export function updateSliderPreview() {
-    let idsToHide = getIdsToHide(vars.currentEditDistance)
-    hideTrees(idsToHide);
     updateRepresentationText();
 
     updateScentWidget(vars.currentEditDistance)
@@ -29,6 +27,10 @@ export function updateSliderPreview() {
 
 
 export function updateAll() {
+    let idsToHide = getIdsToHide(vars.currentEditDistance)
+    hideTrees(idsToHide);
+
+
     updateSliderPreview();
     updateColors();
     if (recalculate) { //if we need to reinitialize the grid
@@ -87,7 +89,7 @@ function updateColorSchemes() {
     }
 }
 
-function updatePositions(animate = true) {
+export function updatePositions(animate = true) {
     removeAllPopups(); //remove all popups as we are changing the layout and possibly hiding trees/nodes
     let idsToHide = getIdsToHide(vars.currentEditDistance);
 
@@ -134,7 +136,7 @@ function updateRepresentationText() {
         .select("text")
         .text(function () {
             const treeId = parseInt(d3.select(this).node().parentNode.parentNode.getAttribute("id").substring(3))
-            const repAmount = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance);
+            const repAmount = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance, vars.locationToVisualize);
             return repAmount;
         })
 }
@@ -177,7 +179,7 @@ function recalculatePlacement(idsToHide) {
     for (let i = 0; i < treeOrder.length; i++) {
         const id = treeOrder[i];
 
-        const repAmount = getAmountOfTreesRepresentedById(id, vars.currentEditDistance);
+        const repAmount = getAmountOfTreesRepresentedById(id, vars.currentEditDistance, vars.locationToVisualize);
 
         let width = treeBaseWidthById.get(id); //get base width
         let height = treeBaseHeightById.get(id); //get base height
@@ -272,12 +274,29 @@ function animateChanges(widthArray, heightArray, offsetArray, transitionTime) {
 
 
 
-function getIdsToHide(editDistance) {
+/**
+ * Hide either when they are not represnted at the edit distance or if they have no nodes with the right location
+ * @param editDistance 
+ * @returns 
+ */
+function getIdsToHide(editDistance: number) {
     let idsToHide = [];
     for (let i = 0; i < repTreesData.length; i++) {
+        let id = repTreesData[i].id;
+        // //quick determine if we can hide this tree by edit distance along
         if (repTreesData[i].maxEditDistance < editDistance) {
-            idsToHide.push(repTreesData[i].id);
+            idsToHide.push(id);
+            continue;
         }
+
+         //repIData.editDistance <= editDistance
+         //These are represnted
+
+        //trees always represent themselves
+        if (getAmountOfTreesRepresentedById(id, editDistance, vars.locationToVisualize) == 0) {
+            idsToHide.push(id);
+        }
+
     }
     return idsToHide;
 }

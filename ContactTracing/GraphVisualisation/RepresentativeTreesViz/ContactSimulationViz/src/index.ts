@@ -1,9 +1,11 @@
 import { preprocessData } from "./dataQueries"
 import * as d3 from 'd3';
-import { initGridMap } from './GridMap';
+import { initGridMap, updateGridMapFromTrees } from './GridMap';
 import { createSidePanel } from './sidePanel';
 import { generateTreeGrid } from "./representativeGraph";
-import { updateAll } from "./updateFunctions";
+import { updateAll, updatePositions } from "./updateFunctions";
+import { noneColorScheme } from './ColorSchemes';
+import { vars } from "./vizVariables";
 
 
 const repTreesDataInputLocation = "../data/TTPData/RepTrees.json";
@@ -36,6 +38,10 @@ d3.json(repTreesDataInputLocation).then(function (repTreesDataInput) {
                 allTreesData = allTreesDataInput;
                 metaData = metaDataInput;
 
+                //Not the way this should be done, but breaks cyclic dependency. Needs to be refactored properly
+                vars.currentLeftColorScheme = noneColorScheme;
+                vars.currentRightColorScheme = noneColorScheme;
+
                 preprocessData(repTreesData, allTreesData, metaData);
 
                 gridNames = d3.csvParseRows(gridNamesInput)
@@ -50,15 +56,14 @@ d3.json(repTreesDataInputLocation).then(function (repTreesDataInput) {
                 mainRepresentativeGraph();
                 updateAll(); //update to use slider values
 
-                // // preprocessData();
 
-                // initGridMap(gridNames);
-                // const june1 = 1622505600;
+                initGridMap(gridNames);
+                const june1 = 1622505600;
                 // // const june28 = 1623456000;
-                // const december1 = 1638316800;
+                const december1 = 1638316800;
 
                 // createTimeSlider(d3.select("#sidePanel"));
-                // updateGridMapFromTrees(june1, december1);
+                updateGridMapFromTrees(june1, december1);
             });
         });
     });
@@ -67,7 +72,7 @@ d3.json(repTreesDataInputLocation).then(function (repTreesDataInput) {
 function mainRepresentativeGraph() {
     createSidePanel(repTreesData);
     generateTreeGrid(repTreesData);
-    // window.addEventListener('resize', function() { updatePositions() }, true);
+    window.addEventListener('resize', function() { updatePositions() }, true);
 
 }
 

@@ -128,8 +128,9 @@ export function getAmountOfTreesRepresented(d, editDistance) {
 /**
  * Gets the amount of trees represented by the tree with id {@code id} before editdistance {@code editDistance}
  * @param {*} editDistance 
+ * @param {Which location we are visualizing} locationToVisualize
  */
-export function getAmountOfTreesRepresentedById(id, editDistance) {
+export function getAmountOfTreesRepresentedById(id: number, editDistance: number, locationToVisualize: String = "All") {
     const repTree = repTreeById.get(id);
     if (repTree === undefined) { //Occurs when looking at Alltrees which do not have representations
         return 1;
@@ -137,10 +138,17 @@ export function getAmountOfTreesRepresentedById(id, editDistance) {
     let reps = repTree.representations;
 
     let count = 0;
-    for (let repI = 0; repI < reps.length; repI++) {
+    for (let repI = 0; repI < reps.length; repI++) {//go through the various edit distances
         const repIData = reps[repI];
-        if (repIData.editDistance <= editDistance) {
-            count += repIData.representationIds.length;
+        if (repIData.editDistance <= editDistance) { //Representative trees are represented by this tree
+
+            //must be of the current location visualized (or All are visualized)
+            for (let repId of repIData.representationIds) {
+                let location = metaDataFromNodeById.get(repId).location;
+                if (locationToVisualize == location || locationToVisualize == "All") {
+                    count += 1;
+                }
+            }
         }
     }
     return count;
@@ -181,8 +189,9 @@ export function getTreesRepresentedById(id, editDistance) {
  * @param {} treeId 
  * @param {} nodeId 
  * @param {} editDistance
+ * @param {} location
  */
-function getRepresentedNodesMetaData(nodeId, editDistance) {
+function getRepresentedNodesMetaData(nodeId: number, editDistance: number, location: string = "All") {
     const node = repNodeById.get(nodeId);
     let reps = node.representations;
 
@@ -191,8 +200,13 @@ function getRepresentedNodesMetaData(nodeId, editDistance) {
         const repIData = reps[i];
         if (repIData.editDistance <= editDistance) {
             const repIds = repIData.representationIds;
-            for (let j = 0; j < repIds.length; j++) {
-                repNodeIds.push(repIds[j]);
+
+
+            for (let repId of repIData.representationIds) {
+                let repLocation = metaDataFromNodeById.get(repId).location;
+                if (location == repLocation || location == "All") {
+                    repNodeIds.push(repId);
+                }
             }
         }
     }
@@ -268,10 +282,11 @@ export function getMetaDataValues(name, metaDataArray) {
  * @param {name of the attribute we want to get the values from} name  
  * @param {Id of the node that is representing other nodes} id
  * @param {The maximum edit distance to find trees represented by 'id'} editDistance
+ * @param {Only get data from nodes matching location (or if location is All) } location
  * @returns An array of all values for this attribute for all trees represented at the given editdistance by the node with the specified id. Values can be present multiple times
  */
-export function getMetaDataValuesFromRepTrees(name, id, editDistance) {
-    const repTreeMetaData = getRepresentedNodesMetaData(id, editDistance)
+export function getMetaDataValuesFromRepTrees(name, id, editDistance, location: String = "All") {
+    const repTreeMetaData = getRepresentedNodesMetaData(id, editDistance, location)
     return getMetaDataValues(name, repTreeMetaData);
 }
 

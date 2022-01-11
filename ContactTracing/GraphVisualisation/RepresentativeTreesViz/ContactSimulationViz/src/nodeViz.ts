@@ -94,13 +94,6 @@ function getRectGlyphYPositions(id, partIndex, isRepTree, isLeftChart) {
 }
 
 
-function isRectIndexFromLeftChart(rectIndex) {
-    return rectIndex < vars.maxParts;
-}
-
-
-
-
 function getStartX(isLeftChart) {
     if (isLeftChart) {
         return -vars.nodeBaseSize;
@@ -167,8 +160,8 @@ export function getPartCounts(id, isRepTree, isLeftChart) {
 
     let values;
     if (isRepTree) {
-        //get value of all nodes represented by this idea
-        values = getMetaDataValuesFromRepTrees(attributeName, id, vars.currentEditDistance);
+        //get value of all nodes represented by this id
+        values = getMetaDataValuesFromRepTrees(attributeName, id, vars.currentEditDistance,vars.locationToVisualize);
     } else {
         values = [getMetaDataValueFromId(attributeName, id)]; //put into arrow for consistency
     }

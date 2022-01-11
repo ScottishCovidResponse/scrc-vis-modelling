@@ -1,4 +1,8 @@
 import * as d3 from 'd3';
+import { getColorScheme, getIndexInColorScheme } from './ColorSchemes';
+import { metaDataFromNodeById } from './dataQueries';
+import { vars } from './vizVariables';
+import { updateAll } from './updateFunctions';
 
 let gridToSvgMap = new Map();
 
@@ -27,14 +31,24 @@ export function initGridMap(gridNames) {
     for (let rowI = 0; rowI < rows; rowI++) {
         for (let columnI = 0; columnI < columns; columnI++) {
             //make top level cell
-            const originName = gridNames[rowI][columnI];
-            if (originName !== "Empty") {
+            const name = gridNames[rowI][columnI];
+            if (name !== "Empty") {
                 const topX = columnI * (topCellWidth + spacing);
                 const topY = rowI * (topCellHeight + spacing);
 
                 //draw top level
                 const topSquareGroupSvg = generateSquareGroup(gridMapGrid, topX, topY, topCellWidth, topCellHeight, "topLevelGridCell");
-                gridToSvgMap.set(originName, topSquareGroupSvg);
+                gridToSvgMap.set(name, topSquareGroupSvg);
+
+                topSquareGroupSvg.on("click", function () {
+                    if (vars.locationToVisualize != name) {
+                        vars.locationToVisualize = name;
+                    } else {//clicked on it while active, disable
+                        vars.locationToVisualize = "All";
+                    }
+                    console.log(vars.locationToVisualize);
+                    updateAll();
+                })
 
             }
         }
@@ -69,7 +83,7 @@ function generateSquareGroup(svg, x, y, width, height, className) {
  * Takes as input a number of d3 trees, and updates the the od-map based on the frequence 
  * @param {*} trees 
  */
-function updateGridMapFromTrees(startTime, endTime) {
+export function updateGridMapFromTrees(startTime, endTime) {
     let gridCount = new Map();
 
     let totalCount = 0;
@@ -99,7 +113,7 @@ function updateGridMapFromTrees(startTime, endTime) {
 }
 
 
-function updateGridMapFromMap(gridCount) {
+export function updateGridMapFromMap(gridCount) {
     const values = Array.from(gridCount.values())
     const [colorScheme, colorSchemeValues] = getColorScheme("integer", values);
 

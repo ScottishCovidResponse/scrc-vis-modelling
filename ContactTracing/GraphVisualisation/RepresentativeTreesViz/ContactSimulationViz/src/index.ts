@@ -58,12 +58,12 @@ d3.json(repTreesDataInputLocation).then(function (repTreesDataInput) {
 
 
                 initGridMap(gridNames);
-                const june1 = 1622505600;
-                // // const june28 = 1623456000;
-                const december1 = 1638316800;
+
+
+
 
                 // createTimeSlider(d3.select("#sidePanel"));
-                updateGridMapFromTrees(june1, december1);
+                updateGridMapFromTrees(vars.startDate, vars.endDate);
             });
         });
     });

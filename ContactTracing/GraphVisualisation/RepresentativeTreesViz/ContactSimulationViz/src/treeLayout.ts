@@ -25,7 +25,7 @@ export function getOffSets(treeRoots, treeBaseWidthById, treeBaseHeightById, con
     for (let i = 0; i < treeRoots.length; i++) {
         if (representativeTrees) {
             const id = treeRoots[i].data.id;
-            const repAmount = getAmountOfTreesRepresentedById(id, vars.currentEditDistance,vars.locationToVisualize);
+            const repAmount = getAmountOfTreesRepresentedById(id, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
             const scaleFactor = getScaleFactorByRepAmount(repAmount);
             widths[i] = treeBaseWidthById.get(id) * scaleFactor;
             heights[i] = treeBaseHeightById.get(id) * scaleFactor; //get base height
@@ -58,7 +58,7 @@ export function createSingleTree(svgToAddTo, xOffset, yOffset, root, treeId, isR
 
     let scaleFactor = 1;
     if (isRepTree) {
-        const repAmount = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance,vars.locationToVisualize);
+        const repAmount = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
         scaleFactor = getScaleFactorByRepAmount(repAmount);
     }
 
@@ -140,6 +140,9 @@ export function createSingleTree(svgToAddTo, xOffset, yOffset, root, treeId, isR
 }
 
 export function getScaleFactorByRepAmount(repAmount) {
+    if (repAmount == 0) {
+        repAmount = 1; //prevent taking the log of 0
+    }
     const scaleFactor = 1 + Math.log10(repAmount);
     return scaleFactor
 }

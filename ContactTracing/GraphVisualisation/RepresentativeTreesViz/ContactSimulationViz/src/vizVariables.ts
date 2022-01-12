@@ -26,6 +26,14 @@ export class vars {
 
     public static normalizeComponentChart = false; //whether we normalize the bar chart against the total amount of nodes or not.
 
+
+                
+    // private june1 = 1622505600;
+    // private december1 = 1638316800;
+
+    public static startDate = 1622505600;
+    public static endDate = 1638316800;
+
     //Visual variables
     //Variables for the tree visualization
     public static nodeBaseSize = 8; //radius of the node

@@ -14,7 +14,7 @@ import {
 import { metaDataNames, metaDataTypes, getMaxDepth } from './dataQueries';
 import { createComponentBarChart } from './BarChart';
 import { changePending, updateAll, updateSliderPreview, setRecalculate, updateGlobalChart } from './updateFunctions';
-
+import Litepicker from 'litepicker';
 
 
 export let currentLeftPolicy = "1a"; //what the current policy is for the left sides of the glyphs
@@ -26,11 +26,11 @@ export let currentRightAppPercentage = "100";
 
 
 
-let sortEnabled = false;
 let sortBy = "Tree size";
 
 export function createSidePanel(repTreesData) {
     createSelectors(repTreesData);
+    createCalendar();
     createDistributionChartPanel();
     createColorLegends();
 }
@@ -197,40 +197,57 @@ function createAppPercentageSelectors(selectorDiv) {
     createLeftRightComboBoxes(selectorDiv, colorOptions, "leftAppPercentageSelector", "rightAppPercentageSelector", currentLeftAppPercentage + "%", currentRightAppPercentage + "%", leftChangeFunction, rightChangeFunction);
 }
 
-function createSortOptions(selectorDiv) {
+function createCalendar() {
+    const litePickerDiv = d3.select("#sidePanel").append("div").attr("id", "DatePickerDiv")
 
-    const sortDiv = selectorDiv.append("div")
-        .attr("class", "sortDiv")
+    litePickerDiv.append("p").attr("class", "title text").text("Date range")
 
-    sortDiv.append("p")
-        .attr("class", "text subtitle")
-        .text("Sort")
-
-    const sortEnabledChangeFunction = function () {
-        sortEnabled = this.checked; //keep it updated
-        changePending();
-    };
-
-    createCheckBox(sortDiv, "sortCheckBox", sortEnabled, sortEnabledChangeFunction);
+    const sideBySideDiv = litePickerDiv.append("div").attr("class", "calendarDiv")
 
 
-    sortDiv.append("p")
-        .attr("class", "text subtitle")
-        .text("by")
+    const inputPicker = sideBySideDiv.append("input")
+        .attr("type", "text")
+        .attr("id", "datepicker")
 
-    const comboOptions = [
-        { "NAME": "Tree size" },
-        { "NAME": "Difference" },
-        { "NAME": "Root width" }
-    ]
 
-    const sortByChangeFunction = function () {
-        sortBy = this.value; //keep it updated
-        changePending();
-    };
+    const picker = new Litepicker({
+        element: document.getElementById('datepicker'),
+        singleMode: false,
+        delimiter: "   -   ",
+        format: "D-MMM-YY",
+        startDate: new Date(vars.startDate * 1000), //javascript uses milliseconds instead of seconds
+        endDate: new Date(vars.endDate * 1000),
+        setup: (picker) => {
+            picker.on('selected', (date1: Date, date2: Date) => {
+                vars.startDate = (date1.getTime() / 1000);
+                vars.endDate = (date2.getTime() / 1000);
+                updateAll();
+            })
+        }
+    })
 
-    createComboBox(sortDiv, "sortComboBox", comboOptions, sortBy, sortByChangeFunction);
+
+    function allSelection() {
+        if (this.checked) {
+            vars.startDate = 0
+            vars.endDate = Number.MAX_VALUE;
+            updateAll();
+            inputPicker.classed("grayed", true);
+        } else {
+            vars.startDate = (picker.getStartDate().getTime() / 1000);
+            vars.endDate = (picker.getEndDate().getTime() / 1000);
+            updateAll();
+            inputPicker.classed("grayed", false);
+        }
+    }
+
+    createCheckBox(sideBySideDiv, "selectAll", false, allSelection, "All")
+
+
+    console.log("Add all Checkbox")
+
 }
+
 
 function createRecalculateButton(selectorDiv) {
 

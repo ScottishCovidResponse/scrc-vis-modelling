@@ -85,7 +85,7 @@ function generateSquareGroup(svg, x: number, y: number, width: number, height: n
  * Takes as input a number of d3 trees, and updates the the od-map based on the frequence 
  * @param {*} trees 
  */
-export function updateGridMapFromTrees(startTime, endTime) {
+export function updateGridMapFromTrees(startTime: number, endTime: number) {
     let gridCount = new Map();
 
     let totalCount = 0;

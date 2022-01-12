@@ -11,6 +11,7 @@ import { updateNodeGlyphs } from "./nodeViz";
 import { removeAllPopups } from "./popup";
 import { getScaleFactorByRepAmount } from "./treeLayout";
 import { calculateOffsets } from "./offsetCalculator";
+import { updateGridMapFromTrees } from "./GridMap";
 
 let recalculate = false; //Holds whether we need to recalculate the tree grid. Can happen in case of node size change or data change
 
@@ -48,6 +49,7 @@ export function updateAll() {
 
     updateGlobalChart();
     changeNoLongerPending();
+    updateGridMapFromTrees(vars.startDate, vars.endDate);
 }
 
 
@@ -179,7 +181,7 @@ function recalculatePlacement(idsToHide) {
     for (let i = 0; i < treeOrder.length; i++) {
         const id = treeOrder[i];
 
-        const repAmount = getAmountOfTreesRepresentedById(id, vars.currentEditDistance, vars.locationToVisualize);
+        const repAmount = getAmountOfTreesRepresentedById(id, vars.currentEditDistance, vars.locationToVisualize,vars.startDate,vars.endDate);
 
         let width = treeBaseWidthById.get(id); //get base width
         let height = treeBaseHeightById.get(id); //get base height
@@ -282,21 +284,32 @@ function animateChanges(widthArray, heightArray, offsetArray, transitionTime) {
 function getIdsToHide(editDistance: number) {
     let idsToHide = [];
     for (let i = 0; i < repTreesData.length; i++) {
-        let id = repTreesData[i].id;
+        const repData = repTreesData[i];
+        let id = repData.id;
+
         // //quick determine if we can hide this tree by edit distance along
-        if (repTreesData[i].maxEditDistance < editDistance) {
+        if (repData.maxEditDistance < editDistance) {
+            idsToHide.push(id);
+            continue;
+        }
+        //only show trees in the represented range
+        const metaData = metaDataFromNodeById.get(id);
+        if (metaData.positiveTestTime < vars.startDate || metaData.positiveTestTime > vars.endDate) {
             idsToHide.push(id);
             continue;
         }
 
-         //repIData.editDistance <= editDistance
-         //These are represnted
+        
+        //repIData.editDistance <= editDistance
+        //These are represnted
 
         //trees always represent themselves
-        if (getAmountOfTreesRepresentedById(id, editDistance, vars.locationToVisualize) == 0) {
+        if (getAmountOfTreesRepresentedById(id, editDistance, vars.locationToVisualize,vars.startDate,vars.endDate) == 0) {
             idsToHide.push(id);
+            continue;
         }
 
     }
+    console.log("TODO: Hide complete trees that are not in the right range")
     return idsToHide;
 }

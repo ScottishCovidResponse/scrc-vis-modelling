@@ -332,8 +332,7 @@ function initGridMap(gridNames) {
             d3__WEBPACK_IMPORTED_MODULE_0__.select(this).select("rect").classed("selectedRectangle", false);
           }
 
-          console.log(_vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.locationToVisualize);
-          (0,_updateFunctions__WEBPACK_IMPORTED_MODULE_4__.updateAll)();
+          (0,_updateFunctions__WEBPACK_IMPORTED_MODULE_4__.changePending)();
         });
       }
     };
@@ -720,39 +719,14 @@ function getTreeHeight(treeNode) {
  */
 
 
-function getAmountOfTreesRepresented(d, editDistance) {
+function getAmountOfTreesRepresented(d, editDistance, locationToVisualize, startDate, endDate) {
   var count = 0;
-  var reps = d.data.representations;
-
-  for (var repI = 0; repI < reps.length; repI++) {
-    var repIData = reps[repI];
-
-    if (repIData.editDistance <= editDistance) {
-      count += repIData.representationIds.length;
-    }
-  }
-
-  return count;
-}
-/**
- * Gets the amount of trees represented by the tree with id {@code id} before editdistance {@code editDistance}
- * @param {*} editDistance 
- * @param {Which location we are visualizing} locationToVisualize
- */
-
-function getAmountOfTreesRepresentedById(id, editDistance) {
-  var locationToVisualize = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "All";
-  var startDate = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-  var endDate = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : Number.MAX_VALUE;
-  var repTree = repTreeById.get(id);
-
-  if (repTree === undefined) {
-    //Occurs when looking at Alltrees which do not have representations
-    return 1;
-  }
-
-  var reps = repTree.representations;
-  var count = 0;
+  var reps = d.data.representations; // for (let repI = 0; repI < reps.length; repI++) {
+  //     const repIData = reps[repI];
+  //     if (repIData.editDistance <= editDistance) {
+  //         count += repIData.representationIds.length;
+  //     }
+  // }
 
   for (var repI = 0; repI < reps.length; repI++) {
     //go through the various edit distances
@@ -772,7 +746,7 @@ function getAmountOfTreesRepresentedById(id, editDistance) {
 
           if (locationToVisualize == location || locationToVisualize == "All") {
             //must have started or ended in this period
-            if (startDate < metaData.positiveTestTime && metaData.positiveTestTime < endDate) {
+            if (metaData.positiveTestTime > startDate && metaData.positiveTestTime < endDate) {
               //must be in the right timeframp
               count += 1;
             }
@@ -782,6 +756,57 @@ function getAmountOfTreesRepresentedById(id, editDistance) {
         _iterator4.e(err);
       } finally {
         _iterator4.f();
+      }
+    }
+  }
+
+  return count;
+}
+/**
+ * Gets the amount of trees represented by the tree with id {@code id} before editdistance {@code editDistance}
+ * @param {*} editDistance 
+ * @param {Which location we are visualizing} locationToVisualize
+ */
+
+function getAmountOfTreesRepresentedById(id, editDistance, locationToVisualize, startDate, endDate) {
+  var repTree = repTreeById.get(id);
+
+  if (repTree === undefined) {
+    //Occurs when looking at Alltrees which do not have representations
+    return 1;
+  }
+
+  var reps = repTree.representations;
+  var count = 0;
+
+  for (var repI = 0; repI < reps.length; repI++) {
+    //go through the various edit distances
+    var repIData = reps[repI];
+
+    if (repIData.editDistance <= editDistance) {
+      //Representative trees are represented by this tree
+      //must be of the current location visualized (or All are visualized)
+      var _iterator5 = _createForOfIteratorHelper(repIData.representationIds),
+          _step5;
+
+      try {
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+          var repId = _step5.value;
+          var metaData = metaDataFromNodeById.get(repId);
+          var location = metaData.location;
+
+          if (locationToVisualize == location || locationToVisualize == "All") {
+            //must have started or ended in this period
+            if (metaData.positiveTestTime > startDate && metaData.positiveTestTime < endDate) {
+              //must be in the right timeframp
+              count += 1;
+            }
+          }
+        }
+      } catch (err) {
+        _iterator5.e(err);
+      } finally {
+        _iterator5.f();
       }
     }
   }
@@ -827,8 +852,7 @@ function getTreesRepresentedById(id, editDistance) {
  * @param {} location
  */
 
-function getRepresentedNodesMetaData(nodeId, editDistance) {
-  var location = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "All";
+function getRepresentedNodesMetaData(nodeId, editDistance, locationToVisualize, startDate, endDate) {
   var node = repNodeById.get(nodeId);
   var reps = node.representations;
   var repNodeIds = [];
@@ -837,24 +861,28 @@ function getRepresentedNodesMetaData(nodeId, editDistance) {
     var repIData = reps[i];
 
     if (repIData.editDistance <= editDistance) {
-      var repIds = repIData.representationIds;
-
-      var _iterator5 = _createForOfIteratorHelper(repIData.representationIds),
-          _step5;
+      //must be of the current location visualized (or All are visualized)
+      var _iterator6 = _createForOfIteratorHelper(repIData.representationIds),
+          _step6;
 
       try {
-        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-          var repId = _step5.value;
-          var repLocation = metaDataFromNodeById.get(repId).location;
+        for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+          var repId = _step6.value;
+          var metaData = metaDataFromNodeById.get(repId);
+          var location = metaData.location;
 
-          if (location == repLocation || location == "All") {
-            repNodeIds.push(repId);
+          if (locationToVisualize == location || locationToVisualize == "All") {
+            //must have started or ended in this period
+            if (metaData.positiveTestTime > startDate && metaData.positiveTestTime < endDate) {
+              //must be in the right timeframp
+              repNodeIds.push(repId);
+            }
           }
         }
       } catch (err) {
-        _iterator5.e(err);
+        _iterator6.e(err);
       } finally {
-        _iterator5.f();
+        _iterator6.f();
       }
     }
   }
@@ -933,9 +961,8 @@ function getMetaDataValues(name, metaDataArray) {
  * @returns An array of all values for this attribute for all trees represented at the given editdistance by the node with the specified id. Values can be present multiple times
  */
 
-function getMetaDataValuesFromRepTrees(name, id, editDistance) {
-  var location = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "All";
-  var repTreeMetaData = getRepresentedNodesMetaData(id, editDistance, location);
+function getMetaDataValuesFromRepTrees(name, id, editDistance, locationToVisualize, startDate, endDate) {
+  var repTreeMetaData = getRepresentedNodesMetaData(id, editDistance, locationToVisualize, startDate, endDate);
   return getMetaDataValues(name, repTreeMetaData);
 }
 function getNodes(rootNode) {
@@ -1032,8 +1059,7 @@ d3__WEBPACK_IMPORTED_MODULE_1__.json(repTreesDataInputLocation).then(function (r
         mainRepresentativeGraph();
         (0,_updateFunctions__WEBPACK_IMPORTED_MODULE_5__.updateAll)(); //update to use slider values
 
-        (0,_GridMap__WEBPACK_IMPORTED_MODULE_2__.initGridMap)(gridNames); // createTimeSlider(d3.select("#sidePanel"));
-
+        (0,_GridMap__WEBPACK_IMPORTED_MODULE_2__.initGridMap)(gridNames);
         (0,_GridMap__WEBPACK_IMPORTED_MODULE_2__.updateGridMapFromTrees)(_vizVariables__WEBPACK_IMPORTED_MODULE_7__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_7__.vars.endDate);
       });
     });
@@ -1278,7 +1304,7 @@ function getPartCounts(id, isRepTree, isLeftChart) {
 
   if (isRepTree) {
     //get value of all nodes represented by this id
-    values = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_0__.getMetaDataValuesFromRepTrees)(attributeName, id, _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.locationToVisualize);
+    values = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_0__.getMetaDataValuesFromRepTrees)(attributeName, id, _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.endDate);
   } else {
     values = [(0,_dataQueries__WEBPACK_IMPORTED_MODULE_0__.getMetaDataValueFromId)(attributeName, id)]; //put into arrow for consistency
   }
@@ -1905,7 +1931,7 @@ function createCalendar() {
       picker.on('selected', function (date1, date2) {
         _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.startDate = date1.getTime() / 1000;
         _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.endDate = date2.getTime() / 1000;
-        (0,_updateFunctions__WEBPACK_IMPORTED_MODULE_6__.updateAll)();
+        (0,_updateFunctions__WEBPACK_IMPORTED_MODULE_6__.changePending)();
       });
     }
   });
@@ -1914,18 +1940,17 @@ function createCalendar() {
     if (this.checked) {
       _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.startDate = 0;
       _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.endDate = Number.MAX_VALUE;
-      (0,_updateFunctions__WEBPACK_IMPORTED_MODULE_6__.updateAll)();
       inputPicker.classed("grayed", true);
     } else {
       _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.startDate = picker.getStartDate().getTime() / 1000;
       _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.endDate = picker.getEndDate().getTime() / 1000;
-      (0,_updateFunctions__WEBPACK_IMPORTED_MODULE_6__.updateAll)();
       inputPicker.classed("grayed", false);
     }
+
+    (0,_updateFunctions__WEBPACK_IMPORTED_MODULE_6__.changePending)();
   }
 
   createCheckBox(sideBySideDiv, "selectAll", false, allSelection, "All");
-  console.log("Add all Checkbox");
 }
 
 function createRecalculateButton(selectorDiv) {
@@ -2260,6 +2285,10 @@ function createSingleTree(svgToAddTo, xOffset, yOffset, root, treeId, isRepTree)
   if (isRepTree) {
     var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_2__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.endDate);
     scaleFactor = getScaleFactorByRepAmount(repAmount);
+
+    if (repAmount != 1) {
+      console.log(repAmount);
+    }
   }
 
   var width = getDisplayWidth(root);
@@ -2289,7 +2318,9 @@ function createSingleTree(svgToAddTo, xOffset, yOffset, root, treeId, isRepTree)
   }); //add how many trees this node represents if the data is present
 
   if (isRepTree && typeof root.data.representations !== 'undefined') {
-    var repNumber = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_2__.getAmountOfTreesRepresented)(root, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.currentEditDistance);
+    var repNumber = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_2__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.endDate); //Old
+    // const repNumber = getAmountOfTreesRepresented(root, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
+
     var textG = treeSvg.append("g").attr("class", "textG");
     var text = textG.append("text").attr("class", "textRepAmount").attr("font-size", _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.fontSizeRepAmount) // .attr("font-size", "60vw")
     .text(repNumber); //position text such that the top is 2 pixels below the root
@@ -2609,7 +2640,7 @@ function hideTrees(idsToHide) {
 function updateRepresentationText() {
   d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGrid").selectAll(".svgtree").selectAll(".textG").select("text").text(function () {
     var treeId = parseInt(d3__WEBPACK_IMPORTED_MODULE_0__.select(this).node().parentNode.parentNode.getAttribute("id").substring(3));
-    var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_3__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.locationToVisualize);
+    var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_3__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.endDate);
     return repAmount;
   });
 }
@@ -2744,14 +2775,15 @@ function getIdsToHide(editDistance) {
       idsToHide.push(id);
       continue;
     } //only show trees in the represented range
-
-
-    var _metaData = _dataQueries__WEBPACK_IMPORTED_MODULE_3__.metaDataFromNodeById.get(id);
-
-    if (_metaData.positiveTestTime < _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.startDate || _metaData.positiveTestTime > _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.endDate) {
-      idsToHide.push(id);
-      continue;
-    } //repIData.editDistance <= editDistance
+    // const metaData = metaDataFromNodeById.get(id);
+    // if ( metaData.positiveTestTime < vars.startDate  || metaData.positiveTestTime > vars.endDate) {
+    //     idsToHide.push(id);
+    //     // console.log(vars.startDate)
+    //     // console.log(vars.endDate)
+    //     // console.log(metaData.positiveTestTime);
+    //     continue;
+    // }
+    //repIData.editDistance <= editDistance
     //These are represnted
     //trees always represent themselves
 

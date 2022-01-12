@@ -31,6 +31,7 @@ let sortBy = "Tree size";
 export function createSidePanel(repTreesData) {
     createSelectors(repTreesData);
     createCalendar();
+    
     createDistributionChartPanel();
     createColorLegends();
 }
@@ -221,31 +222,29 @@ function createCalendar() {
             picker.on('selected', (date1: Date, date2: Date) => {
                 vars.startDate = (date1.getTime() / 1000);
                 vars.endDate = (date2.getTime() / 1000);
-                updateAll();
+                changePending();
             })
         }
     })
 
 
     function allSelection() {
+
+
         if (this.checked) {
             vars.startDate = 0
             vars.endDate = Number.MAX_VALUE;
-            updateAll();
             inputPicker.classed("grayed", true);
         } else {
             vars.startDate = (picker.getStartDate().getTime() / 1000);
             vars.endDate = (picker.getEndDate().getTime() / 1000);
-            updateAll();
             inputPicker.classed("grayed", false);
         }
+        
+        changePending();
     }
 
     createCheckBox(sideBySideDiv, "selectAll", false, allSelection, "All")
-
-
-    console.log("Add all Checkbox")
-
 }
 
 

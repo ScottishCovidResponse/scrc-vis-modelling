@@ -58,11 +58,6 @@ d3.json(repTreesDataInputLocation).then(function (repTreesDataInput) {
 
 
                 initGridMap(gridNames);
-
-
-
-
-                // createTimeSlider(d3.select("#sidePanel"));
                 updateGridMapFromTrees(vars.startDate, vars.endDate);
             });
         });

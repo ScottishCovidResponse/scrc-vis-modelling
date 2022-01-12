@@ -138,7 +138,7 @@ function updateRepresentationText() {
         .select("text")
         .text(function () {
             const treeId = parseInt(d3.select(this).node().parentNode.parentNode.getAttribute("id").substring(3))
-            const repAmount = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance, vars.locationToVisualize);
+            const repAmount = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance, vars.locationToVisualize,vars.startDate,vars.endDate);
             return repAmount;
         })
 }
@@ -181,7 +181,7 @@ function recalculatePlacement(idsToHide) {
     for (let i = 0; i < treeOrder.length; i++) {
         const id = treeOrder[i];
 
-        const repAmount = getAmountOfTreesRepresentedById(id, vars.currentEditDistance, vars.locationToVisualize,vars.startDate,vars.endDate);
+        const repAmount = getAmountOfTreesRepresentedById(id, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
 
         let width = treeBaseWidthById.get(id); //get base width
         let height = treeBaseHeightById.get(id); //get base height
@@ -282,6 +282,7 @@ function animateChanges(widthArray, heightArray, offsetArray, transitionTime) {
  * @returns 
  */
 function getIdsToHide(editDistance: number) {
+    
     let idsToHide = [];
     for (let i = 0; i < repTreesData.length; i++) {
         const repData = repTreesData[i];
@@ -292,19 +293,24 @@ function getIdsToHide(editDistance: number) {
             idsToHide.push(id);
             continue;
         }
-        //only show trees in the represented range
-        const metaData = metaDataFromNodeById.get(id);
-        if (metaData.positiveTestTime < vars.startDate || metaData.positiveTestTime > vars.endDate) {
-            idsToHide.push(id);
-            continue;
-        }
 
-        
+
+         //only show trees in the represented range
+        // const metaData = metaDataFromNodeById.get(id);
+        // if ( metaData.positiveTestTime < vars.startDate  || metaData.positiveTestTime > vars.endDate) {
+        //     idsToHide.push(id);
+        //     // console.log(vars.startDate)
+        //     // console.log(vars.endDate)
+        //     // console.log(metaData.positiveTestTime);
+        //     continue;
+        // }
+
+
         //repIData.editDistance <= editDistance
         //These are represnted
 
         //trees always represent themselves
-        if (getAmountOfTreesRepresentedById(id, editDistance, vars.locationToVisualize,vars.startDate,vars.endDate) == 0) {
+        if (getAmountOfTreesRepresentedById(id, editDistance, vars.locationToVisualize, vars.startDate, vars.endDate) == 0) {
             idsToHide.push(id);
             continue;
         }

@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import { getColorScheme, getIndexInColorScheme } from './ColorSchemes';
 import { metaDataFromNodeById } from './dataQueries';
 import { vars } from './vizVariables';
-import { updateAll } from './updateFunctions';
+import { changePending } from './updateFunctions';
 
 let gridToSvgMap = new Map();
 
@@ -48,8 +48,7 @@ export function initGridMap(gridNames) {
                         vars.locationToVisualize = "All";
                         d3.select(this).select("rect").classed("selectedRectangle", false);
                     }
-                    console.log(vars.locationToVisualize);
-                    updateAll();
+                    changePending();
                 })
 
             }

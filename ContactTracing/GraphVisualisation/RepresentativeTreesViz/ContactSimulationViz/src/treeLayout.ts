@@ -60,6 +60,9 @@ export function createSingleTree(svgToAddTo, xOffset, yOffset, root, treeId, isR
     if (isRepTree) {
         const repAmount = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
         scaleFactor = getScaleFactorByRepAmount(repAmount);
+        if (repAmount != 1) {
+            console.log(repAmount)
+        }
     }
 
     const width = getDisplayWidth(root);
@@ -117,7 +120,10 @@ export function createSingleTree(svgToAddTo, xOffset, yOffset, root, treeId, isR
 
     //add how many trees this node represents if the data is present
     if (isRepTree && typeof root.data.representations !== 'undefined') {
-        const repNumber = getAmountOfTreesRepresented(root, vars.currentEditDistance);
+        const repNumber = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
+
+        //Old
+        // const repNumber = getAmountOfTreesRepresented(root, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
 
         const textG = treeSvg.append("g").attr("class", "textG")
         const text = textG.append("text")

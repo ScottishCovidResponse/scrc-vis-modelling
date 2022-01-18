@@ -64,16 +64,3 @@ function setBaseWidthAndHeightById(treeRoots) {
         treeOrder[i] = treeRoot.data.id;
     }
 }
-
-
-
-
-/**
- * True if d.maxEditDistance > editdistance
- * @param {*} d 
- * @param {*} editDistance 
- * @returns 
- */
-function contains(d, editDistance) {
-    return (d.maxEditDistance > editDistance)
-}

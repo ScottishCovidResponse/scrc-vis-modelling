@@ -27,25 +27,26 @@ public class ContactNode extends Node<ContactEdge> {
      */
     public Integer sourceInfectionId;
 
-    public ArrayList<MetaData> metaDataList;
-    
+    public ArrayList<MetaData> metaDataList = new ArrayList();
+
     /**
      * Debug purposes only
      */
     public String md5Hash;
-    
+
     public String location;
 
+    /**
+     * Holds all contacts of this node. Includes nodes that this node does not have edges to.
+     */
+    public Set<String> allContacts = new HashSet();
+    
     public ContactNode(int id) {
         super(id);
     }
 
     public void setTestTime(long positiveTestTime) {
         this.positiveTestTime = positiveTestTime;
-    }
-
-    public void setMetaData(ArrayList<MetaData> metaDataList) {
-        this.metaDataList = metaDataList;
     }
 
     public Set<ContactNode> getUniqueContacts() {
@@ -71,5 +72,26 @@ public class ContactNode extends Node<ContactEdge> {
         metaDataList.add(md);
     }
 
+    public void addContactCount() {
+        MetaData contactCountMd = getNamedMetaData("ContactCount");
+
+        if (contactCountMd == null) {
+            contactCountMd = new MetaData("ContactCount", "integer", "0");
+        } else {
+            metaDataList.remove(contactCountMd);
+        }
+        int newValue = Integer.parseInt(contactCountMd.valueString) + 1;
+        contactCountMd.valueString = "" + newValue;
+        metaDataList.add(contactCountMd);
+    }
+
+    public MetaData getNamedMetaData(String attributeName) {
+        for (MetaData md : metaDataList) {
+            if (md.attributeName.equals(attributeName)) {
+                return md;
+            }
+        }
+        return null;
+    }
 
 }

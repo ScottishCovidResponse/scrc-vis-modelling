@@ -55,17 +55,22 @@ public class RealDataParser {
     public static void main(String[] args) {
         try {
             System.out.println("TODO: Parse rom arguments");
-            String inputFolderLocation = "E:/TTP/TTPDataPlus";
-//            String inputFolderLocation = "E:/TTP/ContactTTPSimulationViz/data/TTPData";
-            String outputFileLocation = inputFolderLocation;
+            String inputFolderLocation = "E:/TTP/RawData";
+            String outputFileLocation = "E:/TTP/ProcessedData";
 
             int startTreeSize = 1;//calculate starting from trees of size 1
             int endTreeSize = 2000; //stop calculating for trees of size 2000
 
             int timeWindowSize = 60 * 60 * 24;//Time window of 1 day
 
+            /**
+             * Whether we have already created all the components files. Note,
+             * this does not mean we have calculated all infections trees.
+             */
+            boolean chainsAlreadyGenerated = false;
+
             RealDataParser rdp = new RealDataParser(inputFolderLocation, outputFileLocation, startTreeSize, endTreeSize, timeWindowSize);
-            rdp.parseData(true);
+            rdp.parseData(chainsAlreadyGenerated);
 //            rdp.parseTreeData(outputFileLocation + "/NodesAndMeta.json", outputFileLocation + "/AllTrees.json");
         } catch (IOException ex) {
             System.out.println("Invalid input or outputFileLocation");
@@ -92,20 +97,24 @@ public class RealDataParser {
         System.out.println("Working on data from: " + inputFolderLocation);
 
         //gets the structure of the graph and the associated metadata
-        ContactGraphParser gp = new ContactGraphParser(inputFolderLocation + "/Wales_TTP_data_cases_contacts.csv", inputFolderLocation + "/Wales_TTP_data_exposures.csv");
+        ContactGraphParser gp = new ContactGraphParser(inputFolderLocation + "/Wales_TTP_data_cases_contacts_v2.csv", inputFolderLocation + "/Wales_TTP_data_exposures_v2.csv");
 //        gp.addMetaDataFiles(inputFolderLocation + "/NodeData.csv", inputFolderLocation + "/ContactEdgeData.csv");
+
         ContactGraph cg = gp.constructGraph();
+//        ContactGraph cg = gp.constructGraph(50000);//run it with a limited set of lines to read, should make sure the program actually finished
 
         cg.printStatistics();
 
-//        addContactsAmountToMetadata(cg);//add the amount of contacts to the metadata?
+        cg.addContactsAmountToMetadata();//add the amount of contacts to the metadata?
         Log.printProgress("Calculate most likely infection chain");
         InfectionChainCalculator icc = new InfectionChainCalculator(cg, inputFolderLocation);
-        InfectionGraph ig = icc.calculateInfectionGraph(!chainsAlreadyGenerated);//if chains are already geneerated, no need to execute the program again. Just read files
-//        addSourceIdToMetaData(cg, ig);
+        InfectionGraph ig = icc.calculateInfectionGraph(chainsAlreadyGenerated);//if chains are already geneerated, no need to execute the program again. Just read files
+        System.out.println("Finished calculating most likely infection chain");
 
+        addSourceIdToMetaData(cg, ig);
+//
         ig.printStatistics();
-
+//
         //write the metadata of the nodes that are infected to a json file
         GraphWriter gw = new GraphWriter();
         List<ContactNode> exposedContactNodes = cg.getContactNodesInInfectionGraph(cg, ig);
@@ -125,9 +134,6 @@ public class RealDataParser {
     }
 
     public void calculateRepTrees(Set<Tree> forest) throws IOException {
-
-        System.out.println("TODO: Set time windows automatically");
-
         //make output dir for for distances
         File f = new File(outputFileLocation + "/ReptreesRTDistance");
         f.mkdir();
@@ -143,16 +149,12 @@ public class RealDataParser {
         merger.cleanup();//delete the temporary output folder.
     }
 
-//    public void parseTreeData(String forestLocation, String nodeMetaDataLocation) throws IOException {
-//
-//        ForestReader fr = new ForestReader();
-//        Set<Tree> forest = fr.readForest(forestLocation, nodeMetaDataLocation);
-//        calculateRepTrees(forest);
-//    }
     private void addSourceIdToMetaData(ContactGraph cg, InfectionGraph ig) {
         for (InfectionNode in : ig.getNodes()) {
             ContactNode cn = cg.getNode(in.id);
-            cn.sourceInfectionId = in.sourceInfectionId;
+            if (cn != null) {//should only happen when debugging
+                cn.sourceInfectionId = in.sourceInfectionId;
+            }
         }
     }
 

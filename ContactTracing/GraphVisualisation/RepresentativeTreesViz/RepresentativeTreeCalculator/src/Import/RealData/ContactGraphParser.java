@@ -47,7 +47,7 @@ public class ContactGraphParser {
     /**
      * For each caseid, holds the converted md5 hash to a number
      */
-    HashMap<String, Integer> caseIdtoId = new HashMap();
+    HashMap<String, Integer> instanceIdtoId = new HashMap();
     int currentIdNumber = 0; //start numbering them from 0 onwards
 
     public ContactGraphParser(String nodeFileLocation, String edgeFileLocation) throws IOException {
@@ -56,15 +56,15 @@ public class ContactGraphParser {
     }
 
     public ContactGraph constructGraph() {
-        return constructGraph(Integer.MAX_VALUE);
+        ContactGraph cg = constructGraph(Integer.MAX_VALUE);
+        System.err.println("Not correct! We are taking a single case multiple times. Need to use citizenId(or make it)");
+        return cg;
     }
 
-    public ContactGraph constructGraph(int linesToProcess) {
+    public ContactGraph constructGraph(int maxLinesToProcess) {
         //we can process less lines for debugging purposes;
-        linesToProcess = Math.min(nodeFileContent.size(), linesToProcess);
+        int linesToProcess = Math.min(nodeFileContent.size(), maxLinesToProcess);
 
-        System.out.println("TODO: There is more data to encode from the files.");
-        System.out.println("TODO: Currently only taking positive nodes and edges into account. ");
         //create the nodes of the graph firsts
         for (int i = 1; i < linesToProcess; i++)//skip headers
         {
@@ -84,6 +84,7 @@ public class ContactGraphParser {
             }
         }
 
+        linesToProcess = Math.min(edgeFileContent.size(), maxLinesToProcess);
         //create the edges of the graph
         for (int i = 1; i < linesToProcess; i++)//skip headers
         {
@@ -109,87 +110,89 @@ public class ContactGraphParser {
     }
 
     private void createNode(String[] split) {
-        int id = getIdFromCaseId(split[0]);
+        String instanceId = split[2];
+//        String instanceId = split[1]; //incorrect, should be 2 but broken
+        String testTime = split[5];
+        String testResult = split[6];
+        String location = split[7];
+
+        int id = getIdFromInstanceId(instanceId);
         assert (g.getNode(id) == null);
 
+        if (testTime.isBlank()) {//testing time is empty, won't create node
+            return;
+        }
+
         ContactNode n = new ContactNode(id);
-        n.md5Hash = split[0];
+        n.md5Hash = instanceId;
+        n.location = location;
 
-        if (split.length <= 3) {
-            System.out.println("");
+        //add the location
+        if ("Positive".equals(testResult)) {
+            //only add a node if it was involved in a positive test
+
+            long unixTestTime = TimeFunctions.dateToUnixTimestamp(testTime);
+            //Might be multiple tests, set it to the first one
+            n.setTestTime(unixTestTime);
+
+            g.addNode(n);
         }
-
-        if (!split[3].isBlank()) {//testing time is not empty
-            if ("Positive".equals(split[4])) {
-                //if this node has a time where it is tested positive
-                long testTime = TimeFunctions.dateToUnixTimestamp(split[3]);
-                n.setTestTime(testTime);
-
-                //only add a node if it was involved in a positive test (TODO: For now)
-                g.addNode(n);
-            }
-            //
-        }
-
-        if (!split[5].isBlank()) {
-            //add the location
-            n.location = split[5];
-        }
-
-        //add metadata
-//        ArrayList<MetaData> metaDataList = new ArrayList();        
-//        
-//        for (int i = 2; i < split.length; i++) {
-//            String header = nodeHeaders[i];
-//            String dataType = nodeDataType[i];
-//            String valueString = split[i];
-//            MetaData md = new MetaData(header, dataType, valueString);
-//            metaDataList.add(md);
-//        }
-//
-//        n.setMetaData(metaDataList);
     }
 
     private void createEdge(String[] split) {
 
-        //We ignore edges that are not complete (some do not have time of contact)
-        if (split[2].isBlank() || split[3].isBlank() || split[4].isBlank()) {
+        String exposureId = split[0];
+        
+        String indexInstanceId = split[3];
+        String contactInstanceId = split[6];
+//        String indexInstanceId = split[2]; //incorrect, should be 3 but broken
+//        String contactInstanceId = split[5]; //incorrect, should be 6 but broken
+        
+        String contactTime = split[8];
+        
+        
+        //We ignore edges that do not have id's for both endpoints
+        if (indexInstanceId.isBlank() || contactInstanceId.isBlank()) {
             return;
         }
 
-        int id1 = getIdFromCaseId(split[2]);
-        int id2 = getIdFromCaseId(split[3]);
-        long time = TimeFunctions.dateToUnixTimestamp(split[4]);
+        int id1 = getIdFromInstanceId(indexInstanceId);
+        int id2 = getIdFromInstanceId(contactInstanceId);
         int weight = 1; //TODO: weight is not yet in data
 
         ContactNode n1 = g.getNode(id1);
         ContactNode n2 = g.getNode(id2);
 
+        //Add 1 to it's contact count of each existing node
+        if (n1 != null) {
+            n1.addContactCount();
+        }
+        if (n2 != null) {
+            n2.addContactCount();
+        }
+
+        if (contactTime.isBlank()) {//no time of contact
+            return;
+        }
         if (n1 == null || n2 == null) {
-            //not both tested positive
+            //One of the nodes never tested positive, don't add an edge
             return;
         }
 
-        ContactEdge e = new ContactEdge(n1, n2, time, weight);
+        if (id1 == id2) {
+            //we do not do self edges
+            System.out.println("Self edge in the data with hash" + exposureId);
+            return;
+        }
+
+        long unixContactTime = TimeFunctions.dateToUnixTimestamp(contactTime);
+
+        ContactEdge e = new ContactEdge(n1, n2, unixContactTime, weight);
         g.addEdge(e);
 
         //need bidirectional edges
-        ContactEdge eI = new ContactEdge(n2, n1, time, weight);
+        ContactEdge eI = new ContactEdge(n2, n1, unixContactTime, weight);
         g.addEdge(eI);
-
-//
-//        //add metadata
-//        ArrayList<MetaData> metaDataList = new ArrayList();
-//
-//        for (int i = 4; i < split.length; i++) {
-//            String header = edgeHeaders[i];
-//            String dataType = edgeDataType[i];
-//            String valueString = split[i];
-//            MetaData md = new MetaData(header, dataType, valueString);
-//            metaDataList.add(md);
-//        }
-//
-//        e.setMetaData(metaDataList);
     }
 
     public void addMetaDataFiles(String nodeMetaDataFileLocation, String edgeMetaDataFileLocation) throws IOException {
@@ -203,11 +206,11 @@ public class ContactGraphParser {
         nodeDataType = nodeFileContent.get(1).split(",");
     }
 
-    private int getIdFromCaseId(String caseId) {
-        if (caseIdtoId.containsKey(caseId)) {
-            return caseIdtoId.get(caseId);
+    private int getIdFromInstanceId(String caseId) {
+        if (instanceIdtoId.containsKey(caseId)) {
+            return instanceIdtoId.get(caseId);
         } else {
-            caseIdtoId.put(caseId, currentIdNumber);
+            instanceIdtoId.put(caseId, currentIdNumber);
         }
         currentIdNumber++;
         return currentIdNumber - 1;//just increased by 1

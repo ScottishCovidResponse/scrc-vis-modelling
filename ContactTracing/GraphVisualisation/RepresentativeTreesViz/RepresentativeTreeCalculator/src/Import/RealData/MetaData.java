@@ -11,9 +11,9 @@ package Import.RealData;
  */
 public class MetaData {
     
-    String attributeName;
-    String dataType;
-    String valueString;
+    public String attributeName;
+    public String dataType;
+    public String valueString;
 
     public MetaData(String header,String dataType, String valueString) {
         this.attributeName = header;

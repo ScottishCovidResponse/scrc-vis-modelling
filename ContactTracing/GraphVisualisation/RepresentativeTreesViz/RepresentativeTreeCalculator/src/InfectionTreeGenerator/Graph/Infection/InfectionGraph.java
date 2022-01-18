@@ -8,7 +8,9 @@ package InfectionTreeGenerator.Graph.Infection;
 import Utility.Log;
 import InfectionTreeGenerator.Event.Event;
 import InfectionTreeGenerator.Graph.Graph;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -70,5 +72,19 @@ public class InfectionGraph extends Graph<InfectionNode, InfectionEdge> {
         System.out.println(getEdges().size() + " edges in the infection graph");
     }
 
+    private void checkConnectionsBetweenSecondary() {
+        ArrayList<InfectionNode> nodes = new ArrayList(getNodes());
+
+        while (!nodes.isEmpty()) {
+            InfectionNode initN = nodes.get(0);
+            Collection<InfectionNode> reachableNodes = getReachableNodes(initN);
+
+            List<InfectionEdge> edges = new ArrayList();
+            for (InfectionNode n : reachableNodes) {
+                edges.addAll(n.edges);
+            }
+            checkDirectedCycle(initN);
+        }
+    }
 
 }

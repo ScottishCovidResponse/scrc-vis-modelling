@@ -256,6 +256,22 @@ public class ContactGraph {
         System.out.println(getEdges().size() + " edges between nodes with positive tests");
 
         System.out.println(edgeMapping.keySet().size() + " unique edges between nodes");
+
+//        for (ContactNode n : getNodes()) {
+//            Collection<ContactNode> reachableNodes = getReachableNodes(n);
+//            if (reachableNodes.size() > 2) {
+//                int count = Integer.parseInt(n.getNamedMetaData("ContactCount").valueString);
+//                if (count > 1) {
+//                    for (ContactNode n2 : reachableNodes) {
+//                        if (n == n2) {
+//                            continue;
+//                        }
+//
+//                        int totalCountactCount = Integer.parseInt(n2.getNamedMetaData("ContactCount").valueString);
+//                    }
+//                }
+//            }
+//        }
     }
 
 }

@@ -102,7 +102,7 @@ public class InfectionChainCalculator {
 
         Set<ContactNode> nodesHandled = solveTrivialComponents();
 
-        if (!programAlreadyExecuted) {
+        if (programAlreadyExecuted == false) {
             //write a temporary file for each non-trivial component. Directly add trivial components to the graph
             int componentCount = writeComponentFiles(nodesHandled);
             //calculate most-likely-infection chains for each component. TODO: Allow for multiple index cases per component?
@@ -123,6 +123,9 @@ public class InfectionChainCalculator {
                 continue;//already have the component containing n
             }
             Collection<ContactNode> componentNodes = contactGraph.getReachableNodes(n);
+            if (componentNodes.size() > 2) {//not a trivial component
+                continue;
+            }
 
             if (componentNodes.size() == 1) {
                 mostLikelyInfectionGraph.addNode(new InfectionNode(n.id, n.positiveTestTime));
@@ -161,8 +164,8 @@ public class InfectionChainCalculator {
             nodesHandled.addAll(componentNodes);
             Log.printProgress("trivial component number: " + trivialComponentNumber + " is handled", 1, 1000);
         }
-        System.out.println(trivialComponentNumber + " total trivial components handled");
 
+        System.out.println(trivialComponentNumber + " total trivial components handled");
         return nodesHandled;
     }
 
@@ -174,8 +177,9 @@ public class InfectionChainCalculator {
      * components
      */
     private int writeComponentFiles(Set<ContactNode> nodesHandled) {
-        int componentNumber = 0;//how many components we have written files for processed
+        System.out.println("TODO: Need to print all edges between them and take that into account in the program if possible. Likely with weight");
 
+        int componentNumber = 0;//how many components we have written files for processed
         int trivalComponentNumber = 0;//how many components of size 1 we processed
 
         for (ContactNode n : contactGraph.getNodes()) {
@@ -194,24 +198,27 @@ public class InfectionChainCalculator {
             componentNumber++;
             Log.printProgress("component number: " + componentNumber + " is written", 1000);
         }
-
         return componentNumber;
     }
 
     private void writeComponentFiles(ContactGraph g, Collection<ContactNode> nodes, Collection<ContactEdge> edges, int componentNumber) {
 
         try {
-            writeEdgeFile(g, nodes, edges, componentNumber);
-            writeNodeFile(g, nodes, edges, componentNumber);
+            String nodeFileName = javaOutputNodeFilePrefix + componentNumber + ".tsv";
+            String edgeFileName = javaOutputEdgeFilePrefix + componentNumber + ".tsv";
+
+            writeNodeFile(g, nodes, edges, componentNumber, nodeFileName);
+            writeEdgeFile(g, nodes, edges, componentNumber, edgeFileName);
+
         } catch (IOException ex) {
             Logger.getLogger(InfectionChainCalculator.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void writeEdgeFile(ContactGraph g, Collection<ContactNode> nodes, Collection<ContactEdge> edges, int componentNumber) throws IOException {
+    private void writeEdgeFile(ContactGraph g, Collection<ContactNode> nodes, Collection<ContactEdge> edges, int componentNumber, String fileName) throws IOException {
 
-        System.out.println("TODO: Need to print all edges between them and take that into account in the program if possible");
+//        System.out.println("TODO: Need to print all edges between them and take that into account in the program if possible");
         //Need to sort the edges by time for the file.
         List<ContactEdge> sortedEdges = new ArrayList();
         sortedEdges.addAll(edges);
@@ -240,14 +247,13 @@ public class InfectionChainCalculator {
             edgeFileContent.append(weight);
         }
 
-        String fileName = javaOutputEdgeFilePrefix + componentNumber + ".tsv";
         byte[] bytes = edgeFileContent.toString().getBytes();
         Files.write(Paths.get(fileName), bytes);
         File f = new File(fileName);
 //        f.deleteOnExit();
     }
 
-    private void writeNodeFile(ContactGraph g, Collection<ContactNode> nodes, Collection<ContactEdge> edges, int componentNumber) throws IOException {
+    private void writeNodeFile(ContactGraph g, Collection<ContactNode> nodes, Collection<ContactEdge> edges, int componentNumber, String fileName) throws IOException {
 
         //Need to sort the nodes by reporting timefor the file.
         List<ContactNode> sortedNodes = new ArrayList();
@@ -287,8 +293,6 @@ public class InfectionChainCalculator {
             nodeFileContent.append("\n");
             nodeFileContent.append(nodeId); //no test time given, so leave it blank
         }
-
-        String fileName = javaOutputNodeFilePrefix + componentNumber + ".tsv";
 
         byte[] bytes = nodeFileContent.toString().getBytes();
 

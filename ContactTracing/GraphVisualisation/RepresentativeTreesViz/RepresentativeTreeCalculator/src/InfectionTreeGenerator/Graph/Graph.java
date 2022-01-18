@@ -6,6 +6,7 @@
 package InfectionTreeGenerator.Graph;
 
 import InfectionTreeGenerator.Graph.Infection.InfectionEdge;
+import InfectionTreeGenerator.Graph.Infection.InfectionNode;
 import Utility.Pair;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -212,6 +213,38 @@ public class Graph<N extends Node, E extends Edge> {
         }
 
         return reachableNodes;
+    }
+
+    /**
+     * Is there a directed cycle reachable from node n?
+     *
+     * @param n
+     * @return
+     */
+    public boolean checkDirectedCycle(N n) {
+        HashSet<N> visitedNodes = new HashSet();
+        return checkDirectedCycle(n, null, visitedNodes);
+    }
+
+    protected boolean checkDirectedCycle(N currentNode, N previousNode, HashSet<N> visitedNodes) {
+        visitedNodes.add(currentNode);
+        List<E> outgoingEdges = (List<E>) currentNode.getOutgoingEdges();
+        for (E edge : outgoingEdges) {
+            N target = (N) edge.target;
+            if (target == previousNode) {
+                continue;//not allowed to go back
+            }
+
+            if (visitedNodes.contains(target)) {
+                System.out.println(edge.toString());//print the cycle
+                return true;
+            }
+            if (checkDirectedCycle(target, currentNode, visitedNodes)) {
+                System.out.println(edge.toString());//print the cycle
+                return true;
+            }
+        }
+        return false;
     }
 
 }

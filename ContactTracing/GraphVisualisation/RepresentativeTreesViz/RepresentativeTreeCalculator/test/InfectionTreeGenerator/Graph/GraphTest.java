@@ -81,14 +81,23 @@ public class GraphTest {
         result = instance.getReachableNodes(n2);
         assertEquals(true, checkCollectionContentEqual(expResult, result));
 
-        expResult = Arrays.asList(n4,n5);
+        expResult = Arrays.asList(n4, n5);
         result = instance.getReachableNodes(n4);
         assertEquals(true, checkCollectionContentEqual(expResult, result));
-        
+
         expResult = Arrays.asList(n5);
         result = instance.getReachableNodes(n5);
         assertEquals(true, checkCollectionContentEqual(expResult, result));
+    }
 
+    @Test
+    public void testCheckDirectedCycle() {
+        for (Node n : Arrays.asList(n1, n2, n3)) {
+            assertTrue(instance.checkDirectedCycle(n));
+        }
+        for (Node n : Arrays.asList(n4, n5)) {
+            assertFalse(instance.checkDirectedCycle(n));
+        }
     }
 
 }

@@ -35,7 +35,9 @@ import java.util.stream.Collectors;
 
 /**
  * Calculates the edge directions for a connected graph to hold the most likely
- * way an infection spread
+ * way an infection spread. 
+ * 
+ * @pre All nodes need to have a positiveTestTime
  *
  * @author MaxSondag
  */

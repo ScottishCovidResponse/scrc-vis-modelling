@@ -26,16 +26,30 @@ import java.util.stream.Collectors;
  */
 public class DominatingSetCalculatorImplicit {
 
-    public List<Integer> getDominatingSet(int maxDistance, List<Tree> trees, TreeDistanceMeasure dm) {
+    List<Tree> trees;
+    TreeDistanceMeasure dm;
+
+    HashMap<Integer, Tree> treeById = new HashMap();
+
+    public DominatingSetCalculatorImplicit(List<Tree> trees, TreeDistanceMeasure dm) {
+        this.trees = trees;
+        this.dm = dm;
+
+        for (Tree t : trees) {
+            treeById.put(t.id, t);
+        }
+    }
+
+    public List<Integer> getDominatingSet(int maxDistance) {
         ArrayList<Integer> dominatingSet = new ArrayList();
         //nodes that are not connected always need to be in
 
         int count = 0;
         //Trivial algorithm. Go through the nodes. For each node if it is not yet dominated, add it to the set.
         for (Tree t : trees) {
-            Log.printProgress("Calculating dominating set, tree " + count + " out of " + trees.size(), 100);
+            Log.printProgress("Calculating dominating set, tree " + count + " out of " + trees.size(), 1000);
 
-            if (!isDominated(dominatingSet, t, trees, dm, maxDistance)) {
+            if (!isDominated(dominatingSet, t, maxDistance)) {
                 dominatingSet.add(t.id);
             }
 
@@ -54,17 +68,17 @@ public class DominatingSetCalculatorImplicit {
      * @param maxDistance
      * @return
      */
-    public List<Integer> trimDominatingSet(List<Integer> currentDomSet, List<Tree> trees, TreeDistanceMeasure dm, int maxDistance) {
+    public List<Integer> trimDominatingSet(List<Integer> currentDomSet, int maxDistance) {
         //start by taking all trees, and keep removing them as long as the result remaind a dominating set
         ArrayList<Integer> trimmedDomSet = new ArrayList(currentDomSet);
         ArrayList<Integer> idsToConsider = new ArrayList(currentDomSet);
 
         int count = 0;
         for (Integer id : idsToConsider) {
-            Log.printProgress("Calculating trimmed dominating set, tree " + count + " out of " + trees.size(), 100);
+            Log.printProgress("Calculating trimmed dominating set, tree " + count + " out of " + trees.size(), 1000);
             //check if removing node with id from the dominating set still gives a dominating set
             trimmedDomSet.remove(id);
-            if (!isDominatingSet(trimmedDomSet, trees, dm, maxDistance)) {
+            if (!isDominatingSet(trimmedDomSet, maxDistance)) {
                 //not a dominating set anymore, put it back
                 trimmedDomSet.add(id);
             }
@@ -74,23 +88,23 @@ public class DominatingSetCalculatorImplicit {
         return trimmedDomSet;
     }
 
-    private boolean isDominatingSet(ArrayList<Integer> candidateDomSet, List<Tree> trees, TreeDistanceMeasure dm, int maxDistance) {
+    private boolean isDominatingSet(ArrayList<Integer> candidateDomSet, int maxDistance) {
         for (Tree t : trees) {
-            if (!isDominated(candidateDomSet, t, trees, dm, maxDistance)) {
+            if (!isDominated(candidateDomSet, t, maxDistance)) {
                 return false;//t is not dominated
             }
         }
         return true;//all nodes are dominated
     }
 
-    private boolean isDominated(ArrayList<Integer> domSet, Tree t, List<Tree> trees, TreeDistanceMeasure dm, double maxDistance) {
+    private boolean isDominated(ArrayList<Integer> domSet, Tree t, double maxDistance) {
         if (domSet.contains(t.id)) {
             return true;
         }
 
         //go through all trees in the dominating set, and check if one of them dominates this tree
         for (Integer id : domSet) {
-            Tree tId = getTreeById(trees, id);
+            Tree tId = treeById.get(id);
             double distance = dm.getDistance(tId, t);
             if (distance <= maxDistance) {
                 return true; //t is dominated by tId
@@ -98,16 +112,6 @@ public class DominatingSetCalculatorImplicit {
         }
         //no tree dominates this node
         return false;
-    }
-
-    private Tree getTreeById(List<Tree> trees, Integer id) {
-        for (Tree t : trees) {
-            if (t.id == id) {
-                return t;
-            }
-        }
-        System.err.println("No tree with id:" + id + "exists");
-        return null;
     }
 
 }

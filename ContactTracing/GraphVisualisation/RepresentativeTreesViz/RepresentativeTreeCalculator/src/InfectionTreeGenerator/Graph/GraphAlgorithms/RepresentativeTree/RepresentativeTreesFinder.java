@@ -105,11 +105,11 @@ public class RepresentativeTreesFinder {
         //Start calculating representative trees.
         //We find it by using dominating set on filtered trees. The dominating set are the set of representative nodes
         //where all other nodes can transform into within {ted} graph change moves.
-        DominatingSetCalculatorImplicit dsc = new DominatingSetCalculatorImplicit();
+        DominatingSetCalculatorImplicit dsc = new DominatingSetCalculatorImplicit(trees, dm);
 
         //Init dominating set
         //start with getting a dominating graph on distance 0 and slowly add edges.
-        List<Integer> currentDsIds = dsc.getDominatingSet(0, trees, dm);
+        List<Integer> currentDsIds = dsc.getDominatingSet(0);
 
         //initialize the representing trees, they only get filtered down, so these are all Representative trees that will exists.
         //maps from id to a representative tree
@@ -117,9 +117,9 @@ public class RepresentativeTreesFinder {
 
         //go through the edit distances
         for (int ted = 0; ted <= MAXEDITDISTANCE; ted++) {
-            Log.printProgress("Calculating for distance " +ted, 1000);
+            Log.printProgress("Calculating for distance " + ted, 1000);
             //trim the dominating set down instead of recalculating so we keep the original trees. Trees thus only disappear
-            List<Integer> dsTrimmed = dsc.trimDominatingSet(currentDsIds, trees, dm, ted);
+            List<Integer> dsTrimmed = dsc.trimDominatingSet(currentDsIds, ted);
 
             //holds the set of trees that are assigned to a dominating tree at a certaindistance
             HashMap<Integer, List<Tree>> mapping = calculateDominationMapping(dsTrimmed, ted, trees, dm);
@@ -141,7 +141,6 @@ public class RepresentativeTreesFinder {
         }
         return repTrees.values();
     }
-
 
     private HashMap<Integer, RepresentativeTree> initRepTrees(List<Integer> dsIds, List<Tree> trees) {
         HashMap<Integer, RepresentativeTree> idMapping = new HashMap();

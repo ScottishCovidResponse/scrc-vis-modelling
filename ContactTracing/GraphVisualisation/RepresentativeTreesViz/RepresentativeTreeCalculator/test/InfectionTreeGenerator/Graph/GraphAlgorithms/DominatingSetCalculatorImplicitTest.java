@@ -5,12 +5,9 @@
  */
 package InfectionTreeGenerator.Graph.GraphAlgorithms;
 
-import InfectionTreeGenerator.Graph.Edge;
-import InfectionTreeGenerator.Graph.Graph;
 import InfectionTreeGenerator.Graph.GraphAlgorithms.DistanceMeasures.TreeDistanceMeasure;
 import InfectionTreeGenerator.Graph.Infection.InfectionEdge;
 import InfectionTreeGenerator.Graph.Infection.InfectionNode;
-import InfectionTreeGenerator.Graph.Node;
 import InfectionTreeGenerator.Graph.Tree;
 import java.util.Arrays;
 import java.util.List;
@@ -75,8 +72,8 @@ public class DominatingSetCalculatorImplicitTest {
      */
     @Test
     public void testGetDominatingSet() {
-        DominatingSetCalculatorImplicit dsc = new DominatingSetCalculatorImplicit();
-        List<Integer> dominatingSet = dsc.getDominatingSet(0, trees, dm);
+        DominatingSetCalculatorImplicit dsc = new DominatingSetCalculatorImplicit(trees,dm);
+        List<Integer> dominatingSet = dsc.getDominatingSet(0);
         assertEquals(7, dominatingSet.size()); //all nodes
         assertTrue(dominatingSet.contains(1));
         assertTrue(dominatingSet.contains(2));
@@ -87,13 +84,13 @@ public class DominatingSetCalculatorImplicitTest {
         assertTrue(dominatingSet.contains(7));
 
         //sensible implementation should have at most this many nodes
-        dominatingSet = dsc.getDominatingSet(1, trees, dm);
+        dominatingSet = dsc.getDominatingSet(1);
         assertTrue(dominatingSet.size() <= 4);
 
-        dominatingSet = dsc.getDominatingSet(2, trees, dm);
+        dominatingSet = dsc.getDominatingSet(2);
         assertTrue(dominatingSet.size() <= 3);
 
-        dominatingSet = dsc.getDominatingSet(7, trees, dm);
+        dominatingSet = dsc.getDominatingSet(7);
         assertEquals(1, dominatingSet.size()); //single node
     }
 
@@ -103,26 +100,26 @@ public class DominatingSetCalculatorImplicitTest {
      */
     @Test
     public void testTrimDominatingSet() {
-        DominatingSetCalculatorImplicit dsc = new DominatingSetCalculatorImplicit();
-        List<Integer> dominatingSet = dsc.getDominatingSet(0, trees, dm);
+        DominatingSetCalculatorImplicit dsc = new DominatingSetCalculatorImplicit(trees,dm);
+        List<Integer> dominatingSet = dsc.getDominatingSet(0);
         assertEquals(7, dominatingSet.size()); //all nodes
 
-        List<Integer> trimmedDominatingSet = dsc.trimDominatingSet(dominatingSet, trees, dm, 0);
+        List<Integer> trimmedDominatingSet = dsc.trimDominatingSet(dominatingSet, 0);
         //nothing changed
         assertEquals(7, trimmedDominatingSet.size());
 
-        trimmedDominatingSet = dsc.trimDominatingSet(dominatingSet, trees, dm, 1);
+        trimmedDominatingSet = dsc.trimDominatingSet(dominatingSet, 1);
         assertTrue(trimmedDominatingSet.size() <= 4);
 
-        trimmedDominatingSet = dsc.trimDominatingSet(dominatingSet, trees, dm, 2);
+        trimmedDominatingSet = dsc.trimDominatingSet(dominatingSet, 2);
         assertTrue(trimmedDominatingSet.size() <= 3);
 
-        trimmedDominatingSet = dsc.trimDominatingSet(dominatingSet, trees, dm, 7);
+        trimmedDominatingSet = dsc.trimDominatingSet(dominatingSet, 7);
         assertEquals(1, trimmedDominatingSet.size()); //single node
 
         //test it also works without a full base
-        trimmedDominatingSet = dsc.trimDominatingSet(dominatingSet, trees, dm, 2);
-        trimmedDominatingSet = dsc.trimDominatingSet(trimmedDominatingSet, trees, dm, 7);
+        trimmedDominatingSet = dsc.trimDominatingSet(dominatingSet, 2);
+        trimmedDominatingSet = dsc.trimDominatingSet(trimmedDominatingSet, 7);
         assertEquals(1, trimmedDominatingSet.size()); //single node
     }
 

@@ -67,7 +67,7 @@ public class RealDataParser {
              * Whether we have already created all the components files. Note,
              * this does not mean we have calculated all infections trees.
              */
-            boolean chainsAlreadyGenerated = false;
+            boolean chainsAlreadyGenerated = true;
 
             RealDataParser rdp = new RealDataParser(inputFolderLocation, outputFileLocation, startTreeSize, endTreeSize, timeWindowSize);
             rdp.parseData(chainsAlreadyGenerated);

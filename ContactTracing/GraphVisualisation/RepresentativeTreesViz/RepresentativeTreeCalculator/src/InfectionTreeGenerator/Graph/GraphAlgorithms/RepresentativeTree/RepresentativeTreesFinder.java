@@ -90,6 +90,7 @@ public class RepresentativeTreesFinder {
             //write the representativeTrees
             GraphWriter tw = new GraphWriter();
             tw.writeRepresentativeTrees(outputFilePrefix + size + ".json", repTrees);
+            System.out.println("Trees of size " + size + " written to file");
         }
 
         //returns the trees;
@@ -105,6 +106,8 @@ public class RepresentativeTreesFinder {
      */
     private Collection<RepresentativeTree> calculateRepresentativeTrees(List<Tree> trees, TreeDistanceMeasure dm) {
 
+        System.out.println("TODO: Calculate weights on the fly. Not enough memory space to calculate them in advance. Need to rework this part for quite a bit as the complete graph is simply too big");
+        
         //Holds the graphs as nodes, and uses the specified distance measure as weights between the nodes
         Graph g = makeWeightedGraph(trees, dm);
 

@@ -103,14 +103,16 @@ public class InfectionChainCalculator {
         Set<ContactNode> nodesHandled = solveTrivialComponents();
 
         if (programAlreadyExecuted == false) {
+            System.out.println("Start writing files");
             //write a temporary file for each non-trivial component. Directly add trivial components to the graph
-            int componentCount = writeComponentFiles(nodesHandled);
-            //calculate most-likely-infection chains for each component. TODO: Allow for multiple index cases per component?
-            executeProgram(componentCount);
+//            int componentCount = writeComponentFiles(nodesHandled);
+//            //calculate most-likely-infection chains for each component. TODO: Allow for multiple index cases per component?
+//            executeProgram(componentCount);
         }
+        System.out.println("Start parsing output files");
         //Add the most-likely-infection chains to the mostLikelyInfectionGraph
         parseOutputFiles();
-
+        System.out.println("output files parsed");
         return mostLikelyInfectionGraph;
     }
 

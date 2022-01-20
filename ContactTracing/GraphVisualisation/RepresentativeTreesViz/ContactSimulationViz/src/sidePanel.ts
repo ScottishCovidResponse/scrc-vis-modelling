@@ -1,16 +1,48 @@
-function createSidePanel() {
-    createSelectors();
+import * as d3 from 'd3';
+import { createScentedRtLineChart } from './LineChart';
+import { policyDataPresent } from './index';
+import {
+    setVizSizes,
+    // nodeBaseSize, initEditDistanceSliderVal,
+    // currentLeftAttributeName, currentRightAttributeName, setCurrentLeftAttributeName, setCurrentRightAttributeName,
+    // currentLeftAttributeType, currentRightAttributeType, setCurrentLeftAttributeType, setCurrentRightAttributeType,
+    // currentLeftColorScheme, currentRightColorScheme,
+    // currentLeftColorSchemeValues, currentRightColorSchemeValues,
+    // currentLeftAttributeBounds, currentRightAttributeBounds,
+    vars
+} from './vizVariables';
+import { metaDataNames, metaDataTypes, getMaxDepth } from './dataQueries';
+import { createComponentBarChart } from './BarChart';
+import { changePending, updateAll, updateSliderPreview, setRecalculate, updateGlobalChart } from './updateFunctions';
+import Litepicker from 'litepicker';
+
+
+export let currentLeftPolicy = "1a"; //what the current policy is for the left sides of the glyphs
+export let currentRightPolicy = "1a"; //what the current policy is for the left sides of the glyphs
+export let splitPolicy = false; //Whether to split to policy into infection route prevent and contact avoided.
+
+export let currentLeftAppPercentage = "100"; //How many people have the app
+export let currentRightAppPercentage = "100";
+
+
+
+let sortBy = "Tree size";
+
+export function createSidePanel(repTreesData) {
+    createSelectors(repTreesData);
+    createCalendar();
+    
     createDistributionChartPanel();
     createColorLegends();
 }
 
 
-function createSelectors() {
+function createSelectors(repTreesData) {
     const selectorDiv = d3.select("#sidePanel").append("div")
         .attr("id", "SelectorDiv")
         .attr("class", "SidePanelPanelDiv");
 
-    createDistanceSlider(selectorDiv);
+    createDistanceSlider(selectorDiv, repTreesData);
     createSizeSlider(selectorDiv);
     createNodeColorSelectors(selectorDiv);
     if (policyDataPresent) {
@@ -22,33 +54,33 @@ function createSelectors() {
 }
 
 
-function createDistanceSlider(selectorDiv) {
+function createDistanceSlider(selectorDiv, repTreesData) {
 
-    createSlider(selectorDiv, "DistanceSlider", "Rt tree distance", 0, 99, initEditDistanceSliderVal)
+    createSlider(selectorDiv, "DistanceSlider", "Rt tree distance", 0, 99, vars.initEditDistanceSliderVal)
 
     d3.select("#DistanceSlider")
-        .on("input", function() {
-            currentEditDistance = parseInt(this.value); //keep the value up to date
+        .on("input", function () {
+            vars.currentEditDistance = parseInt(this.value); //keep the value up to date
             updateSliderPreview() //Show a preview
             d3.select("#DistanceSliderNumber").text(this.value);
             changePending();
         })
 
     //create it at the end of the sliderdiv so the slider aligns with the scented widget
-    createScentedRtLineChart(selectorDiv.select("#DistanceSliderdiv"), initEditDistanceSliderVal);
+    createScentedRtLineChart(selectorDiv.select("#DistanceSliderdiv"), vars.initEditDistanceSliderVal, repTreesData);
 }
 
 function createSizeSlider(selectorDiv) {
 
-    createSlider(selectorDiv, "SizeSlider", "Node Size", 1, 10, nodeBaseSize)
+    createSlider(selectorDiv, "SizeSlider", "Node Size", 1, 10, vars.nodeBaseSize)
 
     d3.select("#SizeSlider")
-        .on("input", function() {
+        .on("input", function () {
             setVizSizes(parseInt(this.value)); //update all the sizes that are dependent on node size
 
 
             d3.select("#SizeSliderNumber").text(this.value);
-            recalculate = true;
+            setRecalculate();
             changePending();
         })
 }
@@ -56,11 +88,7 @@ function createSizeSlider(selectorDiv) {
 
 function createNodeColorSelectors(selectorDiv) {
 
-    selectorDiv.append("p")
-        .attr("class", "text title")
-        .text("Node Property")
-
-    createLeftRightSubtitles(selectorDiv);
+    createLeftRightSubtitles(selectorDiv, "Node Property");
 
     let colorOptions = [{ "NAME": "None" }];
     for (let i = 0; i < metaDataNames.length; i++) {
@@ -68,31 +96,27 @@ function createNodeColorSelectors(selectorDiv) {
         colorOptions[i + 1] = { "NAME": name } //0 is used by none
     }
 
-    const leftChangeFunction = function() {
-        currentLeftAttributeName = this.value; //keep the color up to date
+    const leftChangeFunction = function () {
+        vars.currentLeftAttributeName = this.value; //keep the color up to date
         let i = metaDataNames.indexOf(this.value);
-        currentLeftAttributeType = metaDataTypes[i];
+        vars.currentLeftAttributeType = metaDataTypes[i];
         changePending();
     };
 
-    const rightChangeFunction = function() {
-        currentRightAttributeName = this.value; //keep the color up to date
+    const rightChangeFunction = function () {
+        vars.currentRightAttributeName = this.value; //keep the color up to date
         let i = metaDataNames.indexOf(this.value);
-        currentRightAttributeType = metaDataTypes[i];
+        vars.currentRightAttributeType = metaDataTypes[i];
         changePending();
     };
 
-    createLeftRightComboBoxes(selectorDiv, colorOptions, "leftNodeColorSelector", "rightNodeColorSelector", currentLeftAttributeName, currentRightAttributeName, leftChangeFunction, rightChangeFunction);
+    createLeftRightComboBoxes(selectorDiv, colorOptions, "leftNodeColorSelector", "rightNodeColorSelector", vars.currentLeftAttributeName, vars.currentRightAttributeName, leftChangeFunction, rightChangeFunction);
 }
 
 
 function createPolicySelectors(selectorDiv) {
 
-    selectorDiv.append("p")
-        .attr("class", "text title")
-        .text("Policy")
-
-    createLeftRightSubtitles(selectorDiv);
+    createLeftRightSubtitles(selectorDiv, "Policy");
 
     //get the properties of the selectors
     var colorOptions = [
@@ -111,21 +135,20 @@ function createPolicySelectors(selectorDiv) {
         { "NAME": "1cX3Y14", },
         { "NAME": "1cX7Y14", },
         { "NAME": "1cX14Y14", },
-        // { "NAME": "1x", }
     ];
 
-    const leftChangeFunction = function() {
+    const leftChangeFunction = function () {
         currentLeftPolicy = this.value; //keep the policy up to date
         changePending();
     }
 
-    const rightChangeFunction = function() {
+    const rightChangeFunction = function () {
         currentRightPolicy = this.value; //keep the policy up to date
         changePending();
     }
 
 
-    const policySplitCheckBoxFunction = function() {
+    const policySplitCheckBoxFunction = function () {
         splitPolicy = this.checked;
         changePending();
     };
@@ -133,20 +156,16 @@ function createPolicySelectors(selectorDiv) {
     const comboBoxDiv = selectorDiv.append("div")
         .attr("class", "comboBoxesDiv")
 
-    createComboBox(comboBoxDiv, "leftPolicySelector", colorOptions, currentLeftPolicy, leftChangeFunction);
+    createComboBox(comboBoxDiv, "leftPolicySelector", colorOptions, currentLeftPolicy, leftChangeFunction, false);
     createCheckBox(comboBoxDiv, "policySplitCheckbox", false, policySplitCheckBoxFunction, "Detailed")
-    createComboBox(comboBoxDiv, "rightPolicySelector", colorOptions, currentRightPolicy, rightChangeFunction);
+    createComboBox(comboBoxDiv, "rightPolicySelector", colorOptions, currentRightPolicy, rightChangeFunction, false);
 }
 
 
 
 function createAppPercentageSelectors(selectorDiv) {
 
-    selectorDiv.append("p")
-        .attr("class", "text title")
-        .text("App percentage")
-
-    createLeftRightSubtitles(selectorDiv);
+    createLeftRightSubtitles(selectorDiv, "App percentage");
 
     //get the properties of the selectors
     var colorOptions = [
@@ -163,13 +182,13 @@ function createAppPercentageSelectors(selectorDiv) {
         { "NAME": "100%" }
     ];
 
-    const leftChangeFunction = function() {
+    const leftChangeFunction = function () {
         const appPercentage = this.value.substring(0, this.value.length - 1); //remove % sign
         currentLeftAppPercentage = appPercentage; //keep the appPercentage up to date
         changePending();
     }
 
-    const rightChangeFunction = function() {
+    const rightChangeFunction = function () {
         const appPercentage = this.value.substring(0, this.value.length - 1); //remove % sign
         currentRightAppPercentage = appPercentage; //keep the appPercentage up to date
         changePending();
@@ -179,40 +198,55 @@ function createAppPercentageSelectors(selectorDiv) {
     createLeftRightComboBoxes(selectorDiv, colorOptions, "leftAppPercentageSelector", "rightAppPercentageSelector", currentLeftAppPercentage + "%", currentRightAppPercentage + "%", leftChangeFunction, rightChangeFunction);
 }
 
-function createSortOptions(selectorDiv) {
+function createCalendar() {
+    const litePickerDiv = d3.select("#sidePanel").append("div").attr("id", "DatePickerDiv")
 
-    const sortDiv = selectorDiv.append("div")
-        .attr("class", "sortDiv")
+    litePickerDiv.append("p").attr("class", "title text").text("Date range")
 
-    sortDiv.append("p")
-        .attr("class", "text subtitle")
-        .text("Sort")
+    const sideBySideDiv = litePickerDiv.append("div").attr("class", "calendarDiv")
 
-    const sortEnabledChangeFunction = function() {
-        sortEnabled = this.checked; //keep it updated
+
+    const inputPicker = sideBySideDiv.append("input")
+        .attr("type", "text")
+        .attr("id", "datepicker")
+
+
+    const picker = new Litepicker({
+        element: document.getElementById('datepicker'),
+        singleMode: false,
+        delimiter: "   -   ",
+        format: "D-MMM-YY",
+        startDate: new Date(vars.startDate * 1000), //javascript uses milliseconds instead of seconds
+        endDate: new Date(vars.endDate * 1000),
+        setup: (picker) => {
+            picker.on('selected', (date1: Date, date2: Date) => {
+                vars.startDate = (date1.getTime() / 1000);
+                vars.endDate = (date2.getTime() / 1000);
+                changePending();
+            })
+        }
+    })
+
+
+    function allSelection() {
+
+
+        if (this.checked) {
+            vars.startDate = 0
+            vars.endDate = Number.MAX_VALUE;
+            inputPicker.classed("grayed", true);
+        } else {
+            vars.startDate = (picker.getStartDate().getTime() / 1000);
+            vars.endDate = (picker.getEndDate().getTime() / 1000);
+            inputPicker.classed("grayed", false);
+        }
+        
         changePending();
-    };
+    }
 
-    createCheckBox(sortDiv, "sortCheckBox", sortEnabled, sortEnabledChangeFunction);
-
-
-    sortDiv.append("p")
-        .attr("class", "text subtitle")
-        .text("by")
-
-    const comboOptions = [
-        { "NAME": "Tree size" },
-        { "NAME": "Difference" },
-        { "NAME": "Root width" }
-    ]
-
-    const sortByChangeFunction = function() {
-        sortBy = this.value; //keep it updated
-        changePending();
-    };
-
-    createComboBox(sortDiv, "sortComboBox", comboOptions, sortBy, sortByChangeFunction);
+    createCheckBox(sideBySideDiv, "selectAll", false, allSelection, "All")
 }
+
 
 function createRecalculateButton(selectorDiv) {
 
@@ -221,7 +255,7 @@ function createRecalculateButton(selectorDiv) {
 
     const text = "Press to recalculate";
 
-    const recalculateFunction = function() {
+    const recalculateFunction = function () {
         updateAll();
     };
 
@@ -240,15 +274,14 @@ function createColorLegends() {
     updateColorLegend();
 }
 
-function updateColorLegend() {
-
-    console.log("color legend needs to be fixed")
-
+export function updateColorLegend() {
     const colorLegendDiv = d3.select("#sidePanel").select("#colorLegendDiv");
     colorLegendDiv.selectAll("*").remove(); //remove current legend
     createStateColorLegend(colorLegendDiv, true);
     createStateColorLegend(colorLegendDiv, false);
 }
+
+const maxIntegerBinsToDispaly = 10;
 
 function createStateColorLegend(colorLegendDiv, isLeft) {
     const halfColorDiv = colorLegendDiv.append("div")
@@ -257,49 +290,69 @@ function createStateColorLegend(colorLegendDiv, isLeft) {
     //get the colors and names to display
     let colors, names, displayNames, type, bounds
 
-
     if (isLeft) {
-        colors = currentLeftColorScheme;
-        names = currentLeftColorSchemeValues;
-        type = currentLeftAttributeType;
-        bounds = currentLeftAttributeBounds;
+        colors = vars.currentLeftColorScheme;
+        names = vars.currentLeftColorSchemeValues;
+        type = vars.currentLeftAttributeType;
+        bounds = vars.currentLeftAttributeBounds;
     } else {
-        colors = currentRightColorScheme
-        names = currentRightColorSchemeValues;
-        type = currentRightAttributeType;
-        bounds = currentRightAttributeBounds;
+        colors = vars.currentRightColorScheme
+        names = vars.currentRightColorSchemeValues;
+        type = vars.currentRightAttributeType;
+        bounds = vars.currentRightAttributeBounds;
     }
     //Copy the array to get the values
     displayNames = [...names]
 
     if (type == "integer") {
         displayNames[0] = bounds[0] + "-" + names[0];
-        for (let i = 1; i < (names.length - 1); i++) {
+        for (let i = 1; i < names.length; i++) {
             displayNames[i] = names[i - 1] + "-" + names[i];
         }
-        displayNames[names.length - 1] = names[names.length - 1] + "-" + bounds[1];
     }
 
+    if (type == "date") {
+        displayNames[0] = getDate(bounds[0]) + "-" + getDate(names[0]);
+        for (let i = 1; i < names.length; i++) {
+            displayNames[i] = getDate(names[i - 1]) + "-" + getDate(names[i]);
+        }
+    }
 
     for (let i = 0; i < displayNames.length; i++) {
         const color = colors[i];
         let name = displayNames[i];
-        console.log("get policies back in")
-            // if (!splitPolicy) //If we aren't looking into the detailed split policy we merge them together
-            // {
-            //     if (name == "Infection route prevented earlier") {
-            //         //skip the detailed view
-            //         continue;
-            //     }
-            //     if (name == "Contact avoided due to isolation") {
-            //         //rename as it now represents all states
-            //         name = "Infection route prevented";
-            //     }
-            // }
+        // if (!splitPolicy) //If we aren't looking into the detailed split policy we merge them together
+        // {
+        //     if (name == "Infection route prevented earlier") {
+        //         //skip the detailed view
+        //         continue;
+        //     }
+        //     if (name == "Contact avoided due to isolation") {
+        //         //rename as it now represents all states
+        //         name = "Infection route prevented";
+        //     }
+        // }
         createStateColorLegendItem(color, name, isLeft, halfColorDiv);
     }
 
 }
+
+function getDate(unixTimeStampInSeconds) {
+    return new Date(unixTimeStampInSeconds * 1000).ddmmyyyy();
+}
+
+//convert date to human readable
+Date.prototype.ddmmyyyy = function () {
+    var mm = this.getMonth() + 1; // getMonth() is zero-based
+    var dd = this.getDate();
+
+    return [
+        (dd > 9 ? '' : '0') + dd,
+        (mm > 9 ? '' : '0') + mm,
+        this.getFullYear(),
+    ].join('.');
+};
+
 
 function createStateColorLegendItem(color, name, isLeft, divToAddTo) {
     const item = divToAddTo.insert("div")
@@ -333,8 +386,7 @@ function createDistributionChartPanel() {
 
     createDistributionChartSelectors(distributionDiv);
 
-    // createDistributionChart(distributionDiv);
-    // createDistributionLegend(distributionDiv);
+
 
     createComponentBarChart(distributionDiv);
 }
@@ -351,35 +403,35 @@ function createDistributionChartSelectors(divToAddTo) {
         comboOptions.push({ "NAME": "Level " + i });
     }
 
-    const selectLeftLevelFunction = function() {
-        currentLeftDistributionSelection = [];
+    const selectLeftLevelFunction = function () {
+        vars.currentLeftDistributionSelection = [];
         for (let option of this.selectedOptions) {
             if (option.value == "All") {
-                currentLeftDistributionSelection.push("All")
+                vars.currentLeftDistributionSelection.push("All")
             } else {
                 //take only the number. Represent as int for ease of manipulation later
-                currentLeftDistributionSelection.push(parseInt(option.value.split(" ")[1]))
+                vars.currentLeftDistributionSelection.push(parseInt(option.value.split(" ")[1]))
             }
         }
         updateGlobalChart();
     };
 
-    const selectRightLevelFunction = function() {
-        currentRightDistributionSelection = [];
+    const selectRightLevelFunction = function () {
+        vars.currentRightDistributionSelection = [];
         for (let option of this.selectedOptions) {
             if (option.value == "All") {
-                currentRightDistributionSelection.push("All")
+                vars.currentRightDistributionSelection.push("All")
             } else {
                 //take only the number. Represent as int for ease of manipulation later
-                currentRightDistributionSelection.push(parseInt(option.value.split(" ")[1]))
+                vars.currentRightDistributionSelection.push(parseInt(option.value.split(" ")[1]))
             }
         }
         updateGlobalChart();
     };
 
 
-    const normalizeCheckBoxFunction = function() {
-        normalizeComponentChart = this.checked;
+    const normalizeCheckBoxFunction = function () {
+        vars.normalizeComponentChart = this.checked;
         updateGlobalChart();
     };
     const comboBoxDiv = divToAddTo.append("div").attr("class", "comboBoxesDiv")
@@ -393,22 +445,7 @@ function createDistributionChartSelectors(divToAddTo) {
 }
 
 
-
-
-function createDistributionLegend(distributionDiv) {
-    const legend = distributionDiv.append("div")
-        .attr("class", "distributionChartLegend");
-
-    const names = distributionChartColorSchemeOrderDisplay;
-    const colors = distributionChartColorScheme;
-    for (let i = 0; i < names.length; i++) {
-        const color = colors[i];
-        const name = names[i];
-        createStateColorLegendItem(color, name, true, legend);
-    }
-}
-
-function createLeftRightSubtitles(sidePanelDiv) {
+function createLeftRightSubtitles(sidePanelDiv, title) {
 
     const subTitleDiv = sidePanelDiv.append("div")
         .attr("class", "subtitleDiv");
@@ -416,6 +453,10 @@ function createLeftRightSubtitles(sidePanelDiv) {
     subTitleDiv.append("p")
         .attr("class", "text subtitle")
         .text("Left");
+
+    subTitleDiv.append("p")
+        .attr("class", "text title")
+        .text(title);
 
     subTitleDiv.append("p")
         .attr("class", "text subtitle")
@@ -428,8 +469,8 @@ function createLeftRightComboBoxes(divToAppendTo, colorOptions, leftId, rightId,
     const comboBoxDiv = divToAppendTo.append("div")
         .attr("class", "comboBoxesDiv")
 
-    createComboBox(comboBoxDiv, leftId, colorOptions, leftInitColor, leftChangeFunction);
-    createComboBox(comboBoxDiv, rightId, colorOptions, rightInitColor, rightChangeFunction);
+    createComboBox(comboBoxDiv, leftId, colorOptions, leftInitColor, leftChangeFunction, false);
+    createComboBox(comboBoxDiv, rightId, colorOptions, rightInitColor, rightChangeFunction, false);
 }
 
 function createComboBox(divToAppendTo, id, valueList, initVal, changeFunction, multiple) {
@@ -449,13 +490,13 @@ function createComboBox(divToAppendTo, id, valueList, initVal, changeFunction, m
         .append("option")
 
     options
-        .text(function(d) {
+        .text(function (d) {
             return d.NAME;
         })
-        .attr("value", function(d) {
+        .attr("value", function (d) {
             return d.NAME;
         })
-        .property("selected", function(d) { return d.NAME === initVal; }); //set default value
+        .property("selected", function (d) { return d.NAME === initVal; }); //set default value
 
     //attach the change function
     dropDown

@@ -1,11 +1,21 @@
+import * as d3 from 'd3';
+import { vars } from './vizVariables';
+import { getAmountOfTreesRepresented, getAmountOfTreesRepresentedById } from './dataQueries'
+import { calculateOffsets } from './offsetCalculator';
+import { makeNodeGlyph } from './nodeViz';
+
+
+
 /**
  * 
  * @param {*} treeRoots 
+ * @param {*} treeBaseWidthById
+ * @param {*} treeBaseHeightById
  * @param {*} containerWidth 
  * @param {If true, scales the trees according to how many nodes they represent } represtativeTrees 
  * @returns 
  */
-function getOffSets(treeRoots, containerWidth, representativeTrees) {
+export function getOffSets(treeRoots, treeBaseWidthById, treeBaseHeightById, containerWidth, representativeTrees) {
     //uses the tree with the maximum width to figure out the minimum size of the container to prevent clipping
 
 
@@ -15,7 +25,7 @@ function getOffSets(treeRoots, containerWidth, representativeTrees) {
     for (let i = 0; i < treeRoots.length; i++) {
         if (representativeTrees) {
             const id = treeRoots[i].data.id;
-            const repAmount = getAmountOfTreesRepresentedById(id, currentEditDistance);
+            const repAmount = getAmountOfTreesRepresentedById(id, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
             const scaleFactor = getScaleFactorByRepAmount(repAmount);
             widths[i] = treeBaseWidthById.get(id) * scaleFactor;
             heights[i] = treeBaseHeightById.get(id) * scaleFactor; //get base height
@@ -23,7 +33,7 @@ function getOffSets(treeRoots, containerWidth, representativeTrees) {
             widths[i] = getDisplayWidth(treeRoots[i]);
             heights[i] = getDisplayHeight(treeRoots[i]);
         }
-        horMargins[i] = horizontalMarginBetweenTrees; //all trees are initially visible
+        horMargins[i] = vars.horizontalMarginBetweenTrees; //all trees are initially visible
     }
 
 
@@ -44,12 +54,15 @@ function getOffSets(treeRoots, containerWidth, representativeTrees) {
  * @param {if true, treats this tree as a representative tree. If false, does not take the representations into account} isRepTree 
  * @returns 
  */
-function createSingleTree(svgToAddTo, xOffset, yOffset, root, treeId, isRepTree) {
+export function createSingleTree(svgToAddTo, xOffset, yOffset, root, treeId, isRepTree) {
 
     let scaleFactor = 1;
     if (isRepTree) {
-        const repAmount = getAmountOfTreesRepresentedById(treeId, currentEditDistance);
+        const repAmount = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
         scaleFactor = getScaleFactorByRepAmount(repAmount);
+        if (repAmount != 1) {
+            console.log(repAmount)
+        }
     }
 
     const width = getDisplayWidth(root);
@@ -77,7 +90,7 @@ function createSingleTree(svgToAddTo, xOffset, yOffset, root, treeId, isRepTree)
 
 
     const g = treeSvg.append("g")
-        .attr("transform", `translate(${marginWithinTree / 2},${marginWithinTree / 2})`); //make sure no clipping occurs
+        .attr("transform", `translate(${vars.marginWithinTree / 2},${vars.marginWithinTree / 2})`); //make sure no clipping occurs
 
     const link = g.append("g") //links
         .attr("class", "edge")
@@ -87,7 +100,7 @@ function createSingleTree(svgToAddTo, xOffset, yOffset, root, treeId, isRepTree)
         .attr("d", d3.linkVertical()
             .x(d => d.x)
             .y(d => d.y))
-        .attr("stroke-width", linkBaseSize);
+        .attr("stroke-width", vars.linkBaseSize);
 
     const node = g.append("g") //nodes
         .attr("class", "node")
@@ -95,30 +108,34 @@ function createSingleTree(svgToAddTo, xOffset, yOffset, root, treeId, isRepTree)
         .data(root.descendants())
         .join("g")
         .attr("transform", d => `translate(${d.x},${d.y})`)
-        .attr("id", function(d) {
+        .attr("id", function (d) {
             return d.data.id
         })
 
     //glyphs for each node
-    node.each(function(d) {
+    node.each(function (d) {
         makeNodeGlyph(d3.select(this), d.data.id, isRepTree)
     })
 
 
     //add how many trees this node represents if the data is present
     if (isRepTree && typeof root.data.representations !== 'undefined') {
-        const repNumber = getAmountOfTreesRepresented(root, currentEditDistance);
+        const repNumber = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
+
+        //Old
+        // const repNumber = getAmountOfTreesRepresented(root, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
 
         const textG = treeSvg.append("g").attr("class", "textG")
         const text = textG.append("text")
             .attr("class", "textRepAmount")
-            .attr("font-size", fontSizeRepAmount)
+            .attr("font-size", vars.fontSizeRepAmount)
+            // .attr("font-size", "60vw")
             .text(repNumber)
 
 
         //position text such that the top is 2 pixels below the root
-        const textX = root.x + nodeBaseSize - text.node().getBBox().width / 2;
-        const textY = root.y + nodeBaseSize * 2 + fontSizeRepAmount;
+        const textX = root.x + vars.nodeBaseSize - text.node().getBBox().width / 2;
+        const textY = root.y + vars.nodeBaseSize * 2 + vars.fontSizeRepAmount;
 
         text.attr("transform", `translate(${textX},${textY})`); //make sure no clipping occurs
     }
@@ -128,11 +145,18 @@ function createSingleTree(svgToAddTo, xOffset, yOffset, root, treeId, isRepTree)
     return treeSvg;
 }
 
+export function getScaleFactorByRepAmount(repAmount) {
+    if (repAmount == 0) {
+        repAmount = 1; //prevent taking the log of 0
+    }
+    const scaleFactor = 1 + Math.log10(repAmount);
+    return scaleFactor
+}
 
 
 
 
-function getTreeRoots(treeData) {
+export function getTreeRoots(treeData) {
     let treeRoots = [];
     for (let i = 0; i < treeData.length; i++) {
         const treeRoot = getTree(treeData[i]);
@@ -148,7 +172,7 @@ function getTreeRoots(treeData) {
 function getTree(data) {
     const dataRoot = d3.hierarchy(data);
     const treeRoot = d3.tree()
-        .nodeSize([horNodeSpace, verNodeSpace])
+        .nodeSize([vars.horNodeSpace, vars.verNodeSpace])
         (dataRoot)
 
 
@@ -190,8 +214,8 @@ function moveTreeToFirstQuadrantAndInvert(root) {
  * @param {} treeRoot 
  * @returns 
  */
-function getDisplayWidth(treeRoot) {
-    const width = getWidth(treeRoot) + marginWithinTree; //TODO: Adjust width and offset for label placement
+export function getDisplayWidth(treeRoot) {
+    const width = getWidth(treeRoot) + vars.marginWithinTree; //TODO: Adjust width and offset for label placement
     return width;
 }
 
@@ -211,8 +235,8 @@ function getWidth(treeRoot) {
  * @param {} treeRoot 
  * @returns 
  */
-function getDisplayHeight(treeRoot) {
-    return getHeight(treeRoot) + marginWithinTree + fontSizeRepAmount;
+export function getDisplayHeight(treeRoot) {
+    return getHeight(treeRoot) + vars.marginWithinTree + vars.fontSizeRepAmount;
 }
 
 function getHeight(treeRoot) {

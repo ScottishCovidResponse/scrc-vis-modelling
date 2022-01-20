@@ -1,8 +1,9 @@
 //Simple line chart including dataprocessing for underneath the R_t slider.
+import * as d3 from 'd3';
 
 const treesPerSize = []; //for each R_t value (represented by the index), holds how many trees there are
 
-function createScentedRtLineChart(chartDiv, scentIndex) {
+export function createScentedRtLineChart(chartDiv, scentIndex, repTreesData) {
 
     console.log("For both the widget and the selector, automatically select maximum interesting edit distance")
 
@@ -61,8 +62,8 @@ function createLineChart(chartDiv, usableWidth, usableHeight, inputData, scentIn
 
     //x,y functions for the data base on axis
     var shape = d3.line()
-        .x(function(d) { return x(d[0]); })
-        .y(function(d) { return y(d[1]); });
+        .x(function (d) { return x(d[0]); })
+        .y(function (d) { return y(d[1]); });
 
 
 
@@ -98,7 +99,7 @@ function createLineChart(chartDiv, usableWidth, usableHeight, inputData, scentIn
  * @param {array of [x,y] values} data 
  */
 function completeShape(data) {
-    dataLength = data.length;
+    const dataLength = data.length;
     data[dataLength] = [dataLength - 1, 0]; //go to 0 on the y-axis
     data[dataLength + 1] = [0, 0]; //go to 0,0
     data[dataLength + 2] = [0, data[0][1]]; //close the shape

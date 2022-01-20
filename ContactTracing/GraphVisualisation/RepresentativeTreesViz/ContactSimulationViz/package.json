@@ -1,0 +1,28 @@
+{
+    "name": "ContactSimulationViz",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.ts",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "webpack --watch"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/preset-typescript": "^7.16.7",
+        "@types/d3": "^7.1.0",
+        "@types/webpack-env": "^1.16.3",
+        "source-map-loader": "^3.0.1",
+        "typescript": "^4.5.4",
+        "webpack-cli": "^4.9.1"
+    },
+    "dependencies": {
+        "@babel/core": "^7.16.7",
+        "@babel/preset-env": "^7.16.7",
+        "babel-loader": "^8.2.3",
+        "d3": "^7.3.0",
+        "litepicker": "^2.0.12"
+    }
+}

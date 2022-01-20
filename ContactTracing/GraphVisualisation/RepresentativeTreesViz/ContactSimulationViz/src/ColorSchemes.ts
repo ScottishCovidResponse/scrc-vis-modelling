@@ -1,3 +1,9 @@
+import { vars } from './vizVariables';
+
+export let categoricalColorScheme = ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f"];
+export let integerColorScheme = ["#feedde", "#fdd0a2", "#fdae6b", "#fd8d3c", "#f16913", "#d94801", "#8c2d04"]
+export let noneColorScheme = ["#888888"];
+
 /**
  * Returns a [colorScheme,colorSchemeValues] pair. 
  * colorScheme: the {maxParts} colors we are using in order.
@@ -5,7 +11,7 @@
  * @param {*} varType the type of the attribute we are coloring
  * @param {*} values An array of all the values for the attribute we are visualizing
  */
-function getColorScheme(varType, values) {
+export function getColorScheme(varType, values) {
     let colorScheme;
     let colorSchemeValues;
 
@@ -24,7 +30,7 @@ function getColorScheme(varType, values) {
 
         //anything not in the top values, gets shoved into the "other" cateogry
         colorSchemeValues[valueLength] = "Other";
-    } else if (varType == "integer") {
+    } else if (varType == "integer" || varType == "date") { //date is a unix timestamp
         colorScheme = integerColorScheme;
 
         //calculate the upper bounds for the bins based on the numbers
@@ -41,15 +47,15 @@ function getColorScheme(varType, values) {
     return [colorScheme, colorSchemeValues];
 }
 
-function getIndexInColorScheme(value, attributeType, colorSchemeValues) {
+export function getIndexInColorScheme(value, attributeType, colorSchemeValues) {
     if (attributeType == "categorical") {
         const index = colorSchemeValues.indexOf(value);
         if (index == -1) {
-            return 9;
+            return vars.maxParts - 1; //can't find it, so "other" category
         } else {
             return index;
         }
-    } else if (attributeType == "integer") {
+    } else if (attributeType == "integer" || attributeType == "date") {
         //get the first value larger than x
         const index = colorSchemeValues.findIndex(x => x >= value)
         return index;
@@ -94,25 +100,32 @@ function getTopKValues(values, k) {
  */
 function calculateUpperboundsBins(values, binCount) {
 
-    const min = Math.min(...values);
-    const max = Math.max(...values);
+    let min = Number.MAX_VALUE;
+    let max = Number.MIN_VALUE;
+    for (let i = 0; i < values.length; i++) {
+        min = Math.min(min, values[i]);
+        max = Math.max(max, values[i]);
+    }
+
 
     //calculate the interval
     let interval = (max - min) / binCount;
 
+    //TODO: Better rounding. Need to make sure the topmost-node always has the same color
+
     //smoothen it so that we have a nice round 10's interval with the right amount of digits
-    const digits = getDigitCount(interval)
-    console.log(digits)
-    if (digits > 1) {
-        const digitRounder = Math.pow(10, digits - 1);
-        interval = Math.floor(interval / digitRounder) * (digitRounder);
-    }
+    // const digits = getDigitCount(interval)
+    // console.log(digits)
+    // if (digits > 1) {
+    //     const digitRounder = Math.pow(10, digits - 1);
+    //     interval = Math.ceil(interval / digitRounder) * (digitRounder);
+    // }
 
 
     let bins = [];
 
     for (let i = 0; i < binCount; i++) {
-        bins[i] = min + interval * (i + 1);
+        bins[i] = Math.ceil(min + interval * (i + 1));
     }
 
     return bins;

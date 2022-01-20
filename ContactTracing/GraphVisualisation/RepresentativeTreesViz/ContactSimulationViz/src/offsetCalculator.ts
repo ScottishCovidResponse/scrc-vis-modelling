@@ -1,3 +1,4 @@
+import { vars } from './vizVariables';
 /**
  * Returns an array of [x,y] offsets to layout the rectangles without overlap.
  * 
@@ -6,7 +7,7 @@
  * @param {The horizontal margin after each node. Used when filtering out nodes} horMargins
  * @param {the maximum width we can use to layout} maxWidth
  */
-function calculateOffsets(widths, heights, horMargins, maxWidth) {
+export function calculateOffsets(widths, heights, horMargins, maxWidth) {
     return snakeLayout(widths, heights, horMargins, maxWidth);
 }
 
@@ -24,7 +25,7 @@ function snakeLayout(inputWidths, inputHeights, horMargins, maxWidth) {
 
     //add the margins to the widths and the heights so we now how much space each element takes
     const widths = addMargin(inputWidths, horMargins);
-    const heights = addMarginConstant(inputHeights, verticalMarginBetweenTrees);
+    const heights = addMarginConstant(inputHeights, vars.verticalMarginBetweenTrees);
 
 
     //outputArray

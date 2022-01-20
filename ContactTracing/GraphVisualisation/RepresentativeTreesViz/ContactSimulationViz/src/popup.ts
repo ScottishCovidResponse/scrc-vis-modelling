@@ -1,7 +1,12 @@
-const popupPadding = 3*2;//even number for even padding
+import * as d3 from "d3";
+import { getTreesRepresentedById } from "./dataQueries";
+import { createSingleTree, getDisplayHeight, getDisplayWidth, getOffSets, getTreeRoots } from "./treeLayout";
+import { vars } from "./vizVariables";
+const popupPadding = 3 * 2;//even number for even padding
+const popupWidth = 500; //width of the popup when clicking a node to see which trees it represents.
 
 
-function showTreesRepresented(event, treeRoot) {
+export function showTreesRepresented(event, treeRoot) {
 
     const id = treeRoot.data.id;
 
@@ -21,7 +26,7 @@ function showTreesRepresented(event, treeRoot) {
     const treesRepresented = getTreeHierarchiesRepresented(id);
 
     //use function from offsetCalculator to calculate the offests
-    let offSets = getOffSets(treesRepresented, popupWidth,false);
+    let offSets = getOffSets(treesRepresented, popupWidth, false);
 
     addPadding(offSets);//add padding to tree positions
 
@@ -35,7 +40,7 @@ function showTreesRepresented(event, treeRoot) {
         const idI = repTreeRoot.data.id;
 
         //use function from treeLayout to layout a single tree
-        createSingleTree(popupTreeGridSvg, xOffset, yOffset, repTreeRoot, idI);
+        createSingleTree(popupTreeGridSvg, xOffset, yOffset, repTreeRoot, idI,false);
 
         //use helper function from representativeGraph to get width and height
         const height = yOffset + getDisplayHeight(repTreeRoot);
@@ -61,14 +66,14 @@ function showTreesRepresented(event, treeRoot) {
 
 function getTreeHierarchiesRepresented(id) {
 
-    const treesRepresented = getTreesRepresentedById(id,currentEditDistance)
-    
+    const treesRepresented = getTreesRepresentedById(id, vars.currentEditDistance)
+
     //use function from representativeGraph to get the tree layouts
     let treeRoots = getTreeRoots(treesRepresented);
     return treeRoots;
 }
 
-function removeAllPopups() {
+export function removeAllPopups() {
     //remove the popup
     d3.select("#treeGrid").selectAll(".popupTreeGrid").remove();
 }

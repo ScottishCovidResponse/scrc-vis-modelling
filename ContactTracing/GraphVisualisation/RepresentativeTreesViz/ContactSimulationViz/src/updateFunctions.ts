@@ -1,21 +1,42 @@
+import * as d3 from "d3";
+import { metaData, repTreesData } from "./index";
+import { getColorScheme } from "./ColorSchemes";
+import { getAmountOfTreesRepresentedById, getMetaDataValues, metaDataFromNodeById } from "./dataQueries";
+import { createScentedRtLineChart } from "./LineChart";
+import { vars } from "./vizVariables";
+import { updateColorLegend } from "./sidePanel";
+import { generateTreeGrid, resizeSVG, treeBaseHeightById, treeBaseWidthById, treeOrder } from "./representativeGraph";
+import { createComponentBarChart } from "./BarChart";
+import { updateNodeGlyphs } from "./nodeViz";
+import { removeAllPopups } from "./popup";
+import { getScaleFactorByRepAmount } from "./treeLayout";
+import { calculateOffsets } from "./offsetCalculator";
+import { updateGridMapFromTrees } from "./GridMap";
+
+let recalculate = false; //Holds whether we need to recalculate the tree grid. Can happen in case of node size change or data change
+
+export function setRecalculate() { recalculate = true }
+
 /**
  * Updates the visualization without changing the layout of the trees
  */
-function updateSliderPreview() {
-    let idsToHide = getIdsToHide(currentEditDistance)
-    hideTrees(idsToHide);
+export function updateSliderPreview() {
     updateRepresentationText();
 
-    updateScentWidget(currentEditDistance)
+    updateScentWidget(vars.currentEditDistance)
 }
 
 
-function updateAll() {
+export function updateAll() {
+    let idsToHide = getIdsToHide(vars.currentEditDistance)
+    hideTrees(idsToHide);
+
+
     updateSliderPreview();
     updateColors();
     if (recalculate) { //if we need to reinitialize the grid
         d3.select("#treeGrid").selectAll("*").remove();
-        generateTreeGrid();
+        generateTreeGrid(repTreesData);
         //update the position without animating as we are redrawing the tree
         updatePositions(false);
     } else {
@@ -28,6 +49,7 @@ function updateAll() {
 
     updateGlobalChart();
     changeNoLongerPending();
+    updateGridMapFromTrees(vars.startDate, vars.endDate);
 }
 
 
@@ -40,27 +62,43 @@ function updateColors() {
 function updateColorSchemes() {
 
     //Need to get the values as this determines which bins we have for the colors
-    leftValues = getMetaDataValues(currentLeftAttributeName, metaData);
-    [currentLeftColorScheme, currentLeftColorSchemeValues] = getColorScheme(currentLeftAttributeType, leftValues)
-        //set the bounds for the bings
-    currentLeftAttributeBounds = [Math.min(...leftValues), Math.max(...leftValues)];
+    let leftValues = getMetaDataValues(vars.currentLeftAttributeName, metaData);
+    [vars.currentLeftColorScheme, vars.currentLeftColorSchemeValues] = getColorScheme(vars.currentLeftAttributeType, leftValues)
 
+    if (vars.currentLeftAttributeType == "integer" || vars.currentLeftAttributeType == "date") {
+        //set the bounds for the bins
+        let minLeftVal = Number.MAX_VALUE;
+        let maxLeftVal = Number.MIN_VALUE;
+        for (let val of leftValues) {
+            minLeftVal = Math.min(minLeftVal, val);
+            maxLeftVal = Math.max(maxLeftVal, val);
+        }
+        vars.currentLeftAttributeBounds = [minLeftVal, maxLeftVal];
+    }
 
+    let rightValues = getMetaDataValues(vars.currentRightAttributeName, metaData);
+    [vars.currentRightColorScheme, vars.currentRightColorSchemeValues] = getColorScheme(vars.currentRightAttributeType, rightValues)
 
-    rightValues = getMetaDataValues(currentRightAttributeName, metaData);
-    [currentRightColorScheme, currentRightColorSchemeValues] = getColorScheme(currentRightAttributeType, rightValues)
-        //set the bounds for the bings
-    currentRightAttributeBounds = [Math.min(...rightValues), Math.max(...rightValues)];
+    if (vars.currentRightAttributeType == "integer" || vars.currentRightAttributeType == "date") {
+        //set the bounds for the bins
+        let minRightVal = Number.MAX_VALUE;
+        let maxRightVal = Number.MIN_VALUE;
+        for (let val of rightValues) {
+            minRightVal = Math.min(minRightVal, val);
+            maxRightVal = Math.max(maxRightVal, val);
+        }
+        vars.currentRightAttributeBounds = [minRightVal, maxRightVal];
+    }
 }
 
-function updatePositions(animate = true) {
+export function updatePositions(animate = true) {
     removeAllPopups(); //remove all popups as we are changing the layout and possibly hiding trees/nodes
-    let idsToHide = getIdsToHide(currentEditDistance);
+    let idsToHide = getIdsToHide(vars.currentEditDistance);
 
     updateTreesAnimated(idsToHide, animate);
 }
 
-function updateGlobalChart() {
+export function updateGlobalChart() {
     //TODO: Not optimized at all, but works
     const distributionDiv = d3.select("#sidePanel").select("#distributionChartPanel");
     distributionDiv.select(".barChartsContainer").remove()
@@ -74,7 +112,7 @@ function changeNoLongerPending() {
     recalcButton.classed("disabled", true)
 }
 
-function changePending() {
+export function changePending() {
     const recalcButton = d3.select("#sidePanel").select(".recalculateDiv").select("#recalculateButton")
     recalcButton.classed("disabled", false)
 }
@@ -82,7 +120,7 @@ function changePending() {
 function hideTrees(idsToHide) {
     d3.select("#treeGrid")
         .selectAll(".svgtree")
-        .attr("class", function() {
+        .attr("class", function () {
             const treeId = parseInt(d3.select(this).attr('id').substring(3));
             //substring 3 as id is "tidXXX" where XXX is a number
             if (idsToHide.includes(treeId)) {
@@ -98,9 +136,9 @@ function updateRepresentationText() {
         .selectAll(".svgtree")
         .selectAll(".textG")
         .select("text")
-        .text(function() {
+        .text(function () {
             const treeId = parseInt(d3.select(this).node().parentNode.parentNode.getAttribute("id").substring(3))
-            const repAmount = getAmountOfTreesRepresentedById(treeId, currentEditDistance);
+            const repAmount = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance, vars.locationToVisualize,vars.startDate,vars.endDate);
             return repAmount;
         })
 }
@@ -110,7 +148,7 @@ function updateScentWidget(distance) {
     //delete old
     d3.select("#RtScentedChart").remove();
     //make new
-    createScentedRtLineChart(d3.select("#DistanceSliderdiv"), distance);
+    createScentedRtLineChart(d3.select("#DistanceSliderdiv"), distance, repTreesData);
 }
 
 /**
@@ -143,15 +181,15 @@ function recalculatePlacement(idsToHide) {
     for (let i = 0; i < treeOrder.length; i++) {
         const id = treeOrder[i];
 
-        const repAmount = getAmountOfTreesRepresentedById(id, currentEditDistance);
+        const repAmount = getAmountOfTreesRepresentedById(id, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
 
         let width = treeBaseWidthById.get(id); //get base width
         let height = treeBaseHeightById.get(id); //get base height
-        let horizontalMargin = horizontalMarginBetweenTrees;
+        let horizontalMargin = vars.horizontalMarginBetweenTrees;
 
         let scaleFactor; //how much to scale the trees by
         if (idsToHide.includes(id)) { //tree will be hidden, shrink it
-            scaleFactor = hiddenTreesScalingFactor;
+            scaleFactor = vars.hiddenTreesScalingFactor;
             horizontalMargin = horizontalMargin * scaleFactor; //shrink margin only if hidden
         } else { //otherwise scale tree
             //hidden trees cannot have a repAmount more than 1
@@ -203,22 +241,22 @@ function animateChanges(widthArray, heightArray, offsetArray, transitionTime) {
         .transition()
         .duration(transitionTime)
         .selectAll("svg")
-        .attr("width", function() { //update the width. Can increase or decrease.
+        .attr("width", function () { //update the width. Can increase or decrease.
             const treeId = parseInt(d3.select(this).attr('id').substring(3))
             const width = widthMap.get(treeId);
             return width;
         })
-        .attr("height", function() { //update the height. Can increase or decrease.
+        .attr("height", function () { //update the height. Can increase or decrease.
             const treeId = parseInt(d3.select(this).attr('id').substring(3))
             const height = heightMap.get(treeId);
             return height;
         })
-        .attr("x", function() { //update x
+        .attr("x", function () { //update x
             const treeId = parseInt(d3.select(this).attr('id').substring(3))
             const xOffset = xOffsetMap.get(treeId);
             return xOffset;
         })
-        .attr("y", function() { //update y
+        .attr("y", function () { //update y
             const treeId = parseInt(d3.select(this).attr('id').substring(3))
             const yOffset = yOffsetMap.get(treeId);
             return yOffset;
@@ -238,12 +276,46 @@ function animateChanges(widthArray, heightArray, offsetArray, transitionTime) {
 
 
 
-function getIdsToHide(editDistance) {
+/**
+ * Hide either when they are not represnted at the edit distance or if they have no nodes with the right location
+ * @param editDistance 
+ * @returns 
+ */
+function getIdsToHide(editDistance: number) {
+    
     let idsToHide = [];
     for (let i = 0; i < repTreesData.length; i++) {
-        if (repTreesData[i].maxEditDistance < editDistance) {
-            idsToHide.push(repTreesData[i].id);
+        const repData = repTreesData[i];
+        let id = repData.id;
+
+        // //quick determine if we can hide this tree by edit distance along
+        if (repData.maxEditDistance < editDistance) {
+            idsToHide.push(id);
+            continue;
         }
+
+
+         //only show trees in the represented range
+        // const metaData = metaDataFromNodeById.get(id);
+        // if ( metaData.positiveTestTime < vars.startDate  || metaData.positiveTestTime > vars.endDate) {
+        //     idsToHide.push(id);
+        //     // console.log(vars.startDate)
+        //     // console.log(vars.endDate)
+        //     // console.log(metaData.positiveTestTime);
+        //     continue;
+        // }
+
+
+        //repIData.editDistance <= editDistance
+        //These are represnted
+
+        //trees always represent themselves
+        if (getAmountOfTreesRepresentedById(id, editDistance, vars.locationToVisualize, vars.startDate, vars.endDate) == 0) {
+            idsToHide.push(id);
+            continue;
+        }
+
     }
+    console.log("TODO: Hide complete trees that are not in the right range")
     return idsToHide;
 }

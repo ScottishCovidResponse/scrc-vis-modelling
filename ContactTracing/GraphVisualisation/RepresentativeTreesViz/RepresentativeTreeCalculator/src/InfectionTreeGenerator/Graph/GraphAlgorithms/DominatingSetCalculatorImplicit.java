@@ -30,11 +30,16 @@ public class DominatingSetCalculatorImplicit {
         ArrayList<Integer> dominatingSet = new ArrayList();
         //nodes that are not connected always need to be in
 
+        int count = 0;
         //Trivial algorithm. Go through the nodes. For each node if it is not yet dominated, add it to the set.
         for (Tree t : trees) {
+            Log.printProgress("Calculating dominating set, tree " + count + " out of " + trees.size(), 100);
+
             if (!isDominated(dominatingSet, t, trees, dm, maxDistance)) {
                 dominatingSet.add(t.id);
             }
+
+            count++;
         }
         return dominatingSet;
     }
@@ -47,20 +52,23 @@ public class DominatingSetCalculatorImplicit {
      * @param trees
      * @param dm
      * @param maxDistance
-     * @return 
+     * @return
      */
     public List<Integer> trimDominatingSet(List<Integer> currentDomSet, List<Tree> trees, TreeDistanceMeasure dm, int maxDistance) {
         //start by taking all trees, and keep removing them as long as the result remaind a dominating set
         ArrayList<Integer> trimmedDomSet = new ArrayList(currentDomSet);
         ArrayList<Integer> idsToConsider = new ArrayList(currentDomSet);
 
+        int count = 0;
         for (Integer id : idsToConsider) {
+            Log.printProgress("Calculating trimmed dominating set, tree " + count + " out of " + trees.size(), 100);
             //check if removing node with id from the dominating set still gives a dominating set
             trimmedDomSet.remove(id);
             if (!isDominatingSet(trimmedDomSet, trees, dm, maxDistance)) {
                 //not a dominating set anymore, put it back
                 trimmedDomSet.add(id);
             }
+            count++;
         }
 
         return trimmedDomSet;

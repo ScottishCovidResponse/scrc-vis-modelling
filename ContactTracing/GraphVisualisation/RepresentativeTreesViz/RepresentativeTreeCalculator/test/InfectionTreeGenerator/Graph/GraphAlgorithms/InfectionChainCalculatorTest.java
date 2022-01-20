@@ -46,22 +46,22 @@ public class InfectionChainCalculatorTest {
         ContactGraph g = new ContactGraph();
         createNode(g, 1, 1564040000);
         createNode(g, 2, 1564170000);
-//        createNode(g, 3); 
-//        createNode(g, 4);
-//        createNode(g, 5);
+        createNode(g, 3);
+        createNode(g, 4);
+        createNode(g, 5);
         createNode(g, 6, 1564370000);
         createNode(g, 7, 1564770000);
 
         createEdge(g, 1, 2, 1, 1564050000);
-//        createEdge(g, 2, 3, 1, 1564150000);
-//        createEdge(g, 1, 3, 1, 1564250000);
+        createEdge(g, 2, 3, 1, 1564150000);
+        createEdge(g, 1, 3, 1, 1564250000);
         createEdge(g, 1, 6, 1, 1564350000);
         createEdge(g, 1, 2, 1, 1564450000);
-//        createEdge(g, 3, 4, 1, 1564550000);
+        createEdge(g, 3, 4, 1, 1564550000);
         createEdge(g, 7, 6, 1, 1564650000);
         createEdge(g, 6, 7, 1, 1564750000);
-//        createEdge(g, 4, 5, 1, 1564850000);
-//        createEdge(g, 4, 6, 1, 1565950000);
+        createEdge(g, 4, 5, 1, 1564850000);
+        createEdge(g, 4, 6, 1, 1565950000);
 
         //seperate component
         createNode(g, 8, 1664770000);
@@ -107,22 +107,22 @@ public class InfectionChainCalculatorTest {
         ContactGraph g = new ContactGraph();
         createNode(g, 1, 1564040000);
         createNode(g, 2, 1564170000);
-//        createNode(g, 3); Nodes without timestamps can't get this far into the program
-//        createNode(g, 4);
-//        createNode(g, 5);
+        createNode(g, 3);
+        createNode(g, 4);
+        createNode(g, 5);
         createNode(g, 6, 1564370000);
         createNode(g, 7, 1564770000);
 
         createEdge(g, 1, 2, 1, 1564050000);
-//        createEdge(g, 2, 3, 1, 1564150000);
-//        createEdge(g, 1, 3, 1, 1564250000);
+        createEdge(g, 2, 3, 1, 1564150000);
+        createEdge(g, 1, 3, 1, 1564250000);
         createEdge(g, 1, 6, 1, 1564350000);
         createEdge(g, 1, 2, 1, 1564450000);
-//        createEdge(g, 3, 4, 1, 1564550000);
+        createEdge(g, 3, 4, 1, 1564550000);
         createEdge(g, 7, 6, 1, 1564650000);
         createEdge(g, 6, 7, 1, 1564750000);
-//        createEdge(g, 4, 5, 1, 1564850000);
-//        createEdge(g, 4, 6, 1, 1565950000);
+        createEdge(g, 4, 5, 1, 1564850000);
+        createEdge(g, 4, 6, 1, 1565950000);
 
         //seperate component
         createNode(g, 8, 1664770000);

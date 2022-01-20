@@ -35,8 +35,8 @@ import java.util.stream.Collectors;
 
 /**
  * Calculates the edge directions for a connected graph to hold the most likely
- * way an infection spread. 
- * 
+ * way an infection spread.
+ *
  * @pre All nodes need to have a positiveTestTime
  *
  * @author MaxSondag
@@ -132,7 +132,9 @@ public class InfectionChainCalculator {
             }
 
             if (componentNodes.size() == 1) {
-                mostLikelyInfectionGraph.addNode(new InfectionNode(n.id, n.positiveTestTime));
+                if (n.positiveTestTime != null) {//only add nodes with positive test time
+                    mostLikelyInfectionGraph.addNode(new InfectionNode(n.id, n.positiveTestTime));
+                }
             }
             if (componentNodes.size() == 2) {
                 //get the othernode and the componentEdges
@@ -145,22 +147,26 @@ public class InfectionChainCalculator {
                     }
                 }
 
-                //add the infectionNodes
-                InfectionNode iN = new InfectionNode(n.id, n.positiveTestTime);
-                InfectionNode iOtherN = new InfectionNode(otherN.id, otherN.positiveTestTime);
-                mostLikelyInfectionGraph.addNode(iN);
-                mostLikelyInfectionGraph.addNode(iOtherN);
+                //only add nodes with positive test time
+                if (n.positiveTestTime != null && otherN.positiveTestTime != null) {
 
-                //use the earliest edge that is a contact for the graph
-                long earliestContact = Long.MAX_VALUE;
-                for (ContactEdge ce : componentEdges) {
-                    earliestContact = Math.min(earliestContact, ce.contactTime);
-                }
+                    //add the infectionNodes
+                    InfectionNode iN = new InfectionNode(n.id, n.positiveTestTime);
+                    InfectionNode iOtherN = new InfectionNode(otherN.id, otherN.positiveTestTime);
+                    mostLikelyInfectionGraph.addNode(iN);
+                    mostLikelyInfectionGraph.addNode(iOtherN);
 
-                if (n.positiveTestTime < otherN.positiveTestTime) {
-                    mostLikelyInfectionGraph.addEdge(new InfectionEdge(iN, iOtherN, earliestContact));
-                } else {
-                    mostLikelyInfectionGraph.addEdge(new InfectionEdge(iOtherN, iN, earliestContact));
+                    //use the earliest edge that is a contact for the graph
+                    long earliestContact = Long.MAX_VALUE;
+                    for (ContactEdge ce : componentEdges) {
+                        earliestContact = Math.min(earliestContact, ce.contactTime);
+                    }
+
+                    if (n.positiveTestTime < otherN.positiveTestTime) {
+                        mostLikelyInfectionGraph.addEdge(new InfectionEdge(iN, iOtherN, earliestContact));
+                    } else {
+                        mostLikelyInfectionGraph.addEdge(new InfectionEdge(iOtherN, iN, earliestContact));
+                    }
                 }
             }
 

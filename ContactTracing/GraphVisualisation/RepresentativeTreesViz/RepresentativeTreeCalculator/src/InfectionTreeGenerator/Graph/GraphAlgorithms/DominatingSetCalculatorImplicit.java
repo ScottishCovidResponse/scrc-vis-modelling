@@ -131,15 +131,17 @@ public class DominatingSetCalculatorImplicit {
         //make a copy so we can freely delete those that we have mapped
         List<Tree> remainingTrees = new ArrayList();
         remainingTrees.addAll(trees);
-
+        int count = 0;
         for (Integer domId : dsIds) {
+            System.out.println("Calculating domination mapping " + count + "out of " + dsIds.size());
             //the current tree we are looking into the dominance relations of
             Tree tDomId = treeById.get(domId);
             List<Tree> dominatedByT = new ArrayList();
 
             //it dominates itself
             dominatedByT.add(tDomId);
-
+            remainingTrees.remove(tDomId);
+            
             //and all trees from {remainingtrees} within the specified distance
             for (Tree t : remainingTrees) {
                 if (dsIds.contains(t.id)) { //Ignore nodes in the dominating set
@@ -155,6 +157,7 @@ public class DominatingSetCalculatorImplicit {
 
             //a tree can only be dominated once
             remainingTrees.removeAll(dominatedByT);
+            count++;
         }
         assert (remainingTrees.isEmpty());
         return mapping;

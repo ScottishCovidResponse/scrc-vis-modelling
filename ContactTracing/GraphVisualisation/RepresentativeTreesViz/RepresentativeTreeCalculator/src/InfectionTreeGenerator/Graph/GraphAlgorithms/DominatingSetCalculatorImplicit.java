@@ -98,7 +98,7 @@ public class DominatingSetCalculatorImplicit {
     }
 
     private boolean isDominated(ArrayList<Integer> domSet, Tree t, double maxDistance) {
-        if (domSet.contains(t.id)) {
+        if (domSet.contains(t.id)) { //if the node is in the dominating set it is clearly dominated
             return true;
         }
 
@@ -112,6 +112,52 @@ public class DominatingSetCalculatorImplicit {
         }
         //no tree dominates this node
         return false;
+    }
+
+    /**
+     * Returns for a given graphId the set of trees that it is "assigned" to to
+     * dominate.Each tree is only assigned to one other tree even if dominated
+     * by more trees. If a tree is in the dominating set, it always dominates
+     * itself
+     *
+     * @param dsIds Set of tree ids that are in the dominating set.
+     * @param maxDistance allowed for a node to be dominated
+     * @param dm the distance measure used
+     * @return
+     */
+    public HashMap<Integer, List<Tree>> calculateDominationMapping(List<Integer> dsIds, double maxDistance, TreeDistanceMeasure dm) {
+        HashMap<Integer, List<Tree>> mapping = new HashMap();
+
+        //make a copy so we can freely delete those that we have mapped
+        List<Tree> remainingTrees = new ArrayList();
+        remainingTrees.addAll(trees);
+
+        for (Integer domId : dsIds) {
+            //the current tree we are looking into the dominance relations of
+            Tree tDomId = treeById.get(domId);
+            List<Tree> dominatedByT = new ArrayList();
+
+            //it dominates itself
+            dominatedByT.add(tDomId);
+
+            //and all trees from {remainingtrees} within the specified distance
+            for (Tree t : remainingTrees) {
+                if (dsIds.contains(t.id)) { //Ignore nodes in the dominating set
+                    continue;
+                }
+                double distance = dm.getDistance(tDomId, t);
+                if (distance <= maxDistance) {
+                    dominatedByT.add(t);
+                }
+            }
+
+            mapping.put(domId, dominatedByT);
+
+            //a tree can only be dominated once
+            remainingTrees.removeAll(dominatedByT);
+        }
+        assert (remainingTrees.isEmpty());
+        return mapping;
     }
 
 }

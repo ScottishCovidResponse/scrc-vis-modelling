@@ -29,14 +29,40 @@ export function updateNodeGlyph(treeSvg: d3.Selection<d3.BaseType, unknown, HTML
     gElements.each(function () {
         const nodeId = parseInt(d3.select(this).attr("id"));
 
+        //TODO: Optimize this by calculating from partCount directly, saving *7 overhead;
+        const leftPartCounts = getPartCounts(nodeId, true, true);
+        const rightPartCounts = getPartCounts(nodeId, true, false);
+
+        const leftPartsIsZero = leftPartCounts.every(item => item === 0);
+        const rightPartsIsZero = rightPartCounts.every(item => item === 0);
+
         for (let partI = 0; partI < vars.maxParts; partI++) {
             const leftRectI = d3.select(this).select(".leftRectNumber" + partI);
-            updateRect(leftRectI, partI, nodeId, true, true);
-
+            if (leftPartsIsZero == false) {
+                updateRect(leftRectI, partI, nodeId, true, true);
+            } else {
+                updateRectWhite(leftRectI);
+            }
             const rightRectI = d3.select(this).select(".rightRectNumber" + partI);
-            updateRect(rightRectI, partI, nodeId, true, false);
+            if (rightPartsIsZero == false) {
+                updateRect(rightRectI, partI, nodeId, true, false);
+            } else {
+                updateRectWhite(rightRectI);
+            }
         }
     });
+}
+
+function updateRectWhite(rect: d3.Selection<d3.BaseType, unknown, null, undefined>) {
+    const rectSize = vars.nodeBaseSize * 2; //nodeBaseSize is radius
+    const color = "white"
+    const [y, height] = [-rectSize / 2, rectSize];
+
+    rect.attr("y", y)
+        .attr("height", height)
+        .attr("fill", color)
+
+    rect.classed("noDataRect", true);
 }
 
 function updateRect(rect: d3.Selection<d3.BaseType, unknown, null, undefined>, partIndex: number, nodeId: number, isRepTree: boolean, isLeftRect: boolean) {
@@ -45,6 +71,8 @@ function updateRect(rect: d3.Selection<d3.BaseType, unknown, null, undefined>, p
     rect.attr("y", y)
         .attr("height", height)
         .attr("fill", color)
+
+    rect.classed("noDataRect", false);
 
 }
 
@@ -109,8 +137,7 @@ function getPartPercentages(id: number, partIndex: number, isRepTree: boolean, i
     }
 
     if (sum == 0) {
-        console.log("Shouldn't happen. Something went wrong in data reading/parsing")
-        return [0, 0];
+        console.log("Shouldn't happen, no data for the node. Something went wrong in data reading/parsing or filtering")
     }
 
     const startPercentage = startValue / sum;

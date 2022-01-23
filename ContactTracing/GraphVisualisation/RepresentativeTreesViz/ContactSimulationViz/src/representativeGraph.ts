@@ -8,11 +8,13 @@ import { vars } from './vizVariables';
 
 
 export function initTreeGrid(repTreesData) {
+    console.log("Init tree grid")
     //get the svg grid where the trees will be added to.
     //using svg instead of flexbox for animations purposes.
     const treeGridDiv = d3.select("#treeGridDiv");
     const treeRoots = getTreeRoots(repTreesData);
 
+    console.log("Creating a tree for every treeroot")
     for (let i = 0; i < treeRoots.length; i++) {
         const treeRoot = treeRoots[i];
         const id = treeRoot.data.id;
@@ -25,16 +27,17 @@ export function initTreeGrid(repTreesData) {
         }) //TODO: Change click function to work on all of svg, not just nodes.
 
     }
-
-    updateTrees();
 }
 
 export function updateTrees() {
     //do not animate these. d3 animations break down at around 20000 svg elements. The largest tree alone has 100 nodes with 10 parts each.
     d3.select("#treeGridDiv")
-        .selectAll(".divsvgtree.visible")
-        .each(function (d) {//only update visible trees for performance reasons
-            updateTree(d3.select(this), true);
+        .selectAll(".divsvgtree")
+        .each(function (d) {
+            //only update trees that are not hidden, don't need to update the rest.
+            if (d3.select(this).classed("hidden") == false) {
+                updateTree(d3.select(this), true);
+            }
         })
 }
 

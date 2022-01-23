@@ -23,7 +23,7 @@ export function updateSliderPreview() {
 
 
 export function updateAll() {
-    let idsToHide = getIdsToHide(vars.currentEditDistance)
+    let idsToHide = getIdsToHide()
     hideTrees(idsToHide);
 
 
@@ -99,7 +99,6 @@ function hideTrees(idsToHide: number[]) {
     d3.select("#treeGridDiv")
         .selectAll(".divsvgtree")
         .each(function () {
-            console.log("test")
             const div = d3.select(this);
             const treeId = parseInt(div.attr('id').substring(3));
             //substring 3 as id is "tidXXX" where XXX is a number
@@ -123,44 +122,19 @@ function updateScentWidget(distance: number) {
 
 /**
  * Hide either when they are not represnted at the edit distance or if they have no nodes with the right location
- * @param editDistance 
  * @returns 
  */
-function getIdsToHide(editDistance: number) {
+function getIdsToHide() {
 
     let idsToHide = [];
     for (let i = 0; i < repTreesData.length; i++) {
         const repData = repTreesData[i];
         let id = repData.id;
 
-        // //quick determine if we can hide this tree by edit distance along
-        if (repData.maxEditDistance < editDistance) {
+        let repAmount = getAmountOfTreesRepresentedById(id, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
+        if (repAmount == 0) {
             idsToHide.push(id);
-            continue;
         }
-
-
-        //only show trees in the represented range
-        // const metaData = metaDataFromNodeById.get(id);
-        // if ( metaData.positiveTestTime < vars.startDate  || metaData.positiveTestTime > vars.endDate) {
-        //     idsToHide.push(id);
-        //     // console.log(vars.startDate)
-        //     // console.log(vars.endDate)
-        //     // console.log(metaData.positiveTestTime);
-        //     continue;
-        // }
-
-
-        //repIData.editDistance <= editDistance
-        //These are represnted
-
-        //trees always represent themselves
-        if (getAmountOfTreesRepresentedById(id, editDistance, vars.locationToVisualize, vars.startDate, vars.endDate) == 0) {
-            idsToHide.push(id);
-            continue;
-        }
-
     }
-    console.log("TODO: Hide complete trees that are not in the right range")
     return idsToHide;
 }

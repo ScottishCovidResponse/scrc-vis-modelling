@@ -562,7 +562,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "metaDataTypes": () => (/* binding */ metaDataTypes),
 /* harmony export */   "preprocessData": () => (/* binding */ preprocessData),
 /* harmony export */   "getMaxDepth": () => (/* binding */ getMaxDepth),
-/* harmony export */   "getAmountOfTreesRepresented": () => (/* binding */ getAmountOfTreesRepresented),
 /* harmony export */   "getAmountOfTreesRepresentedById": () => (/* binding */ getAmountOfTreesRepresentedById),
 /* harmony export */   "getTreesRepresentedById": () => (/* binding */ getTreesRepresentedById),
 /* harmony export */   "getMetaDataValueFromId": () => (/* binding */ getMetaDataValueFromId),
@@ -571,11 +570,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "getNodes": () => (/* binding */ getNodes),
 /* harmony export */   "getNodeFromTree": () => (/* binding */ getNodeFromTree)
 /* harmony export */ });
+/* harmony import */ var _vizVariables__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./vizVariables */ "./src/vizVariables.ts");
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 
 var repTreeById = new Map(); //holds the representative tree data by id of the root
 
@@ -714,59 +715,11 @@ function getTreeHeight(treeNode) {
   return height;
 }
 /**
- * Gets the amount of trees represented by the tree {@code d} before editdistance {@code editDistance}
- * @param {*} editDistance 
- */
-
-
-function getAmountOfTreesRepresented(d, editDistance, locationToVisualize, startDate, endDate) {
-  var count = 0;
-  var reps = d.data.representations; // for (let repI = 0; repI < reps.length; repI++) {
-  //     const repIData = reps[repI];
-  //     if (repIData.editDistance <= editDistance) {
-  //         count += repIData.representationIds.length;
-  //     }
-  // }
-
-  for (var repI = 0; repI < reps.length; repI++) {
-    //go through the various edit distances
-    var repIData = reps[repI];
-
-    if (repIData.editDistance <= editDistance) {
-      //Representative trees are represented by this tree
-      //must be of the current location visualized (or All are visualized)
-      var _iterator4 = _createForOfIteratorHelper(repIData.representationIds),
-          _step4;
-
-      try {
-        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-          var repId = _step4.value;
-          var metaData = metaDataFromNodeById.get(repId);
-          var location = metaData.location;
-
-          if (locationToVisualize == location || locationToVisualize == "All") {
-            //must have started or ended in this period
-            if (metaData.positiveTestTime > startDate && metaData.positiveTestTime < endDate) {
-              //must be in the right timeframp
-              count += 1;
-            }
-          }
-        }
-      } catch (err) {
-        _iterator4.e(err);
-      } finally {
-        _iterator4.f();
-      }
-    }
-  }
-
-  return count;
-}
-/**
  * Gets the amount of trees represented by the tree with id {@code id} before editdistance {@code editDistance}
  * @param {*} editDistance 
  * @param {Which location we are visualizing} locationToVisualize
  */
+
 
 function getAmountOfTreesRepresentedById(id, editDistance, locationToVisualize, startDate, endDate) {
   var repTree = repTreeById.get(id);
@@ -776,81 +729,82 @@ function getAmountOfTreesRepresentedById(id, editDistance, locationToVisualize, 
     return 1;
   }
 
-  var reps = repTree.representations;
-  var count = 0;
-
-  for (var repI = 0; repI < reps.length; repI++) {
-    //go through the various edit distances
-    var repIData = reps[repI];
-
-    if (repIData.editDistance <= editDistance) {
-      //Representative trees are represented by this tree
-      //must be of the current location visualized (or All are visualized)
-      var _iterator5 = _createForOfIteratorHelper(repIData.representationIds),
-          _step5;
-
-      try {
-        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-          var repId = _step5.value;
-          var metaData = metaDataFromNodeById.get(repId);
-          var location = metaData.location;
-
-          if (locationToVisualize == location || locationToVisualize == "All") {
-            //must have started or ended in this period
-            if (metaData.positiveTestTime > startDate && metaData.positiveTestTime < endDate) {
-              //must be in the right timeframp
-              count += 1;
-            }
-          }
-        }
-      } catch (err) {
-        _iterator5.e(err);
-      } finally {
-        _iterator5.f();
-      }
-    }
-  }
-
-  return count;
+  return getTreesRepresentedById(id, editDistance, locationToVisualize, startDate, endDate).length;
 }
 /**
  * Gets the amount of trees represented by the tree with id {@code id} before editdistance {@code editDistance}
  * @param {*} editDistance 
  */
 
-function getTreesRepresentedById(id, editDistance) {
+function getTreesRepresentedById(id, editDistance, locationToVisualize, startDate, endDate) {
+  //Need to filter trees differently
   var repTree = repTreeById.get(id);
   var reps = repTree.representations;
+
+  if (repTree.maxEditDistance <= editDistance) {
+    //This tree is no longer represented
+    return [];
+  } //First gather all the trees represented by this tree.
+
+
   var repTreeIds = [];
 
-  for (var i = 0; i < reps.length; i++) {
-    var repIData = reps[i];
+  for (var repI = 0; repI < reps.length; repI++) {
+    //go through the various edit distances
+    var repIData = reps[repI];
 
     if (repIData.editDistance <= editDistance) {
-      var repIds = repIData.representationIds;
+      //Get all representations of this tree at this distance
+      //Go through the represnted trees
+      var _iterator4 = _createForOfIteratorHelper(repIData.representationIds),
+          _step4;
 
-      for (var j = 0; j < repIds.length; j++) {
-        repTreeIds.push(repIds[j]);
+      try {
+        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+          var repId = _step4.value;
+          var metaData = metaDataFromNodeById.get(repId);
+
+          if (isNodeFiltered(metaData) == false) {
+            repTreeIds.push(repId);
+          }
+        }
+      } catch (err) {
+        _iterator4.e(err);
+      } finally {
+        _iterator4.f();
       }
     }
-  }
+  } //Find the trees in alltrees and return them
+
 
   var allTreesRepresented = [];
 
-  for (var _i3 = 0; _i3 < repTreeIds.length; _i3++) {
-    var tree = allTreeById.get(repTreeIds[_i3]);
+  for (var i = 0; i < repTreeIds.length; i++) {
+    var tree = allTreeById.get(repTreeIds[i]);
     allTreesRepresented.push(tree);
   }
 
   return allTreesRepresented;
 }
+console.log("need to filter trees differently, need to check every node and keep it if at least 1 node is present in filters");
+
+function isNodeFiltered(nodeMetadata) {
+  var location = nodeMetadata.location;
+  var testTime = nodeMetadata.positiveTestTime;
+
+  if (_vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.locationToVisualize == location || _vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.locationToVisualize == "All") {
+    //must have started or ended in this period
+    if (_vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.startDate <= testTime && testTime <= _vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.endDate) {
+      return false;
+    }
+  }
+
+  return true;
+}
 /**
  * Get all nodes that the node with nodeId represents at the specified editdistance. treeId is the tree nodeid belong to
- * @param {} treeId 
- * @param {} nodeId 
- * @param {} editDistance
- * @param {} location
  */
+
 
 function getRepresentedNodesMetaData(nodeId, editDistance, locationToVisualize, startDate, endDate) {
   var node = repNodeById.get(nodeId);
@@ -862,38 +816,34 @@ function getRepresentedNodesMetaData(nodeId, editDistance, locationToVisualize, 
 
     if (repIData.editDistance <= editDistance) {
       //must be of the current location visualized (or All are visualized)
-      var _iterator6 = _createForOfIteratorHelper(repIData.representationIds),
-          _step6;
+      var _iterator5 = _createForOfIteratorHelper(repIData.representationIds),
+          _step5;
 
       try {
-        for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
-          var repId = _step6.value;
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+          var repId = _step5.value;
           var metaData = metaDataFromNodeById.get(repId);
-          var location = metaData.location;
 
-          if (locationToVisualize == location || locationToVisualize == "All") {
-            //must have started or ended in this period
-            if (metaData.positiveTestTime > startDate && metaData.positiveTestTime < endDate) {
-              //must be in the right timeframp
-              repNodeIds.push(repId);
-            }
+          if (isNodeFiltered(metaData) == false) {
+            repNodeIds.push(repId);
           }
         }
       } catch (err) {
-        _iterator6.e(err);
+        _iterator5.e(err);
       } finally {
-        _iterator6.f();
+        _iterator5.f();
       }
     }
-  }
+  } //verify, does this not only get the root node?
+
 
   var metaDataNodes = [];
 
-  for (var _i4 = 0; _i4 < repNodeIds.length; _i4++) {
-    var tree = metaDataFromNodeById.get(repNodeIds[_i4]);
+  for (var _i3 = 0; _i3 < repNodeIds.length; _i3++) {
+    var tree = metaDataFromNodeById.get(repNodeIds[_i3]);
 
     if (tree === undefined) {
-      console.error("Tree with id " + repNodeIds[_i4] + " is not present in the metadata");
+      console.error("Tree with id " + repNodeIds[_i3] + " is not present in the metadata");
       continue;
     }
 
@@ -1027,10 +977,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var repTreesDataInputLocation = "../data/TTPData/RepTrees.json";
-var allTreesDataInputLocation = "../data/TTPData/AllTrees.json";
-var metaDataInputLocation = "../data/TTPData/NodesAndMeta.json";
-var gridNamesInputLocation = "../data/TTPData/WalesGridmapCoordinates.csv"; //Policies
+var repTreesDataInputLocation = "../data/TTPDataUpdated/RepTrees.json";
+var allTreesDataInputLocation = "../data/TTPDataUpdated/AllTrees.json";
+var metaDataInputLocation = "../data/TTPDataUpdated/NodesAndMeta.json";
+var gridNamesInputLocation = "../data/TTPDataUpdated/WalesGridmapCoordinates.csv"; //Policies
 
 var policyDataPresent = false; //Whether policy data is present
 //End policies
@@ -1043,7 +993,21 @@ d3__WEBPACK_IMPORTED_MODULE_1__.json(repTreesDataInputLocation).then(function (r
       d3__WEBPACK_IMPORTED_MODULE_1__.text(gridNamesInputLocation).then(function (gridNamesInput) {
         repTreesData = repTreesDataInput;
         allTreesData = allTreesDataInput;
-        metaData = metaDataInput; //Not the way this should be done, but breaks cyclic dependency. Needs to be refactored properly
+        metaData = metaDataInput; //Shouldn't be neededm but keeping it in for now due to time-constraints
+
+        console.log("Reptrees of maxeditdistance = 0 are included. Need to remove those from data in earlier phase.");
+        console.log("There seem to far to many trees of maxEditDistance = 1");
+        var repTreesDataFiltered = [];
+
+        for (var i = 0; i < repTreesData.length; i++) {
+          var repTree = repTreesData[i];
+
+          if (repTree.maxEditDistance > 1) {
+            repTreesDataFiltered.push(repTree);
+          }
+        }
+
+        repTreesData = repTreesDataFiltered; //Not the way this should be done, but breaks cyclic dependency. Needs to be refactored properly
 
         _vizVariables__WEBPACK_IMPORTED_MODULE_7__.vars.currentLeftColorScheme = _ColorSchemes__WEBPACK_IMPORTED_MODULE_6__.noneColorScheme;
         _vizVariables__WEBPACK_IMPORTED_MODULE_7__.vars.currentRightColorScheme = _ColorSchemes__WEBPACK_IMPORTED_MODULE_6__.noneColorScheme;
@@ -1057,8 +1021,10 @@ d3__WEBPACK_IMPORTED_MODULE_1__.json(repTreesDataInputLocation).then(function (r
         }
 
         mainRepresentativeGraph();
+        console.log("initial update");
         (0,_updateFunctions__WEBPACK_IMPORTED_MODULE_5__.updateAll)(); //update to use slider values
 
+        console.log("Gridmap init");
         (0,_GridMap__WEBPACK_IMPORTED_MODULE_2__.initGridMap)(gridNames);
         (0,_GridMap__WEBPACK_IMPORTED_MODULE_2__.updateGridMapFromTrees)(_vizVariables__WEBPACK_IMPORTED_MODULE_7__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_7__.vars.endDate);
       });
@@ -1129,15 +1095,45 @@ function initNodeGlyph(gElement) {
 function updateNodeGlyph(treeSvg) {
   var gElements = treeSvg.selectAll(".node").selectAll("g");
   gElements.each(function () {
-    var nodeId = parseInt(d3__WEBPACK_IMPORTED_MODULE_3__.select(this).attr("id"));
+    var nodeId = parseInt(d3__WEBPACK_IMPORTED_MODULE_3__.select(this).attr("id")); //TODO: Optimize this by calculating from partCount directly, saving *7 overhead;
+
+    var leftPartCounts = getPartCounts(nodeId, true, true);
+    var rightPartCounts = getPartCounts(nodeId, true, false);
+    var leftPartsIsZero = leftPartCounts.every(function (item) {
+      return item === 0;
+    });
+    var rightPartsIsZero = rightPartCounts.every(function (item) {
+      return item === 0;
+    });
 
     for (var partI = 0; partI < _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.maxParts; partI++) {
       var leftRectI = d3__WEBPACK_IMPORTED_MODULE_3__.select(this).select(".leftRectNumber" + partI);
-      updateRect(leftRectI, partI, nodeId, true, true);
+
+      if (leftPartsIsZero == false) {
+        updateRect(leftRectI, partI, nodeId, true, true);
+      } else {
+        updateRectWhite(leftRectI);
+      }
+
       var rightRectI = d3__WEBPACK_IMPORTED_MODULE_3__.select(this).select(".rightRectNumber" + partI);
-      updateRect(rightRectI, partI, nodeId, true, false);
+
+      if (rightPartsIsZero == false) {
+        updateRect(rightRectI, partI, nodeId, true, false);
+      } else {
+        updateRectWhite(rightRectI);
+      }
     }
   });
+}
+
+function updateRectWhite(rect) {
+  var rectSize = _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.nodeBaseSize * 2; //nodeBaseSize is radius
+
+  var color = "white";
+  var y = -rectSize / 2,
+      height = rectSize;
+  rect.attr("y", y).attr("height", height).attr("fill", color);
+  rect.classed("noDataRect", true);
 }
 
 function updateRect(rect, partIndex, nodeId, isRepTree, isLeftRect) {
@@ -1149,6 +1145,7 @@ function updateRect(rect, partIndex, nodeId, isRepTree, isLeftRect) {
       height = _getRectGlyphYPositio2[1];
 
   rect.attr("y", y).attr("height", height).attr("fill", color);
+  rect.classed("noDataRect", false);
 }
 
 function getPartColor(index, isLeftChart) {
@@ -1207,8 +1204,7 @@ function getPartPercentages(id, partIndex, isRepTree, isLeftChart) {
   }
 
   if (sum == 0) {
-    console.log("Shouldn't happen. Something went wrong in data reading/parsing");
-    return [0, 0];
+    console.log("Shouldn't happen, no data for the node. Something went wrong in data reading/parsing or filtering");
   }
 
   var startPercentage = startValue / sum;
@@ -1285,10 +1281,12 @@ __webpack_require__.r(__webpack_exports__);
 // export var treeBaseHeightById = new Map(); //Base  height of the tree by id of the root. Uses nodes of {@code nodeBaseSize} size
 
 function initTreeGrid(repTreesData) {
-  //get the svg grid where the trees will be added to.
+  console.log("Init tree grid"); //get the svg grid where the trees will be added to.
   //using svg instead of flexbox for animations purposes.
+
   var treeGridDiv = d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGridDiv");
   var treeRoots = getTreeRoots(repTreesData);
+  console.log("Creating a tree for every treeroot");
 
   for (var i = 0; i < treeRoots.length; i++) {
     var treeRoot = treeRoots[i];
@@ -1299,14 +1297,14 @@ function initTreeGrid(repTreesData) {
       console.log("Clicking is disabled for now. See comment");
     }); //TODO: Change click function to work on all of svg, not just nodes.
   }
-
-  updateTrees();
 }
 function updateTrees() {
   //do not animate these. d3 animations break down at around 20000 svg elements. The largest tree alone has 100 nodes with 10 parts each.
-  d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGridDiv").selectAll(".divsvgtree.visible").each(function (d) {
-    //only update visible trees for performance reasons
-    (0,_treeLayout__WEBPACK_IMPORTED_MODULE_1__.updateTree)(d3__WEBPACK_IMPORTED_MODULE_0__.select(this), true);
+  d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGridDiv").selectAll(".divsvgtree").each(function (d) {
+    //only update trees that are not hidden, don't need to update the rest.
+    if (d3__WEBPACK_IMPORTED_MODULE_0__.select(this).classed("hidden") == false) {
+      (0,_treeLayout__WEBPACK_IMPORTED_MODULE_1__.updateTree)(d3__WEBPACK_IMPORTED_MODULE_0__.select(this), true);
+    }
   });
 }
 function getTreeRoots(treeData) {
@@ -1932,7 +1930,7 @@ function initSingleTree(divToAddTo, root, treeId, isRepTree) {
 
   var width = getDisplayWidth(root);
   var height = getDisplayHeight(root);
-  var treeSvgDiv = divToAddTo.insert("div").attr("id", "tid" + treeId).attr("class", "divsvgtree visible"); //make the tree itself
+  var treeSvgDiv = divToAddTo.insert("div").attr("id", "tid" + treeId).attr("class", "divsvgtree"); //make the tree itself
 
   var treeSvg = treeSvgDiv.insert("svg").attr("viewBox", [0, 0, width, height]).attr("width", width * scaleFactor).attr("height", height * scaleFactor).data(root); //bind the data
   //add a background so everything is clickable
@@ -2111,7 +2109,7 @@ function updateSliderPreview() {
   updateScentWidget(_vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance);
 }
 function updateAll() {
-  var idsToHide = getIdsToHide(_vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance);
+  var idsToHide = getIdsToHide();
   hideTrees(idsToHide);
   updateSliderPreview();
   updateSidebarColors();
@@ -2212,7 +2210,6 @@ function changePending() {
 
 function hideTrees(idsToHide) {
   d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGridDiv").selectAll(".divsvgtree").each(function () {
-    console.log("test");
     var div = d3__WEBPACK_IMPORTED_MODULE_0__.select(this);
     var treeId = parseInt(div.attr('id').substring(3)); //substring 3 as id is "tidXXX" where XXX is a number
 
@@ -2232,42 +2229,23 @@ function updateScentWidget(distance) {
 }
 /**
  * Hide either when they are not represnted at the edit distance or if they have no nodes with the right location
- * @param editDistance 
  * @returns 
  */
 
 
-function getIdsToHide(editDistance) {
+function getIdsToHide() {
   var idsToHide = [];
 
   for (var i = 0; i < _index__WEBPACK_IMPORTED_MODULE_1__.repTreesData.length; i++) {
     var repData = _index__WEBPACK_IMPORTED_MODULE_1__.repTreesData[i];
-    var id = repData.id; // //quick determine if we can hide this tree by edit distance along
+    var id = repData.id;
+    var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_3__.getAmountOfTreesRepresentedById)(id, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.endDate);
 
-    if (repData.maxEditDistance < editDistance) {
+    if (repAmount == 0) {
       idsToHide.push(id);
-      continue;
-    } //only show trees in the represented range
-    // const metaData = metaDataFromNodeById.get(id);
-    // if ( metaData.positiveTestTime < vars.startDate  || metaData.positiveTestTime > vars.endDate) {
-    //     idsToHide.push(id);
-    //     // console.log(vars.startDate)
-    //     // console.log(vars.endDate)
-    //     // console.log(metaData.positiveTestTime);
-    //     continue;
-    // }
-    //repIData.editDistance <= editDistance
-    //These are represnted
-    //trees always represent themselves
-
-
-    if ((0,_dataQueries__WEBPACK_IMPORTED_MODULE_3__.getAmountOfTreesRepresentedById)(id, editDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.endDate) == 0) {
-      idsToHide.push(id);
-      continue;
     }
   }
 
-  console.log("TODO: Hide complete trees that are not in the right range");
   return idsToHide;
 }
 

@@ -28,7 +28,7 @@ export function initSingleTree(divToAddTo: d3.Selection<d3.BaseType, unknown, HT
     const treeSvgDiv = divToAddTo
         .insert("div")
         .attr("id", "tid" + treeId)
-        .attr("class", "divsvgtree visible");
+        .attr("class", "divsvgtree");
 
     //make the tree itself
     const treeSvg = treeSvgDiv.insert("svg")
@@ -91,6 +91,7 @@ export function updateTree(treeSvgDiv: d3.Selection<d3.BaseType, unknown, HTMLEl
     //@ts-ignore
     const root: d3.HierarchyPointNode<unknown> = treeSvg.data()[0]
     const treeId = Number.parseInt(treeSvgDiv.attr("id").substring(3));
+
 
     let repAmount: number = null;
     let scaleFactor = 1;

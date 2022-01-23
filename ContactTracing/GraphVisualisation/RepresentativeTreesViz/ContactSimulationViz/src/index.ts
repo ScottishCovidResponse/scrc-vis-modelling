@@ -8,10 +8,10 @@ import { noneColorScheme } from './ColorSchemes';
 import { vars } from "./vizVariables";
 
 
-const repTreesDataInputLocation = "../data/TTPData/RepTrees.json";
-const allTreesDataInputLocation = "../data/TTPData/AllTrees.json";
-const metaDataInputLocation = "../data/TTPData/NodesAndMeta.json";
-const gridNamesInputLocation = "../data/TTPData/WalesGridmapCoordinates.csv";
+const repTreesDataInputLocation = "../data/TTPDataUpdated/RepTrees.json";
+const allTreesDataInputLocation = "../data/TTPDataUpdated/AllTrees.json";
+const metaDataInputLocation = "../data/TTPDataUpdated/NodesAndMeta.json";
+const gridNamesInputLocation = "../data/TTPDataUpdated/WalesGridmapCoordinates.csv";
 
 
 
@@ -21,11 +21,6 @@ const gridNamesInputLocation = "../data/TTPData/WalesGridmapCoordinates.csv";
 export let policyDataPresent = false; //Whether policy data is present
 
 //End policies
-
-
-
-
-
 export let repTreesData, allTreesData, metaData, gridNames;
 
 
@@ -37,6 +32,19 @@ d3.json(repTreesDataInputLocation).then(function (repTreesDataInput) {
                 repTreesData = repTreesDataInput;
                 allTreesData = allTreesDataInput;
                 metaData = metaDataInput;
+
+                //Shouldn't be neededm but keeping it in for now due to time-constraints
+                console.log("Reptrees of maxeditdistance = 0 are included. Need to remove those from data in earlier phase.")
+                console.log("There seem to far to many trees of maxEditDistance = 1")
+                let repTreesDataFiltered = [];
+                for (let i = 0; i < repTreesData.length; i++) {
+                    const repTree = repTreesData[i];
+                    if (repTree.maxEditDistance > 1) {
+                        repTreesDataFiltered.push(repTree);
+                    }
+                }
+                repTreesData = repTreesDataFiltered;
+
 
                 //Not the way this should be done, but breaks cyclic dependency. Needs to be refactored properly
                 vars.currentLeftColorScheme = noneColorScheme;
@@ -52,11 +60,11 @@ d3.json(repTreesDataInputLocation).then(function (repTreesDataInput) {
                     console.log("Policies are disabled. Need to be tested and likely reimplemented")
                 }
 
-
                 mainRepresentativeGraph();
+                console.log("initial update")
                 updateAll(); //update to use slider values
 
-
+                console.log("Gridmap init")
                 initGridMap(gridNames);
                 updateGridMapFromTrees(vars.startDate, vars.endDate);
             });

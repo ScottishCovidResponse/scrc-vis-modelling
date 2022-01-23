@@ -102,6 +102,11 @@ Css code for the visualization of the trees
     stroke-width: 0.1px;
 }
 
+.glyphRectangle.noDataRect {
+    stroke: black;
+    stroke-width: 1px;
+}
+
 
 /*
 Sidepanel

@@ -23,6 +23,15 @@ import java.util.Set;
 //public class Tree<N extends Node<E>, E extends Edge<N>> extends Graph<N extends Node<E>, E extends Edge<N>> {
 public class Tree<N extends Node<E>, E extends Edge<N>> extends Graph {
 
+    public Tree() {
+        super();
+    }
+
+    public Tree(int id) {
+        super();
+        this.id = id;
+    }
+
     //returns if possibleAncestor is an ancestor of n
     public boolean isAncestor(N possibleAncestor, N n) {
 
@@ -87,7 +96,9 @@ public class Tree<N extends Node<E>, E extends Edge<N>> extends Graph {
                 return depthSet.getKey();
             }
         }
-        throw new IllegalArgumentException("Node " + node + " is not in the tree");
+        
+        printTree();
+        throw new IllegalArgumentException("Node " + node + " is not in the tree. It has nodeId " + node.id);
     }
 
     /**
@@ -190,7 +201,15 @@ public class Tree<N extends Node<E>, E extends Edge<N>> extends Graph {
         return children;
     }
 
-    
-    
-    
+    private void printTree() {
+        Collection<N> nodes = getNodes();
+        for (N n : nodes) {
+            System.out.println("(" + n.id);
+            for (E edge : n.edges) {
+                System.out.println(edge.toString() + ",");
+            }
+            System.out.println(")");
+        }
+    }
+
 }

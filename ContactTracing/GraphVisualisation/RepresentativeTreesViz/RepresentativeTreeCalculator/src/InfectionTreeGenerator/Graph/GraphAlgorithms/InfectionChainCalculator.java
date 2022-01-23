@@ -35,7 +35,9 @@ import java.util.stream.Collectors;
 
 /**
  * Calculates the edge directions for a connected graph to hold the most likely
- * way an infection spread
+ * way an infection spread.
+ *
+ * @pre All nodes need to have a positiveTestTime
  *
  * @author MaxSondag
  */
@@ -103,14 +105,17 @@ public class InfectionChainCalculator {
         Set<ContactNode> nodesHandled = solveTrivialComponents();
 
         if (programAlreadyExecuted == false) {
+            System.out.println("Start writing files");
             //write a temporary file for each non-trivial component. Directly add trivial components to the graph
             int componentCount = writeComponentFiles(nodesHandled);
             //calculate most-likely-infection chains for each component. TODO: Allow for multiple index cases per component?
+            System.out.println(componentCount + " files written");
             executeProgram(componentCount);
         }
+        System.out.println("Start parsing output files");
         //Add the most-likely-infection chains to the mostLikelyInfectionGraph
         parseOutputFiles();
-
+        System.out.println("output files parsed");
         return mostLikelyInfectionGraph;
     }
 
@@ -128,7 +133,9 @@ public class InfectionChainCalculator {
             }
 
             if (componentNodes.size() == 1) {
-                mostLikelyInfectionGraph.addNode(new InfectionNode(n.id, n.positiveTestTime));
+                if (n.positiveTestTime != null) {//only add nodes with positive test time
+                    mostLikelyInfectionGraph.addNode(new InfectionNode(n.id, n.positiveTestTime));
+                }
             }
             if (componentNodes.size() == 2) {
                 //get the othernode and the componentEdges
@@ -141,22 +148,26 @@ public class InfectionChainCalculator {
                     }
                 }
 
-                //add the infectionNodes
-                InfectionNode iN = new InfectionNode(n.id, n.positiveTestTime);
-                InfectionNode iOtherN = new InfectionNode(otherN.id, otherN.positiveTestTime);
-                mostLikelyInfectionGraph.addNode(iN);
-                mostLikelyInfectionGraph.addNode(iOtherN);
+                //only add nodes with positive test time
+                if (n.positiveTestTime != null && otherN.positiveTestTime != null) {
 
-                //use the earliest edge that is a contact for the graph
-                long earliestContact = Long.MAX_VALUE;
-                for (ContactEdge ce : componentEdges) {
-                    earliestContact = Math.min(earliestContact, ce.contactTime);
-                }
+                    //add the infectionNodes
+                    InfectionNode iN = new InfectionNode(n.id, n.positiveTestTime);
+                    InfectionNode iOtherN = new InfectionNode(otherN.id, otherN.positiveTestTime);
+                    mostLikelyInfectionGraph.addNode(iN);
+                    mostLikelyInfectionGraph.addNode(iOtherN);
 
-                if (n.positiveTestTime < otherN.positiveTestTime) {
-                    mostLikelyInfectionGraph.addEdge(new InfectionEdge(iN, iOtherN, earliestContact));
-                } else {
-                    mostLikelyInfectionGraph.addEdge(new InfectionEdge(iOtherN, iN, earliestContact));
+                    //use the earliest edge that is a contact for the graph
+                    long earliestContact = Long.MAX_VALUE;
+                    for (ContactEdge ce : componentEdges) {
+                        earliestContact = Math.min(earliestContact, ce.contactTime);
+                    }
+
+                    if (n.positiveTestTime < otherN.positiveTestTime) {
+                        mostLikelyInfectionGraph.addEdge(new InfectionEdge(iN, iOtherN, earliestContact));
+                    } else {
+                        mostLikelyInfectionGraph.addEdge(new InfectionEdge(iOtherN, iN, earliestContact));
+                    }
                 }
             }
 
@@ -177,7 +188,6 @@ public class InfectionChainCalculator {
      * components
      */
     private int writeComponentFiles(Set<ContactNode> nodesHandled) {
-        System.out.println("TODO: Need to print all edges between them and take that into account in the program if possible. Likely with weight");
 
         int componentNumber = 0;//how many components we have written files for processed
         int trivalComponentNumber = 0;//how many components of size 1 we processed
@@ -192,10 +202,11 @@ public class InfectionChainCalculator {
                 componentEdges.addAll(node.edges);
             }
 
-            writeComponentFiles(contactGraph, componentNodes, componentEdges, componentNumber);
+//            writeComponentFiles(contactGraph, componentNodes, componentEdges, componentNumber);
             nodesHandled.addAll(componentNodes);
 
             componentNumber++;
+            Log.printProgress("Not writing components",5, 1000000);
             Log.printProgress("component number: " + componentNumber + " is written", 1000);
         }
         return componentNumber;
@@ -324,7 +335,7 @@ public class InfectionChainCalculator {
     }
 
     private void executeProgram(int componentCount) {
-
+        System.out.println("Start executing programs");
         //TODO: Speed up python. Likely need to make sure that it is not starting up over and over but batch processing.
         //for every component we execute the python program and wait for it to complete before proceeding to not hog compute resources
         for (int i = 0; i < componentCount; i++) {

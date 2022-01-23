@@ -37,12 +37,6 @@ public class DominatingSetCalculator {
         //nodes that are not connected always need to be in
         Collection<Node> nodes = g.getNodes();
 
-        boolean done = false;
-        while (!done) {
-            done = true;
-
-        }
-
         //Trivial algorithm. Go through the nodes. For each node if it is not yet dominated, add it to the set.
         for (Node n : nodes) {
             if (!isDominated(g, dominatingSet, n)) {

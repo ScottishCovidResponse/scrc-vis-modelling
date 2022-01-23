@@ -57,7 +57,6 @@ public class ContactGraphParser {
 
     public ContactGraph constructGraph() {
         ContactGraph cg = constructGraph(Integer.MAX_VALUE);
-        System.err.println("Not correct! We are taking a single case multiple times. Need to use citizenId(or make it)");
         return cg;
     }
 
@@ -111,7 +110,6 @@ public class ContactGraphParser {
 
     private void createNode(String[] split) {
         String instanceId = split[2];
-//        String instanceId = split[1]; //incorrect, should be 2 but broken
         String testTime = split[5];
         String testResult = split[6];
         String location = split[7];
@@ -145,9 +143,6 @@ public class ContactGraphParser {
         
         String indexInstanceId = split[3];
         String contactInstanceId = split[6];
-//        String indexInstanceId = split[2]; //incorrect, should be 3 but broken
-//        String contactInstanceId = split[5]; //incorrect, should be 6 but broken
-        
         String contactTime = split[8];
         
         

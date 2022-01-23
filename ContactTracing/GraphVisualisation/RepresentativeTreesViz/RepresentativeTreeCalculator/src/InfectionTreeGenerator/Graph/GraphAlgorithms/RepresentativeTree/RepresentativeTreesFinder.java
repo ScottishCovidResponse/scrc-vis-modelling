@@ -7,20 +7,14 @@ package InfectionTreeGenerator.Graph.GraphAlgorithms.RepresentativeTree;
 
 import Export.GraphWriter;
 import Utility.Log;
-import InfectionTreeGenerator.Graph.Edge;
-import InfectionTreeGenerator.Graph.Graph;
-import InfectionTreeGenerator.Graph.GraphAlgorithms.ForestFinder;
-import InfectionTreeGenerator.Graph.GraphAlgorithms.DominatingSetCalculator;
 import InfectionTreeGenerator.Graph.GraphAlgorithms.DistanceMeasures.TreeDistanceMeasure;
-import InfectionTreeGenerator.Graph.GraphAlgorithms.DistanceMeasures.TreeEditDistance.TEDMapping;
 import InfectionTreeGenerator.Graph.GraphAlgorithms.DistanceMeasures.TreeEditDistance.TreeEditDistanceCalculator;
-import InfectionTreeGenerator.Graph.Node;
+import InfectionTreeGenerator.Graph.GraphAlgorithms.DominatingSetCalculatorImplicit;
 import InfectionTreeGenerator.Graph.Tree;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -90,6 +84,7 @@ public class RepresentativeTreesFinder {
             //write the representativeTrees
             GraphWriter tw = new GraphWriter();
             tw.writeRepresentativeTrees(outputFilePrefix + size + ".json", repTrees);
+            System.out.println("Trees of size " + size + " written to file");
         }
 
         //returns the trees;
@@ -98,24 +93,23 @@ public class RepresentativeTreesFinder {
     }
 
     /**
-     * Returns a set of representativeTrees for the collection of {@code trees}.
+     * Alternative method of calculating representativeTrees that is less memory
+     * intensive
      *
      * @param trees
+     * @param dm
      * @return
      */
     private Collection<RepresentativeTree> calculateRepresentativeTrees(List<Tree> trees, TreeDistanceMeasure dm) {
 
-        //Holds the graphs as nodes, and uses the specified distance measure as weights between the nodes
-        Graph g = makeWeightedGraph(trees, dm);
-
         //Start calculating representative trees.
         //We find it by using dominating set on filtered trees. The dominating set are the set of representative nodes
         //where all other nodes can transform into within {ted} graph change moves.
-        DominatingSetCalculator dsc = new DominatingSetCalculator();
+        DominatingSetCalculatorImplicit dsc = new DominatingSetCalculatorImplicit(trees, dm);
 
-        //start with an graph on distance 0 and slowly add edges. Used to intialize the dominating set
-        Graph fg0 = getFilteredGraph(g, 0);
-        List<Integer> currentDsIds = dsc.getDominatingSet(fg0);
+        //Init dominating set
+        //start with getting a dominating graph on distance 0 and slowly add edges.
+        List<Integer> currentDsIds = dsc.getDominatingSet(0);
 
         //initialize the representing trees, they only get filtered down, so these are all Representative trees that will exists.
         //maps from id to a representative tree
@@ -123,14 +117,12 @@ public class RepresentativeTreesFinder {
 
         //go through the edit distances
         for (int ted = 0; ted <= MAXEDITDISTANCE; ted++) {
-            //Get graph with only edgeMapping with weight <= ted
-            Graph fgTED = getFilteredGraph(g, ted);
-
+            Log.printProgress("Calculating for distance " + ted, 1000);
             //trim the dominating set down instead of recalculating so we keep the original trees. Trees thus only disappear
-            List<Integer> dsTrimmed = dsc.trimDominatingSet(fgTED, currentDsIds);
+            List<Integer> dsTrimmed = dsc.trimDominatingSet(currentDsIds, ted);
 
             //holds the set of trees that are assigned to a dominating tree at a certaindistance
-            HashMap<Integer, List<Tree>> mapping = calculateDominationMapping(fgTED, dsTrimmed, trees);
+            HashMap<Integer, List<Tree>> mapping = dsc.calculateDominationMapping(dsTrimmed, ted, dm);
 
             for (Integer id : dsTrimmed) {
                 RepresentativeTree repTree = repTrees.get(id);
@@ -150,64 +142,6 @@ public class RepresentativeTreesFinder {
         return repTrees.values();
     }
 
-    private Graph makeWeightedGraph(List<Tree> trees, TreeDistanceMeasure tdm) {
-        Graph g = new Graph();
-
-        //make nodes for each tree
-        HashMap<Integer, Node> nodeMapping = new HashMap();
-        HashMap<Integer, Tree> graphMapping = new HashMap();
-        for (int i = 0; i < (trees.size()); i++) {
-            Tree t = trees.get(i);
-            Node n = new Node(t.id, 1);
-            nodeMapping.put(n.id, n);
-            graphMapping.put(n.id, t);
-
-            g.addNode(n);
-        }
-
-        int count = 0;//counter for progesas
-        for (int i = 0; i < (trees.size() - 1); i++) {
-            Tree t1 = trees.get(i);
-            for (int j = i + 1; j < trees.size(); j++) {
-
-                Log.printProgress("Calculating distance " + count + " out of " + ((trees.size() * trees.size() - trees.size()) / 2), 1000);
-
-                Tree t2 = trees.get(j);
-
-                double distance = tdm.getDistance(t1, t2);
-
-                Node n1 = nodeMapping.get(t1.id);
-                Node n2 = nodeMapping.get(t2.id);
-                Edge weOut = new Edge(n1, n2, distance);
-                //ted is symmetric
-                Edge weIn = new Edge(n2, n1, distance);
-                g.addEdge(weOut);
-                g.addEdge(weIn);
-                count++;
-            }
-        }
-        return g;
-    }
-
-    /**
-     * Returns a new graph with the same id's that only has edges with weight
-     * below or equal to {@code weight}
-     *
-     * @param weight
-     * @return
-     */
-    private Graph getFilteredGraph(Graph<Node, Edge> g, double weight) {
-        Graph<Node, Edge> deepCopy = g.deepCopy();
-        Set<Edge> toRemove = new HashSet();
-        for (Edge e : deepCopy.getEdges()) {
-            if (e.weight > weight) {
-                toRemove.add(e);
-            }
-        }
-        deepCopy.removeEdges(toRemove);
-        return deepCopy;
-    }
-
     private HashMap<Integer, RepresentativeTree> initRepTrees(List<Integer> dsIds, List<Tree> trees) {
         HashMap<Integer, RepresentativeTree> idMapping = new HashMap();
         for (Tree t : trees) {
@@ -218,65 +152,6 @@ public class RepresentativeTreesFinder {
             }
         }
         return idMapping;
-    }
-
-    /**
-     * Returns for a given graphId the set of graphs that it is "assigned" to to
-     * dominate. Each graph is only assigned to one other graph even if
-     * dominated by more graphs. If a tree is in the dominating set, it always
-     * dominates itself
-     *
-     * @param trimmedGraph The graph the dominating set is based upon
-     * @param dsIds Set of graph ids that are in the dominating set.
-     * @param trees all trees
-     * @return
-     */
-    private HashMap<Integer, List<Tree>> calculateDominationMapping(Graph trimmedGraph, List<Integer> dsIds, List<Tree> trees) {
-        HashMap<Integer, List<Tree>> mapping = new HashMap();
-
-        //make a copy so we can freely delete those that we have mapped
-        List<Tree> remainingTrees = new ArrayList();
-        remainingTrees.addAll(trees);
-
-        for (Integer id : dsIds) {
-            //the current tree we are looking into the dominance relations of
-            Tree domTree = getTreeWithId(trees, id);
-
-            Node domTreeNode = trimmedGraph.getNode(id);
-            List<Edge> edges = domTreeNode.edges;
-
-            List<Tree> dominated = new ArrayList();
-
-            //it dominated itself
-            dominated.add(domTree);
-            //and all trees on outgoing edges
-            for (Edge e : edges) {
-                Tree t = getTreeWithId(remainingTrees, e.target.id);
-                if (t == null) {//already processed
-                    continue;
-                }
-                //unless t is in the dominating set
-                if (!dsIds.contains(t.id)) {
-                    dominated.add(t);
-                }
-            }
-
-            mapping.put(id, dominated);
-
-            //a tree can only be dominated once
-            remainingTrees.removeAll(dominated);
-        }
-        assert (remainingTrees.isEmpty());
-        return mapping;
-    }
-
-    private Tree getTreeWithId(List<Tree> trees, Integer id) {
-        for (Tree t : trees) {
-            if (t.id == id) {
-                return t;
-            }
-        }
-        return null;
     }
 
     /**
@@ -310,4 +185,5 @@ public class RepresentativeTreesFinder {
 
         return repTrees;
     }
+
 }

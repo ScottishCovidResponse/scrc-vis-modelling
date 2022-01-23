@@ -51,7 +51,7 @@ def greedyBS(SP, N, K = 10, la = 0.0, ua = 0.0):
                     local_best_mgain, local_best_cost, local_best_covered_nodes = np.Inf, np.Inf, set()
                     local_covered_nodes = set()
                     for s in sinks:
-                        if s[1] not in covered_nodes:
+                        if s[1] not in covered_nodes and s[0] != np.Inf:
                             m_profit += 1.0
                             cost += s[0]
                             local_covered_nodes.add(s[1])
@@ -86,6 +86,7 @@ def greedyBS(SP, N, K = 10, la = 0.0, ua = 0.0):
                 ua = alpha
                 legal_cover = cover
                 legal_alpha = alpha
+                print("legal cover found")
 
                 break
         alpha = (ua + la)/2.0
@@ -95,7 +96,7 @@ def greedyBS(SP, N, K = 10, la = 0.0, ua = 0.0):
         legal_alpha = alpha
         
     print('num of srcs', len(legal_cover))
-    for src, sinks in legal_cover.items():
+    for src, sinks in legal_cover.items(): #For every source, print the path [(time1,n1,n2),(time2,n2,n3)...] how this source gets infected
         for s in sinks:
             output_paths.append(SP[src][s][-1])
     print(total_cost)

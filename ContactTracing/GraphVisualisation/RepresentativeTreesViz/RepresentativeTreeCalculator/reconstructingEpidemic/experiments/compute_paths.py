@@ -25,12 +25,11 @@ def compute_output_paths(K,filepath_edges,filepath_nodes):
     #sinks: Dictionary of {nodeid,latest interactiontime before report} of reported nodes
     #unreported: Dictionary of {nodeid, lastTime in interactions} of all nodes that have no reports
 
-    print ("Todo: Update the weight data. Need to partially put this in the inputdata to be read.")
+    print ("If contact have no weights, put them on 0.")
     SP = shortestPath1(contacts, sources, sinks, unreported)
     #SP holds the shortets paths between Source and Sink nodes.
     #[startOfPathNodeid][endOfPathNodeId] => (total weight of path,Last time of path from start to end,[path]). path is triples of (time of edge,startNodeId,endNodeId)
 
-    print("Todo: find minimal k for which we can cover a component")
     cover, output_paths, cover_cost, legal_alpha = greedyBS(SP, len(sinks), K)
     #output_paths holds the infection paths. It holds a path for each sink in the data, which correspond to reported notes. Note, these are the paths, not the trees.
     #format: (datatime,nodeId1,nodeId2). These correspond to the interactions

@@ -749,23 +749,22 @@ function getTreesRepresentedById(id, editDistance, locationToVisualize, startDat
 
   var repTreeIds = [];
 
-  for (var repI = 0; repI < reps.length; repI++) {
+  for (var repDistI = 0; repDistI < reps.length; repDistI++) {
     //go through the various edit distances
-    var repIData = reps[repI];
+    var repDistData = reps[repDistI];
 
-    if (repIData.editDistance <= editDistance) {
-      //Get all representations of this tree at this distance
-      //Go through the represnted trees
-      var _iterator4 = _createForOfIteratorHelper(repIData.representationIds),
+    if (repDistData.editDistance <= editDistance) {
+      //This tree is represented at this distance
+      var _iterator4 = _createForOfIteratorHelper(repDistData.representationIds),
           _step4;
 
       try {
         for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-          var repId = _step4.value;
-          var metaData = metaDataFromNodeById.get(repId);
+          var repTreeId = _step4.value;
+          var representedTree = allTreeById.get(repTreeId);
 
-          if (isNodeFiltered(metaData) == false) {
-            repTreeIds.push(repId);
+          if (isTreeFiltered(representedTree) == false) {
+            repTreeIds.push(repTreeId);
           }
         }
       } catch (err) {
@@ -787,6 +786,40 @@ function getTreesRepresentedById(id, editDistance, locationToVisualize, startDat
   return allTreesRepresented;
 }
 console.log("need to filter trees differently, need to check every node and keep it if at least 1 node is present in filters");
+/**
+ * A tree is filtered is all of it's nodes are filtered
+ * @param subtree 
+ * @returns 
+ */
+
+function isTreeFiltered(subtree) {
+  var nodeId = subtree.id;
+  var metaData = metaDataFromNodeById.get(nodeId);
+
+  if (isNodeFiltered(metaData) == false) {
+    return false;
+  }
+
+  var _iterator5 = _createForOfIteratorHelper(subtree.children),
+      _step5;
+
+  try {
+    for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+      var child = _step5.value;
+
+      if (isTreeFiltered(child) == false) {
+        return false;
+      }
+    } //all descendants of this node, and this node are filtered.
+
+  } catch (err) {
+    _iterator5.e(err);
+  } finally {
+    _iterator5.f();
+  }
+
+  return true;
+}
 
 function isNodeFiltered(nodeMetadata) {
   var location = nodeMetadata.location;
@@ -811,27 +844,28 @@ function getRepresentedNodesMetaData(nodeId, editDistance, locationToVisualize, 
   var reps = node.representations;
   var repNodeIds = [];
 
-  for (var i = 0; i < reps.length; i++) {
-    var repIData = reps[i];
+  for (var repDistI = 0; repDistI < reps.length; repDistI++) {
+    var repDistData = reps[repDistI];
 
-    if (repIData.editDistance <= editDistance) {
-      //must be of the current location visualized (or All are visualized)
-      var _iterator5 = _createForOfIteratorHelper(repIData.representationIds),
-          _step5;
+    if (repDistData.editDistance <= editDistance) {
+      //this trees is represented by the node at this edit distance
+      var _iterator6 = _createForOfIteratorHelper(repDistData.representationIds),
+          _step6;
 
       try {
-        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-          var repId = _step5.value;
+        for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+          var repId = _step6.value;
           var metaData = metaDataFromNodeById.get(repId);
 
           if (isNodeFiltered(metaData) == false) {
+            //node is not filtered
             repNodeIds.push(repId);
           }
         }
       } catch (err) {
-        _iterator5.e(err);
+        _iterator6.e(err);
       } finally {
-        _iterator5.f();
+        _iterator6.f();
       }
     }
   } //verify, does this not only get the root node?
@@ -839,11 +873,11 @@ function getRepresentedNodesMetaData(nodeId, editDistance, locationToVisualize, 
 
   var metaDataNodes = [];
 
-  for (var _i3 = 0; _i3 < repNodeIds.length; _i3++) {
-    var tree = metaDataFromNodeById.get(repNodeIds[_i3]);
+  for (var i = 0; i < repNodeIds.length; i++) {
+    var tree = metaDataFromNodeById.get(repNodeIds[i]);
 
     if (tree === undefined) {
-      console.error("Tree with id " + repNodeIds[_i3] + " is not present in the metadata");
+      console.error("Tree with id " + repNodeIds[i] + " is not present in the metadata");
       continue;
     }
 

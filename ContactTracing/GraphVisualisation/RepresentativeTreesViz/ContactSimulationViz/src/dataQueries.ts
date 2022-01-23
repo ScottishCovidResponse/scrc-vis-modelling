@@ -141,15 +141,13 @@ export function getTreesRepresentedById(id: number, editDistance: number, locati
 
     //First gather all the trees represented by this tree.
     let repTreeIds = [];
-    for (let repI = 0; repI < reps.length; repI++) {//go through the various edit distances
-        const repIData = reps[repI];
-        if (repIData.editDistance <= editDistance) { //Get all representations of this tree at this distance
-            //Go through the represnted trees
-            for (let repId of repIData.representationIds) {
-                const metaData = metaDataFromNodeById.get(repId)
-
-                if (isNodeFiltered(metaData) == false) {
-                    repTreeIds.push(repId);
+    for (let repDistI = 0; repDistI < reps.length; repDistI++) {//go through the various edit distances
+        const repDistData = reps[repDistI];
+        if (repDistData.editDistance <= editDistance) { //This tree is represented at this distance
+            for (let repTreeId of repDistData.representationIds) {
+                let representedTree = allTreeById.get(repTreeId);
+                if (isTreeFiltered(representedTree) == false) {
+                    repTreeIds.push(repTreeId);
                 }
             }
         }
@@ -167,6 +165,26 @@ export function getTreesRepresentedById(id: number, editDistance: number, locati
 }
 
 console.log("need to filter trees differently, need to check every node and keep it if at least 1 node is present in filters")
+
+/**
+ * A tree is filtered is all of it's nodes are filtered
+ * @param subtree 
+ * @returns 
+ */
+function isTreeFiltered(subtree): boolean {
+    let nodeId = subtree.id;
+    let metaData = metaDataFromNodeById.get(nodeId);
+    if (isNodeFiltered(metaData) == false) {
+        return false;
+    }
+    for (let child of subtree.children) {
+        if (isTreeFiltered(child) == false) {
+            return false;
+        }
+    }
+    //all descendants of this node, and this node are filtered.
+    return true;
+}
 
 function isNodeFiltered(nodeMetadata): boolean {
     let location = nodeMetadata.location;
@@ -190,15 +208,13 @@ function getRepresentedNodesMetaData(nodeId: number, editDistance: number, locat
     let reps = node.representations;
 
     let repNodeIds: number[] = [];
-    for (let i = 0; i < reps.length; i++) {
-        const repIData = reps[i];
-        if (repIData.editDistance <= editDistance) {
-            //must be of the current location visualized (or All are visualized)
-            for (let repId of repIData.representationIds) {
+    for (let repDistI = 0; repDistI < reps.length; repDistI++) {
+        const repDistData = reps[repDistI];
+        if (repDistData.editDistance <= editDistance) { //this trees is represented by the node at this edit distance
+            for (let repId of repDistData.representationIds) {
                 const metaData = metaDataFromNodeById.get(repId)
-                if (isNodeFiltered(metaData) == false) {
+                if (isNodeFiltered(metaData) == false) { //node is not filtered
                     repNodeIds.push(repId);
-
                 }
             }
         }

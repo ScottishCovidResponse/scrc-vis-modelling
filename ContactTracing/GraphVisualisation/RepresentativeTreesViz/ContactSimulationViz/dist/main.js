@@ -1141,18 +1141,20 @@ function updateNodeGlyph(treeSvg) {
     });
 
     for (var partI = 0; partI < _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.maxParts; partI++) {
+      //left
       var leftRectI = d3__WEBPACK_IMPORTED_MODULE_3__.select(this).select(".leftRectNumber" + partI);
 
       if (leftPartsIsZero == false) {
-        updateRect(leftRectI, partI, nodeId, true, true);
+        updateRect(leftRectI, partI, true, leftPartCounts);
       } else {
         updateRectWhite(leftRectI);
-      }
+      } //right
+
 
       var rightRectI = d3__WEBPACK_IMPORTED_MODULE_3__.select(this).select(".rightRectNumber" + partI);
 
       if (rightPartsIsZero == false) {
-        updateRect(rightRectI, partI, nodeId, true, false);
+        updateRect(rightRectI, partI, false, rightPartCounts);
       } else {
         updateRectWhite(rightRectI);
       }
@@ -1170,10 +1172,10 @@ function updateRectWhite(rect) {
   rect.classed("noDataRect", true);
 }
 
-function updateRect(rect, partIndex, nodeId, isRepTree, isLeftRect) {
+function updateRect(rect, partIndex, isLeftRect, partCount) {
   var color = getPartColor(partIndex, isLeftRect);
 
-  var _getRectGlyphYPositio = getRectGlyphYPositions(nodeId, partIndex, isRepTree, isLeftRect),
+  var _getRectGlyphYPositio = getRectGlyphYPositions(partIndex, partCount),
       _getRectGlyphYPositio2 = _slicedToArray(_getRectGlyphYPositio, 2),
       y = _getRectGlyphYPositio2[0],
       height = _getRectGlyphYPositio2[1];
@@ -1196,8 +1198,8 @@ function getRectGlyphXPositions(isLeftChart) {
   return [startX, rectWidth];
 }
 
-function getRectGlyphYPositions(id, partIndex, isRepTree, isLeftChart) {
-  var partRange = getPartPercentages(id, partIndex, isRepTree, isLeftChart);
+function getRectGlyphYPositions(partIndex, partCount) {
+  var partRange = getPartPercentages(partIndex, partCount);
   var rectSize = _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.nodeBaseSize * 2; //nodeBaseSize is radius
 
   var y1 = partRange[0] * rectSize - rectSize / 2;
@@ -1223,17 +1225,17 @@ function getStartX(isLeftChart) {
  */
 
 
-function getPartPercentages(id, partIndex, isRepTree, isLeftChart) {
-  var counts = getPartCounts(id, isRepTree, isLeftChart);
+function getPartPercentages(partIndex, partCount) {
+  // const counts = getPartCounts(id, isRepTree, isLeftChart);
   var startValue = 0; //value of all parts up to index {partIndex}
 
   var sum = 0;
 
-  for (var i = 0; i < counts.length; i++) {
-    sum += counts[i];
+  for (var i = 0; i < partCount.length; i++) {
+    sum += partCount[i];
 
     if (i < partIndex) {
-      startValue += counts[i];
+      startValue += partCount[i];
     }
   }
 
@@ -1242,7 +1244,7 @@ function getPartPercentages(id, partIndex, isRepTree, isLeftChart) {
   }
 
   var startPercentage = startValue / sum;
-  var value = counts[partIndex];
+  var value = partCount[partIndex];
   var endPercentage = (startValue + value) / sum;
   return [startPercentage, endPercentage];
 }

@@ -37,15 +37,17 @@ export function updateNodeGlyph(treeSvg: d3.Selection<d3.BaseType, unknown, HTML
         const rightPartsIsZero = rightPartCounts.every(item => item === 0);
 
         for (let partI = 0; partI < vars.maxParts; partI++) {
+            //left
             const leftRectI = d3.select(this).select(".leftRectNumber" + partI);
             if (leftPartsIsZero == false) {
-                updateRect(leftRectI, partI, nodeId, true, true);
+                updateRect(leftRectI, partI, true,  leftPartCounts);
             } else {
                 updateRectWhite(leftRectI);
             }
+            //right
             const rightRectI = d3.select(this).select(".rightRectNumber" + partI);
             if (rightPartsIsZero == false) {
-                updateRect(rightRectI, partI, nodeId, true, false);
+                updateRect(rightRectI, partI, false, rightPartCounts);
             } else {
                 updateRectWhite(rightRectI);
             }
@@ -65,9 +67,9 @@ function updateRectWhite(rect: d3.Selection<d3.BaseType, unknown, null, undefine
     rect.classed("noDataRect", true);
 }
 
-function updateRect(rect: d3.Selection<d3.BaseType, unknown, null, undefined>, partIndex: number, nodeId: number, isRepTree: boolean, isLeftRect: boolean) {
+function updateRect(rect: d3.Selection<d3.BaseType, unknown, null, undefined>, partIndex: number, isLeftRect: boolean, partCount: number[]) {
     const color = getPartColor(partIndex, isLeftRect);
-    const [y, height] = getRectGlyphYPositions(nodeId, partIndex, isRepTree, isLeftRect);
+    const [y, height] = getRectGlyphYPositions(partIndex, partCount);
     rect.attr("y", y)
         .attr("height", height)
         .attr("fill", color)
@@ -93,9 +95,9 @@ function getRectGlyphXPositions(isLeftChart: boolean) {
 }
 
 
-function getRectGlyphYPositions(id: number, partIndex: number, isRepTree: boolean, isLeftChart: boolean) {
+function getRectGlyphYPositions(partIndex: number, partCount: number[]) {
 
-    const partRange = getPartPercentages(id, partIndex, isRepTree, isLeftChart);
+    const partRange = getPartPercentages(partIndex, partCount);
     const rectSize = vars.nodeBaseSize * 2; //nodeBaseSize is radius
 
     const y1 = partRange[0] * rectSize - rectSize / 2;
@@ -124,15 +126,15 @@ function getStartX(isLeftChart: boolean) {
  * @param {*} isLeftChart
  * @returns 
  */
-function getPartPercentages(id: number, partIndex: number, isRepTree: boolean, isLeftChart: boolean) {
-    const counts = getPartCounts(id, isRepTree, isLeftChart);
+function getPartPercentages(partIndex: number,  partCount: number[]) {
+    // const counts = getPartCounts(id, isRepTree, isLeftChart);
 
     let startValue = 0; //value of all parts up to index {partIndex}
     let sum = 0;
-    for (let i = 0; i < counts.length; i++) {
-        sum += counts[i];
+    for (let i = 0; i < partCount.length; i++) {
+        sum += partCount[i];
         if (i < partIndex) {
-            startValue += counts[i];
+            startValue += partCount[i];
         }
     }
 
@@ -142,7 +144,7 @@ function getPartPercentages(id: number, partIndex: number, isRepTree: boolean, i
 
     const startPercentage = startValue / sum;
 
-    const value = counts[partIndex];
+    const value = partCount[partIndex];
     const endPercentage = (startValue + value) / sum;
 
     return [startPercentage, endPercentage];

@@ -1068,67 +1068,8 @@ d3__WEBPACK_IMPORTED_MODULE_1__.json(repTreesDataInputLocation).then(function (r
 
 function mainRepresentativeGraph() {
   (0,_sidePanel__WEBPACK_IMPORTED_MODULE_3__.createSidePanel)(repTreesData);
-  (0,_representativeGraph__WEBPACK_IMPORTED_MODULE_4__.generateTreeGrid)(repTreesData);
-  window.addEventListener('resize', function () {
-    (0,_updateFunctions__WEBPACK_IMPORTED_MODULE_5__.updatePositions)();
-  }, true);
-} // sliderValue = 1628985600;
-// function createTimeSlider(selectorDiv) {
-//     createSlider(selectorDiv, "TimeSlider", "time", 1628985600, 1635638400, sliderValue)
-//     d3.select("#TimeSlider")
-//         .on("input", function() {
-//             updateSlider(this.value)
-//         })
-//     document.addEventListener('keypress', function(e) {
-//         console.log("pressed");
-//         sliderValue = parseInt(sliderValue) + 60 * 60 * 24;
-//         updateSlider(sliderValue)
-//     })
-// }
-// function updateSlider(value) {
-//     sliderValue = value;
-//     let selectedTime = parseInt(value); //keep the value up to date
-//     updateGridMapFromTrees(selectedTime, selectedTime + (60 * 60 * 24 * 7)); //week time view
-//     console.log(selectedTime)
-//     let d = new Date(0);
-//     d.setUTCSeconds(value)
-//     let month = d.getMonth() + 1;
-//     if (month.toString().length == 1) {
-//         month = "0" + month;
-//     }
-//     let day = d.getDate();
-//     if (day.toString().length == 1) {
-//         day = "0" + day;
-//     }
-//     let year = d.getFullYear();
-//     d3.select("#TimeSliderNumber").text(day + "." + month + "." + year);
-//     d3.select("#TimeSlider").property("value", parseInt(sliderValue))
-// }
-// function createSlider(divToAppendTo, id, text, minVal, maxVal, initVal) {
-//     const sliderDiv = divToAppendTo
-//         .insert("div") //insert sliderdiv before svg
-//         .attr("id", id + "div")
-//         .attr("class", "sliderdiv")
-//     //text above slider
-//     sliderDiv.append("p")
-//         .attr("class", "text title")
-//         .text(text)
-//     //slider itself
-//     const slideContainer = sliderDiv.append("div")
-//         .attr("class", "slidecontainer")
-//     slideContainer.append("input")
-//         .attr("type", "range")
-//         .attr("class", "slider")
-//         .attr("id", id)
-//         .attr("min", minVal)
-//         .attr("max", maxVal)
-//         .attr("value", initVal)
-//     //attach the number behind the slider
-//     slideContainer.append("div")
-//         .attr("class", "slidernumber")
-//         .attr("id", id + "Number")
-//         .text(initVal)
-// }
+  (0,_representativeGraph__WEBPACK_IMPORTED_MODULE_4__.initTreeGrid)(repTreesData);
+}
 
 /***/ }),
 
@@ -1141,8 +1082,8 @@ function mainRepresentativeGraph() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "makeNodeGlyph": () => (/* binding */ makeNodeGlyph),
-/* harmony export */   "updateNodeGlyphs": () => (/* binding */ updateNodeGlyphs),
+/* harmony export */   "initNodeGlyph": () => (/* binding */ initNodeGlyph),
+/* harmony export */   "updateNodeGlyph": () => (/* binding */ updateNodeGlyph),
 /* harmony export */   "getPartColor": () => (/* binding */ getPartColor),
 /* harmony export */   "getPartCounts": () => (/* binding */ getPartCounts)
 /* harmony export */ });
@@ -1168,55 +1109,48 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-/**
- * Creates the stacked chart glyph for each node
- * @param {*} gElement 
- * @param {*} nodeId 
- * @param {*} isRepTree 
- */
-
-function makeNodeGlyph(gElement, nodeId, isRepTree) {
-  //make left chart
-  makeStackedChart(gElement, nodeId, isRepTree, true); //make right chart
-
-  makeStackedChart(gElement, nodeId, isRepTree, false);
-}
-
-function makeStackedChart(gElement, nodeId, isRepTree, isLeftChart) {
-  var _getRectGlyphXPositio = getRectGlyphXPositions(isLeftChart),
-      _getRectGlyphXPositio2 = _slicedToArray(_getRectGlyphXPositio, 2),
-      startX = _getRectGlyphXPositio2[0],
-      rectWidth = _getRectGlyphXPositio2[1];
-
+function initNodeGlyph(gElement) {
   for (var partI = 0; partI < _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.maxParts; partI++) {
-    constructRect(gElement, nodeId, isRepTree, isLeftChart, partI, startX, rectWidth);
+    var _getRectGlyphXPositio = getRectGlyphXPositions(true),
+        _getRectGlyphXPositio2 = _slicedToArray(_getRectGlyphXPositio, 2),
+        leftStartX = _getRectGlyphXPositio2[0],
+        leftRectWidth = _getRectGlyphXPositio2[1];
+
+    gElement.append("rect").attr("x", leftStartX).attr("width", leftRectWidth).attr("class", "glyphRectangle leftRectNumber" + partI);
+
+    var _getRectGlyphXPositio3 = getRectGlyphXPositions(false),
+        _getRectGlyphXPositio4 = _slicedToArray(_getRectGlyphXPositio3, 2),
+        rightStartX = _getRectGlyphXPositio4[0],
+        rightRectWidth = _getRectGlyphXPositio4[1];
+
+    gElement.append("rect").attr("x", rightStartX).attr("width", rightRectWidth).attr("class", "glyphRectangle rightRectNumber" + partI);
   }
 }
+function updateNodeGlyph(treeSvg) {
+  var gElements = treeSvg.selectAll(".node").selectAll("g");
+  gElements.each(function () {
+    var nodeId = parseInt(d3__WEBPACK_IMPORTED_MODULE_3__.select(this).attr("id"));
 
-function constructRect(gElement, nodeId, isRepTree, isLeftChart, partIndex, startX, rectWidth) {
-  var color = getPartColor(partIndex, isLeftChart);
+    for (var partI = 0; partI < _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.maxParts; partI++) {
+      var leftRectI = d3__WEBPACK_IMPORTED_MODULE_3__.select(this).select(".leftRectNumber" + partI);
+      updateRect(leftRectI, partI, nodeId, false, true);
+      var rightRectI = d3__WEBPACK_IMPORTED_MODULE_3__.select(this).select(".rightRectNumber" + partI);
+      updateRect(rightRectI, partI, nodeId, false, false);
+    }
+  });
+}
 
-  var _getRectGlyphYPositio = getRectGlyphYPositions(nodeId, partIndex, isRepTree, isLeftChart),
+function updateRect(rect, partIndex, nodeId, isRepTree, isLeftRect) {
+  var color = getPartColor(partIndex, isLeftRect);
+
+  var _getRectGlyphYPositio = getRectGlyphYPositions(nodeId, partIndex, isRepTree, isLeftRect),
       _getRectGlyphYPositio2 = _slicedToArray(_getRectGlyphYPositio, 2),
       y = _getRectGlyphYPositio2[0],
       height = _getRectGlyphYPositio2[1];
 
-  if (height > 0) {
-    //only add rectangles that have a height
-    gElement.append("rect").attr("x", startX).attr("y", y).attr("width", rectWidth).attr("height", height).attr("fill", color).attr("class", "glyphRectangle");
-  }
+  rect.attr("y", y).attr("height", height).attr("fill", color);
 }
 
-function updateNodeGlyphs(isRepTree) {
-  var gElements = d3__WEBPACK_IMPORTED_MODULE_3__.select("#treeGrid") //do not animate these. d3 animations break down at around 20000 svg elements. The largest tree alone has 100 nodes with 10 parts each.
-  .selectAll(".svgtree.visible").selectAll(".node").selectAll("g");
-  gElements.selectAll("*").remove(); //remove all rectangles so we can add only those that are needed again
-
-  gElements.each(function () {
-    var nodeId = parseInt(d3__WEBPACK_IMPORTED_MODULE_3__.select(this).attr("id"));
-    makeNodeGlyph(d3__WEBPACK_IMPORTED_MODULE_3__.select(this), nodeId, isRepTree);
-  });
-}
 function getPartColor(index, isLeftChart) {
   if (isLeftChart) {
     return _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.currentLeftColorScheme[index];
@@ -1329,258 +1263,6 @@ function getPartCounts(id, isRepTree, isLeftChart) {
 
 /***/ }),
 
-/***/ "./src/offsetCalculator.ts":
-/*!*********************************!*\
-  !*** ./src/offsetCalculator.ts ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "calculateOffsets": () => (/* binding */ calculateOffsets)
-/* harmony export */ });
-/* harmony import */ var _vizVariables__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./vizVariables */ "./src/vizVariables.ts");
-
-/**
- * Returns an array of [x,y] offsets to layout the rectangles without overlap.
- * 
- * @param {Array of widths} widths 
- * @param {array of heights} heights 
- * @param {The horizontal margin after each node. Used when filtering out nodes} horMargins
- * @param {the maximum width we can use to layout} maxWidth
- */
-
-function calculateOffsets(widths, heights, horMargins, maxWidth) {
-  return snakeLayout(widths, heights, horMargins, maxWidth);
-}
-/**
- * Returns an array of [x,y] offsets to layout the rectangles without overlap in strips.
- * @param {Array of widths} widths 
- * @param {array of heights} heights 
- * @param {The horizontal margin after each node. Used when filtering out nodes} horMargins
- * @param {the maximum width we can use to layout} maxWidth
-
- */
-
-function snakeLayout(inputWidths, inputHeights, horMargins, maxWidth) {
-  //use snake pattern to remove jarring transitions from how the eye goes from one place to the other
-  //add the margins to the widths and the heights so we now how much space each element takes
-  var widths = addMargin(inputWidths, horMargins);
-  var heights = addMarginConstant(inputHeights, _vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.verticalMarginBetweenTrees); //outputArray
-
-  var outputPositions = []; //current offset
-
-  var stripYOffset = 0;
-  var currentXOffset = 0;
-  var stripDirection = "Right"; //whether we are currently laying the strip out towards the right or the left
-
-  var stripStartIndex = 0; //holds the index of the element where the current strip starts
-
-  var stripMaxHeight = 0; //maximum height found of an element in the strip
-
-  var stripWidth = 0; //current width
-  //go through the nodes
-
-  for (var i = 0; i < widths.length; i++) {
-    var width = widths[i]; //update strip properties
-
-    stripWidth += width;
-    stripMaxHeight = Math.max(stripMaxHeight, heights[i]); //whether this is the lastelemnt
-
-    var lastElement = i + 1 == widths.length; //If this is the last elemet or the next element does not fit we need to lay this strip out
-
-    if (lastElement || stripWidth + widths[i + 1] > maxWidth) {
-      //layout the nodes in the strip            
-      for (var j = stripStartIndex; j <= i; j++) {
-        var extraYOffset = stripMaxHeight - heights[j]; //if the tree is smaller, shift it down more to align at bottom
-
-        var extraXOffset = 0;
-
-        if (stripDirection == "Left") {
-          extraXOffset = -widths[j]; //move it to the left by the width of this tree so that the element fits (coordinates at left bottom)
-
-          extraXOffset -= maxWidth - stripWidth; //ensure it is always flush against the left side
-        }
-
-        outputPositions[j] = [currentXOffset + extraXOffset, stripYOffset + extraYOffset]; //increase or decrease depending on direction
-
-        if (stripDirection == "Right") {
-          currentXOffset += widths[j];
-        } else {
-          currentXOffset -= widths[j];
-        }
-      } //initialize new strip
-
-
-      stripYOffset += stripMaxHeight; //shift strip down
-
-      stripWidth = 0;
-      stripMaxHeight = 0;
-      stripStartIndex = i + 1; //start the new strip at the next element
-
-      if (stripDirection == "Right") {
-        stripDirection = "Left";
-        currentXOffset = maxWidth;
-      } else {
-        stripDirection = "Right";
-        currentXOffset = 0;
-      }
-    }
-  }
-
-  return outputPositions;
-}
-/**
- * Add the margins to the values for easier calculation. Does not modify the original values
- * @param {*} inputValues 
- * @param {The horizontal margin after each node. Used when filtering out nodes} horMargins
-
- * @returns 
- */
-
-
-function addMargin(inputValues, horMargins) {
-  var outputValues = [];
-
-  for (var i = 0; i < inputValues.length; i++) {
-    outputValues[i] = inputValues[i] + horMargins[i];
-  }
-
-  return outputValues;
-}
-/**
- * Add the margins to the values for easier calculation. Does not modify the original values
- * @param {*} inputValues 
- * @param {The constand added margin} margin
-
- * @returns 
- */
-
-
-function addMarginConstant(inputValues, margin) {
-  var outputValues = [];
-
-  for (var i = 0; i < inputValues.length; i++) {
-    outputValues[i] = inputValues[i] + margin;
-  }
-
-  return outputValues;
-}
-
-/***/ }),
-
-/***/ "./src/popup.ts":
-/*!**********************!*\
-  !*** ./src/popup.ts ***!
-  \**********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "showTreesRepresented": () => (/* binding */ showTreesRepresented),
-/* harmony export */   "removeAllPopups": () => (/* binding */ removeAllPopups)
-/* harmony export */ });
-/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
-/* harmony import */ var _dataQueries__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dataQueries */ "./src/dataQueries.ts");
-/* harmony import */ var _treeLayout__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./treeLayout */ "./src/treeLayout.ts");
-/* harmony import */ var _vizVariables__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./vizVariables */ "./src/vizVariables.ts");
-
-
-
-
-var popupPadding = 3 * 2; //even number for even padding
-
-var popupWidth = 500; //width of the popup when clicking a node to see which trees it represents.
-
-function showTreesRepresented(event, treeRoot) {
-  var id = treeRoot.data.id;
-
-  if (!d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGrid").select("#popupTreeGrid" + treeRoot.data.id).empty()) {
-    //already have it, remove it.
-    removePopup(id);
-    return;
-  } //add an svg to the treegridSVG at the correct position
-
-
-  var popupTreeGridSvg = d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGrid").append("svg").attr("class", "popupTreeGrid").attr("id", "popupTreeGrid" + id).on("click", function () {
-    removePopup(id);
-  }); //add a removal function
-
-  var treesRepresented = getTreeHierarchiesRepresented(id); //use function from offsetCalculator to calculate the offests
-
-  var offSets = (0,_treeLayout__WEBPACK_IMPORTED_MODULE_2__.getOffSets)(treesRepresented, popupWidth, false);
-  addPadding(offSets); //add padding to tree positions
-
-  var maxHeight = 0;
-  var maxWidth = 0;
-
-  for (var i = 0; i < treesRepresented.length; i++) {
-    var xOffset = offSets[i][0];
-    var yOffset = offSets[i][1];
-    var repTreeRoot = treesRepresented[i];
-    var idI = repTreeRoot.data.id; //use function from treeLayout to layout a single tree
-
-    (0,_treeLayout__WEBPACK_IMPORTED_MODULE_2__.createSingleTree)(popupTreeGridSvg, xOffset, yOffset, repTreeRoot, idI, false); //use helper function from representativeGraph to get width and height
-
-    var height = yOffset + (0,_treeLayout__WEBPACK_IMPORTED_MODULE_2__.getDisplayHeight)(repTreeRoot);
-    maxHeight = Math.max(maxHeight, height);
-    var width = xOffset + (0,_treeLayout__WEBPACK_IMPORTED_MODULE_2__.getDisplayWidth)(repTreeRoot);
-    maxWidth = Math.max(maxWidth, width);
-  } //add adding
-
-
-  maxWidth += popupPadding;
-  maxHeight += popupPadding; //assign the width and height to the svg
-
-  popupTreeGridSvg.attr("width", maxWidth);
-  popupTreeGridSvg.attr("height", maxHeight);
-  attachPopupFrameAndPosition(event, popupTreeGridSvg, maxWidth, maxHeight);
-}
-
-function getTreeHierarchiesRepresented(id) {
-  var treesRepresented = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_1__.getTreesRepresentedById)(id, _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.currentEditDistance); //use function from representativeGraph to get the tree layouts
-
-  var treeRoots = (0,_treeLayout__WEBPACK_IMPORTED_MODULE_2__.getTreeRoots)(treesRepresented);
-  return treeRoots;
-}
-
-function removeAllPopups() {
-  //remove the popup
-  d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGrid").selectAll(".popupTreeGrid").remove();
-}
-
-function removePopup(id) {
-  d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGrid").select("#popupTreeGrid" + id).remove();
-}
-
-function attachPopupFrameAndPosition(event, svg, width, height) {
-  svg.append("rect").lower().attr("class", "popupFrame").attr("width", width).attr("height", height);
-  var x = event.offsetX;
-  var y = event.offsetY;
-  var targetSVGWidth = d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGrid").node().clientWidth; //mirror the popup if it doesn't fit
-
-  if (x + width > targetSVGWidth) {
-    x = x - width;
-  }
-
-  if (y + height > window.innerHeight) {
-    y = y - height;
-  }
-
-  svg.attr("x", x).attr("y", y);
-}
-
-function addPadding(offSets) {
-  for (var i = 0; i < offSets.length; i++) {
-    offSets[i][0] += popupPadding / 2;
-    offSets[i][1] += popupPadding / 2;
-  }
-}
-
-/***/ }),
-
 /***/ "./src/representativeGraph.ts":
 /*!************************************!*\
   !*** ./src/representativeGraph.ts ***!
@@ -1590,85 +1272,89 @@ function addPadding(offSets) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "treeOrder": () => (/* binding */ treeOrder),
-/* harmony export */   "treeBaseWidthById": () => (/* binding */ treeBaseWidthById),
-/* harmony export */   "treeBaseHeightById": () => (/* binding */ treeBaseHeightById),
-/* harmony export */   "generateTreeGrid": () => (/* binding */ generateTreeGrid),
-/* harmony export */   "resizeSVG": () => (/* binding */ resizeSVG)
+/* harmony export */   "initTreeGrid": () => (/* binding */ initTreeGrid),
+/* harmony export */   "updateTrees": () => (/* binding */ updateTrees),
+/* harmony export */   "getTreeRoots": () => (/* binding */ getTreeRoots)
 /* harmony export */ });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
-/* harmony import */ var _popup__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./popup */ "./src/popup.ts");
-/* harmony import */ var _treeLayout__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./treeLayout */ "./src/treeLayout.ts");
+/* harmony import */ var _treeLayout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./treeLayout */ "./src/treeLayout.ts");
+/* harmony import */ var _vizVariables__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./vizVariables */ "./src/vizVariables.ts");
 
 
+ // export var treeBaseWidthById = new Map(); //Base width of the tree by id of the root. Uses nodes of {@code nodeBaseSize} size
+// export var treeBaseHeightById = new Map(); //Base  height of the tree by id of the root. Uses nodes of {@code nodeBaseSize} size
 
-var treeOrder = []; //order of the trees in the viz
-
-var treeBaseWidthById = new Map(); //Base width of the tree by id of the root. Uses nodes of {@code nodeBaseSize} size
-
-var treeBaseHeightById = new Map(); //Base  height of the tree by id of the root. Uses nodes of {@code nodeBaseSize} size
-
-function generateTreeGrid(repTreesData) {
+function initTreeGrid(repTreesData) {
   //get the svg grid where the trees will be added to.
   //using svg instead of flexbox for animations purposes.
-  var treeGridSVG = d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGrid");
-  var div = d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGridDiv");
-  var targetContainerWidth = div.node().clientWidth;
-  var treeRoots = (0,_treeLayout__WEBPACK_IMPORTED_MODULE_2__.getTreeRoots)(repTreesData);
-  setBaseWidthAndHeightById(treeRoots); //used later when scaling nodes
+  var treeGridDiv = d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGridDiv");
+  var treeRoots = getTreeRoots(repTreesData);
 
-  var offSets = (0,_treeLayout__WEBPACK_IMPORTED_MODULE_2__.getOffSets)(treeRoots, treeBaseWidthById, treeBaseHeightById, targetContainerWidth, true);
-
-  var _loop = function _loop(i) {
-    var xOffset = offSets[i][0];
-    var yOffset = offSets[i][1];
+  for (var i = 0; i < treeRoots.length; i++) {
     var treeRoot = treeRoots[i];
     var id = treeRoot.data.id;
-    var treeSvg = (0,_treeLayout__WEBPACK_IMPORTED_MODULE_2__.createSingleTree)(treeGridSVG, xOffset, yOffset, treeRoot, id, true);
+    var treeSvg = (0,_treeLayout__WEBPACK_IMPORTED_MODULE_1__.initSingleTree)(treeGridDiv, treeRoot, id, true);
     treeSvg.on("click", function (event) {
-      (0,_popup__WEBPACK_IMPORTED_MODULE_1__.showTreesRepresented)(event, treeRoot);
+      // showTreesRepresented(event, treeRoot) 
+      console.log("Clicking is disabled for now. See comment");
     }); //TODO: Change click function to work on all of svg, not just nodes.
-  };
-
-  for (var i = 0; i < treeRoots.length; i++) {
-    _loop(i);
-  } //size treegridsvg according to it's bounding box
-
-
-  resizeSVG(treeGridSVG);
-}
-/**
- * Sets the width and height of the svg element to fit the content
- * @param {The d3 svg element we are resizing} svg 
- */
-
-function resizeSVG(svg) {
-  //size svg according to it's bounding box
-  var bbox = svg.node().getBBox();
-  svg.attr("width", bbox.width);
-  svg.attr("height", bbox.height);
-}
-
-function setBaseWidthAndHeightById(treeRoots) {
-  for (var i = 0; i < treeRoots.length; i++) {
-    var treeRoot = treeRoots[i];
-    var width = (0,_treeLayout__WEBPACK_IMPORTED_MODULE_2__.getDisplayWidth)(treeRoot);
-    var height = (0,_treeLayout__WEBPACK_IMPORTED_MODULE_2__.getDisplayHeight)(treeRoot);
-    treeBaseWidthById.set(treeRoot.data.id, width);
-    treeBaseHeightById.set(treeRoot.data.id, height);
-    treeOrder[i] = treeRoot.data.id;
   }
+
+  updateTrees();
+}
+function updateTrees() {
+  //do not animate these. d3 animations break down at around 20000 svg elements. The largest tree alone has 100 nodes with 10 parts each.
+  d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGridDiv").selectAll(".divsvgtree.visible").each(function (d) {
+    //only update visible trees for performance reasons
+    (0,_treeLayout__WEBPACK_IMPORTED_MODULE_1__.updateTree)(d3__WEBPACK_IMPORTED_MODULE_0__.select(this), true);
+  });
+}
+function getTreeRoots(treeData) {
+  var treeRoots = [];
+
+  for (var i = 0; i < treeData.length; i++) {
+    var treeRoot = getTree(treeData[i]);
+    treeRoots[i] = treeRoot;
+  }
+
+  return treeRoots;
 }
 /**
- * True if d.maxEditDistance > editdistance
- * @param {*} d 
- * @param {*} editDistance 
+ * Returns a tree layout of the data with the correct nodesizes and all positive coordinates.
+ * @param {*} data 
  * @returns 
  */
 
+function getTree(data) {
+  var dataRoot = d3__WEBPACK_IMPORTED_MODULE_0__.hierarchy(data);
+  var treeRoot = d3__WEBPACK_IMPORTED_MODULE_0__.tree().nodeSize([_vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.horNodeSpace, _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.verNodeSpace])(dataRoot);
+  moveTreeToFirstQuadrantAndInvert(treeRoot);
+  return treeRoot;
+}
+/**
+ * Moves the position of the nodes in the tree with root {@code root} 
+ * such that it is completely in the first quadrant with at least one node with x=0 and one node with y=0.
+ * Additionally ensure the tree grows towards the top.
+ * @param {The tree we are moving} root 
+ */
 
-function contains(d, editDistance) {
-  return d.maxEditDistance > editDistance;
+
+function moveTreeToFirstQuadrantAndInvert(root) {
+  //invert tree
+  root.each(function (d) {
+    d.y = -d.y;
+  }); //put back into  quadrant 1 starting at 0,0
+
+  var minY = Infinity;
+  var minX = Infinity;
+  root.each(function (d) {
+    if (minY > d.y) minY = d.y;
+    if (minX > d.x) minX = d.x;
+  });
+  root.each(function (d) {
+    d.x -= minX;
+    d.y -= minY;
+  });
 }
 
 /***/ }),
@@ -2215,123 +1901,101 @@ function createSlider(divToAppendTo, id, text, minVal, maxVal, initVal) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getOffSets": () => (/* binding */ getOffSets),
-/* harmony export */   "createSingleTree": () => (/* binding */ createSingleTree),
-/* harmony export */   "getScaleFactorByRepAmount": () => (/* binding */ getScaleFactorByRepAmount),
-/* harmony export */   "getTreeRoots": () => (/* binding */ getTreeRoots),
-/* harmony export */   "getDisplayWidth": () => (/* binding */ getDisplayWidth),
-/* harmony export */   "getDisplayHeight": () => (/* binding */ getDisplayHeight)
+/* harmony export */   "initSingleTree": () => (/* binding */ initSingleTree),
+/* harmony export */   "updateTree": () => (/* binding */ updateTree)
 /* harmony export */ });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
 /* harmony import */ var _vizVariables__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./vizVariables */ "./src/vizVariables.ts");
 /* harmony import */ var _dataQueries__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dataQueries */ "./src/dataQueries.ts");
-/* harmony import */ var _offsetCalculator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./offsetCalculator */ "./src/offsetCalculator.ts");
-/* harmony import */ var _nodeViz__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./nodeViz */ "./src/nodeViz.ts");
-
+/* harmony import */ var _nodeViz__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./nodeViz */ "./src/nodeViz.ts");
 
 
 
 
 /**
  * 
- * @param {*} treeRoots 
- * @param {*} treeBaseWidthById
- * @param {*} treeBaseHeightById
- * @param {*} containerWidth 
- * @param {If true, scales the trees according to how many nodes they represent } represtativeTrees 
- * @returns 
- */
-
-function getOffSets(treeRoots, treeBaseWidthById, treeBaseHeightById, containerWidth, representativeTrees) {
-  //uses the tree with the maximum width to figure out the minimum size of the container to prevent clipping
-  var widths = [];
-  var heights = [];
-  var horMargins = [];
-
-  for (var i = 0; i < treeRoots.length; i++) {
-    if (representativeTrees) {
-      var id = treeRoots[i].data.id;
-      var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_2__.getAmountOfTreesRepresentedById)(id, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.endDate);
-      var scaleFactor = getScaleFactorByRepAmount(repAmount);
-      widths[i] = treeBaseWidthById.get(id) * scaleFactor;
-      heights[i] = treeBaseHeightById.get(id) * scaleFactor; //get base height
-    } else {
-      widths[i] = getDisplayWidth(treeRoots[i]);
-      heights[i] = getDisplayHeight(treeRoots[i]);
-    }
-
-    horMargins[i] = _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.horizontalMarginBetweenTrees; //all trees are initially visible
-  } //Holds the [x,y] offset of the trees in order. Calculate from left bottom instead of left top.
-
-
-  var offSets = (0,_offsetCalculator__WEBPACK_IMPORTED_MODULE_3__.calculateOffsets)(widths, heights, horMargins, containerWidth);
-  return offSets;
-}
-/**
- * 
- * @param {*} d3 
- * @param {*} svgToAddTo 
- * @param {*} xOffset 
- * @param {*} yOffset 
+ * @param {*} divToAddTo 
  * @param {*} root 
  * @param {*} treeId 
  * @param {if true, treats this tree as a representative tree. If false, does not take the representations into account} isRepTree 
  * @returns 
  */
 
-function createSingleTree(svgToAddTo, xOffset, yOffset, root, treeId, isRepTree) {
+function initSingleTree(divToAddTo, root, treeId, isRepTree) {
   var scaleFactor = 1;
+  var repAmount = 0;
 
   if (isRepTree) {
-    var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_2__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.endDate);
+    repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_2__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.endDate);
     scaleFactor = getScaleFactorByRepAmount(repAmount);
-
-    if (repAmount != 1) {
-      console.log(repAmount);
-    }
   }
 
   var width = getDisplayWidth(root);
   var height = getDisplayHeight(root);
-  var treeSvg = svgToAddTo.insert("svg").attr("id", "tid" + treeId).attr("class", "svgtree visible").attr("viewBox", [0, 0, width, height]).attr("width", width * scaleFactor).attr("height", height * scaleFactor).attr("x", xOffset).attr("y", yOffset).data(root); //bind the data
+  var treeSvgDiv = divToAddTo.insert("div").attr("id", "tid" + treeId).attr("class", "divsvgtree visible"); //make the tree itself
+
+  var treeSvg = treeSvgDiv.insert("svg").attr("viewBox", [0, 0, width, height]).attr("width", width * scaleFactor).attr("height", height * scaleFactor).data(root); //bind the data
   //add a background so everything is clickable
 
-  var background = treeSvg.append("g").append("rect").attr("x", 0).attr("y", 0).attr("width", width).attr("height", height).style("opacity", 0.0); //make it invisible. TODO: Check performance issues
+  var background = treeSvg.append("g").append("rect").attr("class", "svgbackground").attr("x", 0).attr("y", 0).attr("width", width).attr("height", height); // .style("opacity", 0.0) //make it invisible. TODO: Check performance issues
 
   var g = treeSvg.append("g").attr("transform", "translate(".concat(_vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.marginWithinTree / 2, ",").concat(_vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.marginWithinTree / 2, ")")); //make sure no clipping occurs
 
   var link = g.append("g") //links
-  .attr("class", "edge").selectAll("path").data(root.links()).join("path").attr("d", d3__WEBPACK_IMPORTED_MODULE_0__.linkVertical().x(function (d) {
+  .attr("class", "edge").selectAll("path").data(root.links()).join("path") //@ts-ignore
+  .attr("d", d3__WEBPACK_IMPORTED_MODULE_0__.linkVertical() //@ts-ignore
+  .x(function (d) {
     return d.x;
-  }).y(function (d) {
+  }) //@ts-ignore
+  .y(function (d) {
     return d.y;
   })).attr("stroke-width", _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.linkBaseSize);
   var node = g.append("g") //nodes
   .attr("class", "node").selectAll("g").data(root.descendants()).join("g").attr("transform", function (d) {
     return "translate(".concat(d.x, ",").concat(d.y, ")");
   }).attr("id", function (d) {
+    //@ts-ignore
     return d.data.id;
-  }); //glyphs for each node
+  }); //Init glyphs for each node in the tree
 
   node.each(function (d) {
-    (0,_nodeViz__WEBPACK_IMPORTED_MODULE_4__.makeNodeGlyph)(d3__WEBPACK_IMPORTED_MODULE_0__.select(this), d.data.id, isRepTree);
-  }); //add how many trees this node represents if the data is present
+    (0,_nodeViz__WEBPACK_IMPORTED_MODULE_3__.initNodeGlyph)(d3__WEBPACK_IMPORTED_MODULE_0__.select(this));
+  }); //init representative tree text
 
-  if (isRepTree && typeof root.data.representations !== 'undefined') {
-    var repNumber = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_2__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.endDate); //Old
-    // const repNumber = getAmountOfTreesRepresented(root, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
+  treeSvgDiv.append("text").attr("class", "textRepAmount").attr("font-size", _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.fontSizeRepAmount).text(repAmount);
+  return treeSvgDiv;
+}
+function updateTree(treeSvgDiv, isRepTree) {
+  var treeSvg = treeSvgDiv.select("svg"); //@ts-ignore
 
-    var textG = treeSvg.append("g").attr("class", "textG");
-    var text = textG.append("text").attr("class", "textRepAmount").attr("font-size", _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.fontSizeRepAmount) // .attr("font-size", "60vw")
-    .text(repNumber); //position text such that the top is 2 pixels below the root
+  var root = treeSvg.data()[0];
+  var treeId = Number.parseInt(treeSvgDiv.attr("id").substring(3));
+  var repAmount = null;
+  var scaleFactor = 1;
 
-    var textX = root.x + _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.nodeBaseSize - text.node().getBBox().width / 2;
-    var textY = root.y + _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.nodeBaseSize * 2 + _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.fontSizeRepAmount;
-    text.attr("transform", "translate(".concat(textX, ",").concat(textY, ")")); //make sure no clipping occurs
+  if (isRepTree) {
+    repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_2__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.endDate);
+    scaleFactor = getScaleFactorByRepAmount(repAmount);
+  } //update width and height
+
+
+  var width = getDisplayWidth(root);
+  var height = getDisplayHeight(root);
+  treeSvg.attr("width", width * scaleFactor).attr("height", height * scaleFactor);
+
+  if (isRepTree) {
+    updateTreeRepNumber(treeSvgDiv, repAmount);
   }
 
-  return treeSvg;
+  (0,_nodeViz__WEBPACK_IMPORTED_MODULE_3__.updateNodeGlyph)(treeSvg);
 }
+
+function updateTreeRepNumber(treeSvgDiv, repAmount) {
+  //add how many trees this node represents if the data is present 
+  var text = treeSvgDiv.select("text").text(repAmount);
+  return text;
+}
+
 function getScaleFactorByRepAmount(repAmount) {
   if (repAmount == 0) {
     repAmount = 1; //prevent taking the log of 0
@@ -2340,54 +2004,6 @@ function getScaleFactorByRepAmount(repAmount) {
   var scaleFactor = 1 + Math.log10(repAmount);
   return scaleFactor;
 }
-function getTreeRoots(treeData) {
-  var treeRoots = [];
-
-  for (var i = 0; i < treeData.length; i++) {
-    var treeRoot = getTree(treeData[i]);
-    treeRoots[i] = treeRoot;
-  }
-
-  return treeRoots;
-}
-/**
- * Returns a tree layout of the data with the correct nodesizes and all positive coordinates.
- * @param {*} data 
- * @returns 
- */
-
-function getTree(data) {
-  var dataRoot = d3__WEBPACK_IMPORTED_MODULE_0__.hierarchy(data);
-  var treeRoot = d3__WEBPACK_IMPORTED_MODULE_0__.tree().nodeSize([_vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.horNodeSpace, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.verNodeSpace])(dataRoot);
-  moveTreeToFirstQuadrantAndInvert(treeRoot);
-  return treeRoot;
-}
-/**
- * Moves the position of the nodes in the tree with root {@code root} 
- * such that it is completely in the first quadrant with at least one node with x=0 and one node with y=0.
- * Additionally ensure the tree grows towards the top.
- * @param {The tree we are moving} root 
- */
-
-
-function moveTreeToFirstQuadrantAndInvert(root) {
-  //invert tree
-  root.each(function (d) {
-    d.y = -d.y;
-  }); //put back into  quadrant 1 starting at 0,0
-
-  var minY = Infinity;
-  var minX = Infinity;
-  root.each(function (d) {
-    if (minY > d.y) minY = d.y;
-    if (minX > d.x) minX = d.x;
-  });
-  root.each(function (d) {
-    d.x -= minX;
-    d.y -= minY;
-  });
-} //Small utility functions
-
 /**
  * Returns the width of the svg as it will be rendered on screen for a single tree
  * @param {} treeRoot 
@@ -2445,7 +2061,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "setRecalculate": () => (/* binding */ setRecalculate),
 /* harmony export */   "updateSliderPreview": () => (/* binding */ updateSliderPreview),
 /* harmony export */   "updateAll": () => (/* binding */ updateAll),
-/* harmony export */   "updatePositions": () => (/* binding */ updatePositions),
 /* harmony export */   "updateGlobalChart": () => (/* binding */ updateGlobalChart),
 /* harmony export */   "changePending": () => (/* binding */ changePending)
 /* harmony export */ });
@@ -2456,13 +2071,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _LineChart__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./LineChart */ "./src/LineChart.ts");
 /* harmony import */ var _vizVariables__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./vizVariables */ "./src/vizVariables.ts");
 /* harmony import */ var _sidePanel__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./sidePanel */ "./src/sidePanel.ts");
-/* harmony import */ var _representativeGraph__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./representativeGraph */ "./src/representativeGraph.ts");
-/* harmony import */ var _BarChart__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./BarChart */ "./src/BarChart.ts");
-/* harmony import */ var _nodeViz__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./nodeViz */ "./src/nodeViz.ts");
-/* harmony import */ var _popup__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./popup */ "./src/popup.ts");
-/* harmony import */ var _treeLayout__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./treeLayout */ "./src/treeLayout.ts");
-/* harmony import */ var _offsetCalculator__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./offsetCalculator */ "./src/offsetCalculator.ts");
-/* harmony import */ var _GridMap__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./GridMap */ "./src/GridMap.ts");
+/* harmony import */ var _BarChart__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./BarChart */ "./src/BarChart.ts");
+/* harmony import */ var _GridMap__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./GridMap */ "./src/GridMap.ts");
+/* harmony import */ var _representativeGraph__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./representativeGraph */ "./src/representativeGraph.ts");
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
@@ -2487,10 +2098,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-
-
-
-
 var recalculate = false; //Holds whether we need to recalculate the tree grid. Can happen in case of node size change or data change
 
 function setRecalculate() {
@@ -2501,37 +2108,22 @@ function setRecalculate() {
  */
 
 function updateSliderPreview() {
-  updateRepresentationText();
   updateScentWidget(_vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance);
 }
 function updateAll() {
   var idsToHide = getIdsToHide(_vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance);
   hideTrees(idsToHide);
   updateSliderPreview();
-  updateColors();
-
-  if (recalculate) {
-    //if we need to reinitialize the grid
-    d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGrid").selectAll("*").remove();
-    (0,_representativeGraph__WEBPACK_IMPORTED_MODULE_7__.generateTreeGrid)(_index__WEBPACK_IMPORTED_MODULE_1__.repTreesData); //update the position without animating as we are redrawing the tree
-
-    updatePositions(false);
-  } else {
-    //only moving and recoloring. Update via position
-    updatePositions(true);
-  } //Update the positions as well as ensure the right trees are hiden.
-
-
+  updateSidebarColors();
+  (0,_representativeGraph__WEBPACK_IMPORTED_MODULE_9__.updateTrees)();
   updateGlobalChart();
   changeNoLongerPending();
-  (0,_GridMap__WEBPACK_IMPORTED_MODULE_13__.updateGridMapFromTrees)(_vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.endDate);
+  (0,_GridMap__WEBPACK_IMPORTED_MODULE_8__.updateGridMapFromTrees)(_vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.endDate);
 }
 
-function updateColors() {
+function updateSidebarColors() {
   updateColorSchemes();
   (0,_sidePanel__WEBPACK_IMPORTED_MODULE_6__.updateColorLegend)(); //Make sure color legend is up to date
-
-  (0,_nodeViz__WEBPACK_IMPORTED_MODULE_9__.updateNodeGlyphs)(true); //update the glyphs for the visible trees. 
 }
 
 function updateColorSchemes() {
@@ -2601,18 +2193,11 @@ function updateColorSchemes() {
   }
 }
 
-function updatePositions() {
-  var animate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-  (0,_popup__WEBPACK_IMPORTED_MODULE_10__.removeAllPopups)(); //remove all popups as we are changing the layout and possibly hiding trees/nodes
-
-  var idsToHide = getIdsToHide(_vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance);
-  updateTreesAnimated(idsToHide, animate);
-}
 function updateGlobalChart() {
   //TODO: Not optimized at all, but works
   var distributionDiv = d3__WEBPACK_IMPORTED_MODULE_0__.select("#sidePanel").select("#distributionChartPanel");
   distributionDiv.select(".barChartsContainer").remove();
-  (0,_BarChart__WEBPACK_IMPORTED_MODULE_8__.createComponentBarChart)(distributionDiv);
+  (0,_BarChart__WEBPACK_IMPORTED_MODULE_7__.createComponentBarChart)(distributionDiv);
 }
 
 function changeNoLongerPending() {
@@ -2626,22 +2211,16 @@ function changePending() {
 }
 
 function hideTrees(idsToHide) {
-  d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGrid").selectAll(".svgtree").attr("class", function () {
-    var treeId = parseInt(d3__WEBPACK_IMPORTED_MODULE_0__.select(this).attr('id').substring(3)); //substring 3 as id is "tidXXX" where XXX is a number
+  d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGrid").selectAll(".divsvgtree") //@ts-ignore
+  .attr("class", function () {
+    var div = d3__WEBPACK_IMPORTED_MODULE_0__.select(this);
+    var treeId = parseInt(div.attr('id').substring(3)); //substring 3 as id is "tidXXX" where XXX is a number
 
     if (idsToHide.includes(treeId)) {
-      return "svgtree hidden"; //todo: Only change hidden of visible without needing to specify the rest
+      div.classed("visible", false);
     } else {
-      return "svgtree visible";
+      div.classed("visible", true);
     }
-  });
-}
-
-function updateRepresentationText() {
-  d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGrid").selectAll(".svgtree").selectAll(".textG").select("text").text(function () {
-    var treeId = parseInt(d3__WEBPACK_IMPORTED_MODULE_0__.select(this).node().parentNode.parentNode.getAttribute("id").substring(3));
-    var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_3__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.endDate);
-    return repAmount;
   });
 }
 
@@ -2650,112 +2229,6 @@ function updateScentWidget(distance) {
   d3__WEBPACK_IMPORTED_MODULE_0__.select("#RtScentedChart").remove(); //make new
 
   (0,_LineChart__WEBPACK_IMPORTED_MODULE_4__.createScentedRtLineChart)(d3__WEBPACK_IMPORTED_MODULE_0__.select("#DistanceSliderdiv"), distance, _index__WEBPACK_IMPORTED_MODULE_1__.repTreesData);
-}
-/**
- * Animates the changes in the trees
- * @param {*} idsToHide 
- * @param {if false, no animation will be used} animate 
- */
-
-
-function updateTreesAnimated(idsToHide) {
-  var animate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-  var updatedPlacement = recalculatePlacement(idsToHide);
-  var newWidths = updatedPlacement[0];
-  var newHeights = updatedPlacement[1];
-  var offSets = updatedPlacement[2];
-  var transitionTime = 1000;
-
-  if (animate == false) {
-    transitionTime = 0;
-  }
-
-  animateChanges(newWidths, newHeights, offSets, transitionTime);
-}
-
-function recalculatePlacement(idsToHide) {
-  //get the new widths and offsets
-  var newWidths = [];
-  var newHeights = [];
-  var newHorizontalMargins = [];
-
-  for (var i = 0; i < _representativeGraph__WEBPACK_IMPORTED_MODULE_7__.treeOrder.length; i++) {
-    var id = _representativeGraph__WEBPACK_IMPORTED_MODULE_7__.treeOrder[i];
-    var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_3__.getAmountOfTreesRepresentedById)(id, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.endDate);
-    var width = _representativeGraph__WEBPACK_IMPORTED_MODULE_7__.treeBaseWidthById.get(id); //get base width
-
-    var height = _representativeGraph__WEBPACK_IMPORTED_MODULE_7__.treeBaseHeightById.get(id); //get base height
-
-    var horizontalMargin = _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.horizontalMarginBetweenTrees;
-    var scaleFactor = void 0; //how much to scale the trees by
-
-    if (idsToHide.includes(id)) {
-      //tree will be hidden, shrink it
-      scaleFactor = _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.hiddenTreesScalingFactor;
-      horizontalMargin = horizontalMargin * scaleFactor; //shrink margin only if hidden
-    } else {
-      //otherwise scale tree
-      //hidden trees cannot have a repAmount more than 1
-      //scale trees according to repamount
-      scaleFactor = (0,_treeLayout__WEBPACK_IMPORTED_MODULE_11__.getScaleFactorByRepAmount)(repAmount);
-    }
-
-    width = width * scaleFactor;
-    height = height * scaleFactor;
-    newWidths[i] = width;
-    newHeights[i] = height;
-    newHorizontalMargins[i] = horizontalMargin;
-  }
-
-  var div = d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGridDiv");
-  var targetContainerWidth = div.node().clientWidth;
-  var offSets = (0,_offsetCalculator__WEBPACK_IMPORTED_MODULE_12__.calculateOffsets)(newWidths, newHeights, newHorizontalMargins, targetContainerWidth);
-  return [newWidths, newHeights, offSets];
-}
-
-function animateChanges(widthArray, heightArray, offsetArray, transitionTime) {
-  var widthMap = new Map();
-  var heightMap = new Map();
-  var xOffsetMap = new Map();
-  var yOffsetMap = new Map();
-
-  for (var i = 0; i < _representativeGraph__WEBPACK_IMPORTED_MODULE_7__.treeOrder.length; i++) {
-    var id = _representativeGraph__WEBPACK_IMPORTED_MODULE_7__.treeOrder[i];
-    xOffsetMap.set(id, offsetArray[i][0]);
-    yOffsetMap.set(id, offsetArray[i][1]);
-    widthMap.set(id, widthArray[i]);
-    heightMap.set(id, heightArray[i]);
-  } //Note, d3 using svg is not fast enough to animate the amount of elements we are using. 
-  //TODO: Trim down glyphs to only contains parts that exist. Needs a refactor. If we want to animate glyps, it needs a different technology (canvas?)
-
-
-  d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGrid").interrupt().transition().duration(transitionTime).selectAll("svg").attr("width", function () {
-    //update the width. Can increase or decrease.
-    var treeId = parseInt(d3__WEBPACK_IMPORTED_MODULE_0__.select(this).attr('id').substring(3));
-    var width = widthMap.get(treeId);
-    return width;
-  }).attr("height", function () {
-    //update the height. Can increase or decrease.
-    var treeId = parseInt(d3__WEBPACK_IMPORTED_MODULE_0__.select(this).attr('id').substring(3));
-    var height = heightMap.get(treeId);
-    return height;
-  }).attr("x", function () {
-    //update x
-    var treeId = parseInt(d3__WEBPACK_IMPORTED_MODULE_0__.select(this).attr('id').substring(3));
-    var xOffset = xOffsetMap.get(treeId);
-    return xOffset;
-  }).attr("y", function () {
-    //update y
-    var treeId = parseInt(d3__WEBPACK_IMPORTED_MODULE_0__.select(this).attr('id').substring(3));
-    var yOffset = yOffsetMap.get(treeId);
-    return yOffset;
-  }).end().then(function () {
-    var svg = d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGrid");
-    (0,_representativeGraph__WEBPACK_IMPORTED_MODULE_7__.resizeSVG)(svg);
-  })["catch"](function (error) {// console.error(error);
-    //ignore the error. Can come from it being interrupted in which
-    //case there is no need to resize
-  });
 }
 /**
  * Hide either when they are not represnted at the edit distance or if they have no nodes with the right location
@@ -2870,13 +2343,7 @@ _defineProperty(vars, "horNodeSpace", vars.nodeBaseSize * 2 + 2);
 
 _defineProperty(vars, "marginWithinTree", vars.nodeBaseSize * 2);
 
-_defineProperty(vars, "horizontalMarginBetweenTrees", vars.nodeBaseSize * 2);
-
 _defineProperty(vars, "fontSizeRepAmount", 3);
-
-_defineProperty(vars, "verticalMarginBetweenTrees", 4);
-
-_defineProperty(vars, "hiddenTreesScalingFactor", 0.001);
 
 function setNodeBaseSize(size) {
   this.nodeBaseSize = size;
@@ -2890,8 +2357,7 @@ function setVizSizes(nodeSize) {
   vars.horNodeSpace = nodeSize * 2 + 2; // Horizontal space between nodes. *2 as this is the diamater of a node.
 
   vars.marginWithinTree = nodeSize * 2; //Makes sure the tree doesn't get clipped
-
-  vars.horizontalMarginBetweenTrees = nodeSize * 2; // fontSizeRepAmount = nodeSize * 2; //Base font size for the number that tells how much is represented
+  // fontSizeRepAmount = nodeSize * 2; //Base font size for the number that tells how much is represented
 
   vars.fontSizeRepAmount = 3;
 }

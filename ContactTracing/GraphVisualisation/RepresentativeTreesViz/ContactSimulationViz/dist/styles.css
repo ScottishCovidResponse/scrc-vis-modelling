@@ -8,6 +8,15 @@
     display: flex;
     overflow: hidden;
     padding: 8px;
+    background-color: white;
+}
+
+.background {
+    background-color: white;
+}
+
+.svgbackground {
+    fill: white;
 }
 
 #sidePanel {
@@ -30,6 +39,18 @@
     flex-grow: 1;
     overflow: scroll;
     padding: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.divsvgtree {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-right: 10px;
+    padding-bottom: 10px;
 }
 
 body,
@@ -47,11 +68,6 @@ Css code for the visualization of the trees
 #treeGrid .visible {
     opacity: 1;
     /*visible*/
-}
-
-#treeGrid .hidden {
-    opacity: 0.4;
-    /*Blur it out*/
 }
 
 .popupFrame {

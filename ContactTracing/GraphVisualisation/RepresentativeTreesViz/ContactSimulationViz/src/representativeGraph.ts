@@ -1,66 +1,94 @@
 import * as d3 from 'd3';
-import { showTreesRepresented } from './popup';
-import { createSingleTree, getDisplayHeight, getDisplayWidth, getOffSets, getTreeRoots } from './treeLayout';
+import { initSingleTree, updateTree } from './treeLayout';
+import { vars } from './vizVariables';
 
-export var treeOrder = []; //order of the trees in the viz
-export var treeBaseWidthById = new Map(); //Base width of the tree by id of the root. Uses nodes of {@code nodeBaseSize} size
-export var treeBaseHeightById = new Map(); //Base  height of the tree by id of the root. Uses nodes of {@code nodeBaseSize} size
+// export var treeBaseWidthById = new Map(); //Base width of the tree by id of the root. Uses nodes of {@code nodeBaseSize} size
+// export var treeBaseHeightById = new Map(); //Base  height of the tree by id of the root. Uses nodes of {@code nodeBaseSize} size
 
 
-export function generateTreeGrid(repTreesData) {
+
+export function initTreeGrid(repTreesData) {
     //get the svg grid where the trees will be added to.
     //using svg instead of flexbox for animations purposes.
-    const treeGridSVG = d3.select("#treeGrid");
-    const div = d3.select("#treeGridDiv");
-
-
-    let targetContainerWidth = div.node().clientWidth;
-
+    const treeGridDiv = d3.select("#treeGridDiv");
     const treeRoots = getTreeRoots(repTreesData);
-    setBaseWidthAndHeightById(treeRoots); //used later when scaling nodes
-
-
-    const offSets = getOffSets(treeRoots, treeBaseWidthById, treeBaseHeightById, targetContainerWidth, true);
 
     for (let i = 0; i < treeRoots.length; i++) {
-        const xOffset = offSets[i][0];
-        const yOffset = offSets[i][1];
         const treeRoot = treeRoots[i];
         const id = treeRoot.data.id;
 
-        const treeSvg = createSingleTree(treeGridSVG, xOffset, yOffset, treeRoot, id, true);
-        treeSvg.on("click", function (event) { showTreesRepresented(event, treeRoot) }) //TODO: Change click function to work on all of svg, not just nodes.
+        const treeSvg = initSingleTree(treeGridDiv, treeRoot, id, true);
+        treeSvg.on("click", function (event) {
+            // showTreesRepresented(event, treeRoot) 
+            console.log("Clicking is disabled for now. See comment")
+
+        }) //TODO: Change click function to work on all of svg, not just nodes.
 
     }
 
+    updateTrees();
+}
 
-    //size treegridsvg according to it's bounding box
-    resizeSVG(treeGridSVG);
+export function updateTrees() {
+    //do not animate these. d3 animations break down at around 20000 svg elements. The largest tree alone has 100 nodes with 10 parts each.
+    d3.select("#treeGridDiv")
+        .selectAll(".divsvgtree.visible")
+        .each(function (d) {//only update visible trees for performance reasons
+            updateTree(d3.select(this), true);
+        })
+}
+
+
+export function getTreeRoots(treeData) {
+    let treeRoots = [];
+    for (let i = 0; i < treeData.length; i++) {
+        const treeRoot = getTree(treeData[i]);
+        treeRoots[i] = treeRoot;
+    }
+    return treeRoots;
+}
+
+
+/**
+ * Returns a tree layout of the data with the correct nodesizes and all positive coordinates.
+ * @param {*} data 
+ * @returns 
+ */
+function getTree(data) {
+    const dataRoot = d3.hierarchy(data);
+    const treeRoot = d3.tree()
+        .nodeSize([vars.horNodeSpace, vars.verNodeSpace])
+        (dataRoot)
+
+
+    moveTreeToFirstQuadrantAndInvert(treeRoot);
+    return treeRoot;
 }
 
 
 
 
 /**
- * Sets the width and height of the svg element to fit the content
- * @param {The d3 svg element we are resizing} svg 
+ * Moves the position of the nodes in the tree with root {@code root} 
+ * such that it is completely in the first quadrant with at least one node with x=0 and one node with y=0.
+ * Additionally ensure the tree grows towards the top.
+ * @param {The tree we are moving} root 
  */
-export function resizeSVG(svg) {
-    //size svg according to it's bounding box
-    const bbox = svg.node().getBBox();
-    svg.attr("width", bbox.width);
-    svg.attr("height", bbox.height);
-}
+function moveTreeToFirstQuadrantAndInvert(root: d3.HierarchyPointNode<unknown>) {
+    //invert tree
+    root.each(d => {
+        d.y = -d.y;
+    });
 
-
-function setBaseWidthAndHeightById(treeRoots) {
-    for (let i = 0; i < treeRoots.length; i++) {
-        const treeRoot = treeRoots[i];
-        const width = getDisplayWidth(treeRoot);
-        const height = getDisplayHeight(treeRoot);
-
-        treeBaseWidthById.set(treeRoot.data.id, width);
-        treeBaseHeightById.set(treeRoot.data.id, height);
-        treeOrder[i] = treeRoot.data.id;
-    }
+    //put back into  quadrant 1 starting at 0,0
+    let minY = Infinity;
+    let minX = Infinity;
+    root.each(d => {
+        if (minY > d.y) minY = d.y;
+        if (minX > d.x) minX = d.x;
+    });
+    root.each(d => {
+        d.x -= minX;
+        d.y -= minY;
+    });
 }

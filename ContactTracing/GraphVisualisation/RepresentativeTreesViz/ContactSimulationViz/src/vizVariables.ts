@@ -38,16 +38,11 @@ export class vars {
     //Variables for the tree visualization
     public static nodeBaseSize = 8; //radius of the node
     public static linkBaseSize = this.nodeBaseSize / 2; //Width of links
-    public static verNodeSpace = this.nodeBaseSize * 2 + 3;; //vertical space between nodes
-    public static horNodeSpace = this.nodeBaseSize * 2 + 2;; //horitonzal space between nodes
-    public static marginWithinTree = this.nodeBaseSize * 2;; //margin between the trees
-    public static horizontalMarginBetweenTrees = this.nodeBaseSize * 2;; //Horizontal space between trees.
-    public static fontSizeRepAmount = 3;; //Base font size for the number that tells how much is represented
+    public static verNodeSpace = this.nodeBaseSize * 2 + 3; //vertical space between nodes
+    public static horNodeSpace = this.nodeBaseSize * 2 + 2; //horitonzal space between nodes
+    public static marginWithinTree = this.nodeBaseSize * 2; //margin between the trees
 
-
-    //Space for the layout
-    public static verticalMarginBetweenTrees = 4; //Vertical space between trees.
-    public static hiddenTreesScalingFactor = 0.001; //how much the trees that are represented by other trees are scaled down
+    public static fontSizeRepAmount = 3; //Base font size for the number that tells how much is represented
 }
 
 export function setNodeBaseSize(size: number) {
@@ -61,7 +56,6 @@ export function setVizSizes(nodeSize: number) {
     vars.verNodeSpace = nodeSize * 2 + 3; //Vertical space between nodes. *2 as this is the diamater of a node. 
     vars.horNodeSpace = nodeSize * 2 + 2; // Horizontal space between nodes. *2 as this is the diamater of a node.
     vars.marginWithinTree = nodeSize * 2; //Makes sure the tree doesn't get clipped
-    vars.horizontalMarginBetweenTrees = nodeSize * 2;
     // fontSizeRepAmount = nodeSize * 2; //Base font size for the number that tells how much is represented
     vars.fontSizeRepAmount = 3;
 }

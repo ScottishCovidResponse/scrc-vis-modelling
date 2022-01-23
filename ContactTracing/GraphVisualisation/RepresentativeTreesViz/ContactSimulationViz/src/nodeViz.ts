@@ -1,70 +1,54 @@
-import { getMetaDataValueFromId, getMetaDataValuesFromRepTrees} from './dataQueries';
+import { getMetaDataValueFromId, getMetaDataValuesFromRepTrees } from './dataQueries';
 import { getIndexInColorScheme } from './ColorSchemes';
-import {
-    // currentLeftColorScheme, currentRightColorScheme,
-    // currentLeftColorSchemeValues, currentRightColorSchemeValues,
-    // currentLeftAttributeName, currentRightAttributeName,
-    // currentLeftAttributeType, currentRightAttributeType, maxParts
-    vars
-} from './vizVariables';
+import { vars } from './vizVariables';
 import * as d3 from 'd3';
 
 
-
-/**
- * Creates the stacked chart glyph for each node
- * @param {*} gElement 
- * @param {*} nodeId 
- * @param {*} isRepTree 
- */
-export function makeNodeGlyph(gElement, nodeId, isRepTree) {
-    //make left chart
-    makeStackedChart(gElement, nodeId, isRepTree, true);
-
-    //make right chart
-    makeStackedChart(gElement, nodeId, isRepTree, false);
-}
-
-function makeStackedChart(gElement, nodeId, isRepTree, isLeftChart) {
-    let [startX, rectWidth] = getRectGlyphXPositions(isLeftChart)
-
+export function initNodeGlyph(gElement: d3.Selection<d3.BaseType, unknown, null, undefined>) {
     for (let partI = 0; partI < vars.maxParts; partI++) {
-        constructRect(gElement, nodeId, isRepTree, isLeftChart, partI, startX, rectWidth);
-    }
-}
 
-
-function constructRect(gElement, nodeId, isRepTree, isLeftChart, partIndex, startX, rectWidth) {
-
-    const color = getPartColor(partIndex, isLeftChart);
-    const [y, height] = getRectGlyphYPositions(nodeId, partIndex, isRepTree, isLeftChart);
-
-    if (height > 0) { //only add rectangles that have a height
+        let [leftStartX, leftRectWidth] = getRectGlyphXPositions(true)
         gElement.append("rect")
-            .attr("x", startX)
-            .attr("y", y)
-            .attr("width", rectWidth)
-            .attr("height", height)
-            .attr("fill", color)
-            .attr("class", "glyphRectangle")
+            .attr("x", leftStartX)
+            .attr("width", leftRectWidth)
+            .attr("class", "glyphRectangle leftRectNumber" + partI)
+
+        let [rightStartX, rightRectWidth] = getRectGlyphXPositions(false)
+        gElement.append("rect")
+            .attr("x", rightStartX)
+            .attr("width", rightRectWidth)
+            .attr("class", "glyphRectangle rightRectNumber" + partI);
     }
 }
 
-export function updateNodeGlyphs(isRepTree) {
-    const gElements = d3.select("#treeGrid") //do not animate these. d3 animations break down at around 20000 svg elements. The largest tree alone has 100 nodes with 10 parts each.
-        .selectAll(".svgtree.visible")
+export function updateNodeGlyph(treeSvg: d3.Selection<d3.BaseType, unknown, HTMLElement, undefined>) {
+    const gElements = treeSvg
         .selectAll(".node")
         .selectAll("g");
 
-    gElements.selectAll("*").remove(); //remove all rectangles so we can add only those that are needed again
-
     gElements.each(function () {
         const nodeId = parseInt(d3.select(this).attr("id"));
-        makeNodeGlyph(d3.select(this), nodeId, isRepTree)
+
+        for (let partI = 0; partI < vars.maxParts; partI++) {
+            const leftRectI = d3.select(this).select(".leftRectNumber" + partI);
+            updateRect(leftRectI, partI, nodeId, false, true);
+
+            const rightRectI = d3.select(this).select(".rightRectNumber" + partI);
+            updateRect(rightRectI, partI, nodeId, false, false);
+        }
     });
 }
 
-export function getPartColor(index, isLeftChart) {
+function updateRect(rect: d3.Selection<d3.BaseType, unknown, null, undefined>, partIndex: number, nodeId: number, isRepTree: boolean, isLeftRect: boolean) {
+    const color = getPartColor(partIndex, isLeftRect);
+    const [y, height] = getRectGlyphYPositions(nodeId, partIndex, isRepTree, isLeftRect);
+    rect.attr("y", y)
+        .attr("height", height)
+        .attr("fill", color)
+
+}
+
+export function getPartColor(index: number, isLeftChart: boolean) {
     if (isLeftChart) {
         return vars.currentLeftColorScheme[index];
     } else {
@@ -73,7 +57,7 @@ export function getPartColor(index, isLeftChart) {
 }
 
 
-function getRectGlyphXPositions(isLeftChart) {
+function getRectGlyphXPositions(isLeftChart: boolean) {
     let startX = getStartX(isLeftChart);
     let rectWidth = vars.nodeBaseSize;
 
@@ -81,7 +65,7 @@ function getRectGlyphXPositions(isLeftChart) {
 }
 
 
-function getRectGlyphYPositions(id, partIndex, isRepTree, isLeftChart) {
+function getRectGlyphYPositions(id: number, partIndex: number, isRepTree: boolean, isLeftChart: boolean) {
 
     const partRange = getPartPercentages(id, partIndex, isRepTree, isLeftChart);
     const rectSize = vars.nodeBaseSize * 2; //nodeBaseSize is radius
@@ -94,7 +78,7 @@ function getRectGlyphYPositions(id, partIndex, isRepTree, isLeftChart) {
 }
 
 
-function getStartX(isLeftChart) {
+function getStartX(isLeftChart: boolean) {
     if (isLeftChart) {
         return -vars.nodeBaseSize;
     } else {
@@ -112,7 +96,7 @@ function getStartX(isLeftChart) {
  * @param {*} isLeftChart
  * @returns 
  */
-function getPartPercentages(id, partIndex, isRepTree, isLeftChart) {
+function getPartPercentages(id: number, partIndex: number, isRepTree: boolean, isLeftChart: boolean) {
     const counts = getPartCounts(id, isRepTree, isLeftChart);
 
     let startValue = 0; //value of all parts up to index {partIndex}
@@ -139,7 +123,7 @@ function getPartPercentages(id, partIndex, isRepTree, isLeftChart) {
 
 
 
-export function getPartCounts(id, isRepTree, isLeftChart) {
+export function getPartCounts(id: number, isRepTree: boolean, isLeftChart: boolean) {
     let partCounts = new Array(vars.maxParts).fill(0); //array length equal to amount of parts. Fill them in one by one
 
 
@@ -161,7 +145,7 @@ export function getPartCounts(id, isRepTree, isLeftChart) {
     let values;
     if (isRepTree) {
         //get value of all nodes represented by this id
-        values = getMetaDataValuesFromRepTrees(attributeName, id, vars.currentEditDistance,vars.locationToVisualize,vars.startDate,vars.endDate);
+        values = getMetaDataValuesFromRepTrees(attributeName, id, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
     } else {
         values = [getMetaDataValueFromId(attributeName, id)]; //put into arrow for consistency
     }

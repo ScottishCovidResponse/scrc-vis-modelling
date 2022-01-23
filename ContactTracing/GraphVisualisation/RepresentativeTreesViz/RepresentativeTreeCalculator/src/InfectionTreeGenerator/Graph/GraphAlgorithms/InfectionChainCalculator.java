@@ -107,9 +107,10 @@ public class InfectionChainCalculator {
         if (programAlreadyExecuted == false) {
             System.out.println("Start writing files");
             //write a temporary file for each non-trivial component. Directly add trivial components to the graph
-//            int componentCount = writeComponentFiles(nodesHandled);
-//            //calculate most-likely-infection chains for each component. TODO: Allow for multiple index cases per component?
-//            executeProgram(componentCount);
+            int componentCount = writeComponentFiles(nodesHandled);
+            //calculate most-likely-infection chains for each component. TODO: Allow for multiple index cases per component?
+            System.out.println(componentCount + " files written");
+            executeProgram(componentCount);
         }
         System.out.println("Start parsing output files");
         //Add the most-likely-infection chains to the mostLikelyInfectionGraph
@@ -187,7 +188,6 @@ public class InfectionChainCalculator {
      * components
      */
     private int writeComponentFiles(Set<ContactNode> nodesHandled) {
-        System.out.println("TODO: Need to print all edges between them and take that into account in the program if possible. Likely with weight");
 
         int componentNumber = 0;//how many components we have written files for processed
         int trivalComponentNumber = 0;//how many components of size 1 we processed
@@ -202,10 +202,11 @@ public class InfectionChainCalculator {
                 componentEdges.addAll(node.edges);
             }
 
-            writeComponentFiles(contactGraph, componentNodes, componentEdges, componentNumber);
+//            writeComponentFiles(contactGraph, componentNodes, componentEdges, componentNumber);
             nodesHandled.addAll(componentNodes);
 
             componentNumber++;
+            Log.printProgress("Not writing components",5, 1000000);
             Log.printProgress("component number: " + componentNumber + " is written", 1000);
         }
         return componentNumber;
@@ -334,7 +335,7 @@ public class InfectionChainCalculator {
     }
 
     private void executeProgram(int componentCount) {
-
+        System.out.println("Start executing programs");
         //TODO: Speed up python. Likely need to make sure that it is not starting up over and over but batch processing.
         //for every component we execute the python program and wait for it to complete before proceeding to not hog compute resources
         for (int i = 0; i < componentCount; i++) {

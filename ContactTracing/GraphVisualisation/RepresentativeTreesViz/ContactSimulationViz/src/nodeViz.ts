@@ -31,10 +31,10 @@ export function updateNodeGlyph(treeSvg: d3.Selection<d3.BaseType, unknown, HTML
 
         for (let partI = 0; partI < vars.maxParts; partI++) {
             const leftRectI = d3.select(this).select(".leftRectNumber" + partI);
-            updateRect(leftRectI, partI, nodeId, false, true);
+            updateRect(leftRectI, partI, nodeId, true, true);
 
             const rightRectI = d3.select(this).select(".rightRectNumber" + partI);
-            updateRect(rightRectI, partI, nodeId, false, false);
+            updateRect(rightRectI, partI, nodeId, true, false);
         }
     });
 }

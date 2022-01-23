@@ -1133,9 +1133,9 @@ function updateNodeGlyph(treeSvg) {
 
     for (var partI = 0; partI < _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.maxParts; partI++) {
       var leftRectI = d3__WEBPACK_IMPORTED_MODULE_3__.select(this).select(".leftRectNumber" + partI);
-      updateRect(leftRectI, partI, nodeId, false, true);
+      updateRect(leftRectI, partI, nodeId, true, true);
       var rightRectI = d3__WEBPACK_IMPORTED_MODULE_3__.select(this).select(".rightRectNumber" + partI);
-      updateRect(rightRectI, partI, nodeId, false, false);
+      updateRect(rightRectI, partI, nodeId, true, false);
     }
   });
 }
@@ -2211,15 +2211,15 @@ function changePending() {
 }
 
 function hideTrees(idsToHide) {
-  d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGrid").selectAll(".divsvgtree") //@ts-ignore
-  .attr("class", function () {
+  d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGridDiv").selectAll(".divsvgtree").each(function () {
+    console.log("test");
     var div = d3__WEBPACK_IMPORTED_MODULE_0__.select(this);
     var treeId = parseInt(div.attr('id').substring(3)); //substring 3 as id is "tidXXX" where XXX is a number
 
     if (idsToHide.includes(treeId)) {
-      div.classed("visible", false);
+      div.classed("hidden", true);
     } else {
-      div.classed("visible", true);
+      div.classed("hidden", false);
     }
   });
 }

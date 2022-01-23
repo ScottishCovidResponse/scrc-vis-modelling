@@ -96,16 +96,17 @@ export function changePending() {
 }
 
 function hideTrees(idsToHide: number[]) {
-    d3.select("#treeGrid")
-        .selectAll(".divsvgtree")//@ts-ignore
-        .attr("class", function () {
+    d3.select("#treeGridDiv")
+        .selectAll(".divsvgtree")
+        .each(function () {
+            console.log("test")
             const div = d3.select(this);
             const treeId = parseInt(div.attr('id').substring(3));
             //substring 3 as id is "tidXXX" where XXX is a number
             if (idsToHide.includes(treeId)) {
-                div.classed("visible", false)
+                div.classed("hidden", true);
             } else {
-                div.classed("visible", true)
+                div.classed("hidden", false)
             }
         })
 }

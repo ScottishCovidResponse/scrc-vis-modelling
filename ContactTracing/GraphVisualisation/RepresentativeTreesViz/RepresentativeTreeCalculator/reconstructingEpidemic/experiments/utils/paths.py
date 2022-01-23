@@ -19,57 +19,50 @@ def shortestPath1(contacts, sources, sinks, unreported):
         shortest_paths[n][n] = (0.0, contactTime, [(contactTime, n, n)])
         out_paths[n][n] = copy.deepcopy(shortest_paths[n].get(n))
 
-    c = 0
-    for contact in contacts:
-        c += 1
-        if c % 1000 == 0:
-            print(c)
-        contactTime, node1, node2 = contact[0], contact[1], contact[2]
+    done = False;
+    while(done == False):
+        done = True;#if not changed, no new shortest path was found. Horrible implementatino of shortest temporal path
         for src_node, t_start in sources.items():
+            for contact in contacts:
+                contactTime, cN1, cN2 = contact[0], contact[1], contact[2]
+                if cN1 in shortest_paths[src_node].keys():
+                    shortestPathSrcToCn1 = shortest_paths[src_node][cN1]
 
-            if node1 in shortest_paths[src_node].keys():
+                    # Penalty to include this edge depending on positive test time and time of contact
+                    if contact[3] != 0:
+                        penalty = contact[3]; 
+                        #We are using this when handling real data, where we assign weights to the likely edges. The else statement is legacy functionality
+                    else:
+                        if cN2 not in sinks:
+                            cn2Time = unreported[cN2]
+                        else:
+                            cn2Time = sources[cN2]
+                        penalty = cn2Time-contactTime #Penalty dependent on time difference between contact and infection of next person
+                        #TODO: Note, not taking into account that the first person could no longer be infectious. Can be encoded further
+                        if cn2Time < contactTime:
+                            penalty =  penalty*-2;#invert and extra penalty since the contact happened after the estimated positive test date
 
-                prime = shortest_paths[src_node][node1]
+                        # Set penalty to non-zero such that we don't get divide by 0 problems.
+                        penalty = max(1,penalty);
+                        
+                    # weighted distance to n2 from src_node
+                    distance_to_n2 = shortestPathSrcToCn1[0] +penalty
+                    # Timestamp of current interaction. If we take the path to n2, this will be the last
+                    last_time_to_n2 = contactTime
+                    # Extend the shortest path to n1, with the edge to n2.
+                    path_to_n2 = shortestPathSrcToCn1[2] + [(contactTime, cN1, cN2)]
+                    # if n2 not in immuned or t < immuned[n2]: # if node is not immune yet
+                    if cN2 not in shortest_paths[src_node] or shortest_paths[src_node][cN2][0] > distance_to_n2:
+                        shortest_paths[src_node][cN2] = (distance_to_n2,last_time_to_n2,path_to_n2)
 
-                if node1 in sinks:
-                    penalty_n1 = np.abs((sources[node1]-contactTime))
-                else:
-                    penalty_n1 = np.abs((unreported[node1]-contactTime))
+                    # not in output path yet, or this is a shorter path
+                    if cN2 in sinks and (cN2 not in out_paths[src_node] or out_paths[src_node][cN2][0] >shortest_paths[src_node][cN2][0]):
+                        done = False;
+                        out_paths[src_node][cN2] = copy.deepcopy(shortest_paths[src_node].get(cN2, (np.Inf, -1, [])))
 
-                if node2 in sinks:
-                    penalty_n2 = np.abs((sources[node2]-contactTime))
-                else:
-                    penalty_n2 = np.abs((unreported[node2]-contactTime))
-
-                #Set penalty to non-zero such that we don't get divide by 0 problems. contactTime is integer, so equal to minimum value.
-                if penalty_n1 == 0:
-                    penalty_n1 = 1
-                if penalty_n2 == 0:
-                    penalty_n2 = 1;
-
-                # weighted distance to n2 from src_node
-                distance_to_n2 = prime[0] + penalty_n1 + penalty_n2
-                # Timestamp of current interaction. If we take the path to n2, this will be the last
-                last_time_to_n2 = contactTime
-                # Extend the shortest path to n1, with the edge to n2.
-                path_to_n2 = prime[2] + [(contactTime, node1, node2)]
-                # if n2 not in immuned or t < immuned[n2]: # if node is not immune yet
-                if node2 not in shortest_paths[src_node] or shortest_paths[src_node][node2][0] >= distance_to_n2:
-                    shortest_paths[src_node][node2] = (
-                        distance_to_n2, last_time_to_n2, path_to_n2)
-
-                # not in output path yet, or this is a shorter path
-                # if n2 in sinks and (n2 not in out_paths[src_node] or out_paths[src_node][n2][0] >= shortest_paths[src_node][n2][0]):
-                #     out_paths[src_node][n2] = copy.deepcopy(shortest_paths[src_node].get(n2, (np.Inf, -1, [])))
-                # if n1 in sinks and (n1 not in out_paths[src_node] or out_paths[src_node][n1][0] >= shortest_paths[src_node][n1][0]):
-                #     out_paths[src_node][n1] = copy.deepcopy(shortest_paths[src_node].get(n1, (np.Inf, -1, [])))
-                if node2 in sinks and sinks[node2] >= contactTime and (node2 not in out_paths[src_node] or out_paths[src_node][node2][0] >= shortest_paths[src_node][node2][0]):
-                    out_paths[src_node][node2] = copy.deepcopy(
-                        shortest_paths[src_node].get(node2, (np.Inf, -1, [])))
-
-                if node1 in sinks and sinks[node1] >= contactTime and (node1 not in out_paths[src_node] or out_paths[src_node][node1][0] >= shortest_paths[src_node][node1][0]):
-                    out_paths[src_node][node1] = copy.deepcopy(
-                        shortest_paths[src_node].get(node1, (np.Inf, -1, [])))
+                    if cN1 in sinks and (cN1 not in out_paths[src_node] or out_paths[src_node][cN1][0] > shortest_paths[src_node][cN1][0]):
+                        done = False;
+                        out_paths[src_node][cN1] = copy.deepcopy(shortest_paths[src_node].get(cN1, (np.Inf, -1, [])))
 
     SP = {}
     for i in sources.keys():

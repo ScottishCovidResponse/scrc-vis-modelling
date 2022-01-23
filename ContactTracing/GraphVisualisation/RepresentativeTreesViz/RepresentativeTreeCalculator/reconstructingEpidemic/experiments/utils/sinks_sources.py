@@ -15,7 +15,7 @@ def get_sinks_and_sources(contacts,NS):
             assert(n not in sources) #it is double in the list
         
             nodes.add(n)
-            if(t != ""):
+            if(t != ""): #it has a timestamp, so both a sink and a source
                 sources[n] = t
                 sinks[n] = t
             else:

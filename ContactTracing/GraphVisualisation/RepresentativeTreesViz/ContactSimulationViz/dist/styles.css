@@ -103,7 +103,7 @@ Css code for the visualization of the trees
 }
 
 .glyphRectangle.noDataRect {
-    stroke: black;
+    stroke: "#555";
     stroke-width: 1px;
 }
 

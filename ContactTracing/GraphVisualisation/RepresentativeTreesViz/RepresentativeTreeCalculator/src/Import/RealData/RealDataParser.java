@@ -146,7 +146,7 @@ public class RealDataParser {
         Log.printProgress("Merging trees");
         JsonMerger merger = new JsonMerger(outputFileLocation + "/ReptreesRTDistance/", outputFileLocation + "/RepTrees.json");
         merger.mergeTrees();
-        merger.cleanup();//delete the temporary output folder.
+//        merger.cleanup();//delete the temporary output folder.
     }
 
     private void addSourceIdToMetaData(ContactGraph cg, InfectionGraph ig) {

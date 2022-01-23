@@ -141,8 +141,7 @@ export function getTreesRepresentedById(id: number, editDistance: number, locati
 
     //First gather all the trees represented by this tree.
     let repTreeIds = [];
-    for (let repDistI = 0; repDistI < reps.length; repDistI++) {//go through the various edit distances
-        const repDistData = reps[repDistI];
+    for (let repDistData of reps) {//go through the various edit distances
         if (repDistData.editDistance <= editDistance) { //This tree is represented at this distance
             for (let repTreeId of repDistData.representationIds) {
                 let representedTree = allTreeById.get(repTreeId);
@@ -208,8 +207,7 @@ function getRepresentedNodesMetaData(nodeId: number, editDistance: number, locat
     let reps = node.representations;
 
     let repNodeIds: number[] = [];
-    for (let repDistI = 0; repDistI < reps.length; repDistI++) {
-        const repDistData = reps[repDistI];
+    for (let repDistData of reps) {//go through the various edit distances
         if (repDistData.editDistance <= editDistance) { //this trees is represented by the node at this edit distance
             for (let repId of repDistData.representationIds) {
                 const metaData = metaDataFromNodeById.get(repId)

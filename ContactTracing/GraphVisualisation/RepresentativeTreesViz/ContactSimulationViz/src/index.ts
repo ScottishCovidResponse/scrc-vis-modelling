@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import { initGridMap, updateGridMapFromTrees } from './GridMap';
 import { createSidePanel } from './sidePanel';
 import { initTreeGrid } from "./representativeGraph";
-import { updateAll} from "./updateFunctions";
+import { updateAll } from "./updateFunctions";
 import { noneColorScheme } from './ColorSchemes';
 import { vars } from "./vizVariables";
 
@@ -35,12 +35,13 @@ d3.json(repTreesDataInputLocation).then(function (repTreesDataInput) {
 
                 //Shouldn't be neededm but keeping it in for now due to time-constraints
                 console.log("Reptrees of maxeditdistance = 0 are included. Need to remove those from data in earlier phase.")
-                console.log("There seem to far to many trees of maxEditDistance = 1")
                 let repTreesDataFiltered = [];
                 for (let i = 0; i < repTreesData.length; i++) {
                     const repTree = repTreesData[i];
-                    if (repTree.maxEditDistance > 1) {
-                        repTreesDataFiltered.push(repTree);
+                    if (repTree.maxEditDistance > 0) {
+                        // if (repTree.children.length != 0) { //Speedup option
+                            repTreesDataFiltered.push(repTree);
+                        // }
                     }
                 }
                 repTreesData = repTreesDataFiltered;

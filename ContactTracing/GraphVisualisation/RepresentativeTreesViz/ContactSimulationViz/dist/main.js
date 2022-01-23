@@ -749,32 +749,41 @@ function getTreesRepresentedById(id, editDistance, locationToVisualize, startDat
 
   var repTreeIds = [];
 
-  for (var repDistI = 0; repDistI < reps.length; repDistI++) {
-    //go through the various edit distances
-    var repDistData = reps[repDistI];
+  var _iterator4 = _createForOfIteratorHelper(reps),
+      _step4;
 
-    if (repDistData.editDistance <= editDistance) {
-      //This tree is represented at this distance
-      var _iterator4 = _createForOfIteratorHelper(repDistData.representationIds),
-          _step4;
+  try {
+    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+      var repDistData = _step4.value;
 
-      try {
-        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-          var repTreeId = _step4.value;
-          var representedTree = allTreeById.get(repTreeId);
+      //go through the various edit distances
+      if (repDistData.editDistance <= editDistance) {
+        //This tree is represented at this distance
+        var _iterator5 = _createForOfIteratorHelper(repDistData.representationIds),
+            _step5;
 
-          if (isTreeFiltered(representedTree) == false) {
-            repTreeIds.push(repTreeId);
+        try {
+          for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+            var repTreeId = _step5.value;
+            var representedTree = allTreeById.get(repTreeId);
+
+            if (isTreeFiltered(representedTree) == false) {
+              repTreeIds.push(repTreeId);
+            }
           }
+        } catch (err) {
+          _iterator5.e(err);
+        } finally {
+          _iterator5.f();
         }
-      } catch (err) {
-        _iterator4.e(err);
-      } finally {
-        _iterator4.f();
       }
-    }
-  } //Find the trees in alltrees and return them
+    } //Find the trees in alltrees and return them
 
+  } catch (err) {
+    _iterator4.e(err);
+  } finally {
+    _iterator4.f();
+  }
 
   var allTreesRepresented = [];
 
@@ -800,12 +809,12 @@ function isTreeFiltered(subtree) {
     return false;
   }
 
-  var _iterator5 = _createForOfIteratorHelper(subtree.children),
-      _step5;
+  var _iterator6 = _createForOfIteratorHelper(subtree.children),
+      _step6;
 
   try {
-    for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-      var child = _step5.value;
+    for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+      var child = _step6.value;
 
       if (isTreeFiltered(child) == false) {
         return false;
@@ -813,9 +822,9 @@ function isTreeFiltered(subtree) {
     } //all descendants of this node, and this node are filtered.
 
   } catch (err) {
-    _iterator5.e(err);
+    _iterator6.e(err);
   } finally {
-    _iterator5.f();
+    _iterator6.f();
   }
 
   return true;
@@ -844,32 +853,42 @@ function getRepresentedNodesMetaData(nodeId, editDistance, locationToVisualize, 
   var reps = node.representations;
   var repNodeIds = [];
 
-  for (var repDistI = 0; repDistI < reps.length; repDistI++) {
-    var repDistData = reps[repDistI];
+  var _iterator7 = _createForOfIteratorHelper(reps),
+      _step7;
 
-    if (repDistData.editDistance <= editDistance) {
-      //this trees is represented by the node at this edit distance
-      var _iterator6 = _createForOfIteratorHelper(repDistData.representationIds),
-          _step6;
+  try {
+    for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
+      var repDistData = _step7.value;
 
-      try {
-        for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
-          var repId = _step6.value;
-          var metaData = metaDataFromNodeById.get(repId);
+      //go through the various edit distances
+      if (repDistData.editDistance <= editDistance) {
+        //this trees is represented by the node at this edit distance
+        var _iterator8 = _createForOfIteratorHelper(repDistData.representationIds),
+            _step8;
 
-          if (isNodeFiltered(metaData) == false) {
-            //node is not filtered
-            repNodeIds.push(repId);
+        try {
+          for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
+            var repId = _step8.value;
+            var metaData = metaDataFromNodeById.get(repId);
+
+            if (isNodeFiltered(metaData) == false) {
+              //node is not filtered
+              repNodeIds.push(repId);
+            }
           }
+        } catch (err) {
+          _iterator8.e(err);
+        } finally {
+          _iterator8.f();
         }
-      } catch (err) {
-        _iterator6.e(err);
-      } finally {
-        _iterator6.f();
       }
-    }
-  } //verify, does this not only get the root node?
+    } //verify, does this not only get the root node?
 
+  } catch (err) {
+    _iterator7.e(err);
+  } finally {
+    _iterator7.f();
+  }
 
   var metaDataNodes = [];
 
@@ -1030,14 +1049,14 @@ d3__WEBPACK_IMPORTED_MODULE_1__.json(repTreesDataInputLocation).then(function (r
         metaData = metaDataInput; //Shouldn't be neededm but keeping it in for now due to time-constraints
 
         console.log("Reptrees of maxeditdistance = 0 are included. Need to remove those from data in earlier phase.");
-        console.log("There seem to far to many trees of maxEditDistance = 1");
         var repTreesDataFiltered = [];
 
         for (var i = 0; i < repTreesData.length; i++) {
           var repTree = repTreesData[i];
 
-          if (repTree.maxEditDistance > 1) {
-            repTreesDataFiltered.push(repTree);
+          if (repTree.maxEditDistance > 0) {
+            // if (repTree.children.length != 0) { //Speedup option
+            repTreesDataFiltered.push(repTree); // }
           }
         }
 

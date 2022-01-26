@@ -53,7 +53,7 @@ function createSelectors(repTreesData) {
 
 function createDistanceSlider(selectorDiv: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>, repTreesData) {
 
-    createSlider(selectorDiv, "DistanceSlider", "Rt tree distance", 0, 99, vars.initEditDistanceSliderVal)
+    createSlider(selectorDiv, "DistanceSlider", "Maximal Rt distance in cluster", 0, 99, vars.initEditDistanceSliderVal)
 
     d3.select("#DistanceSlider")
         .on("input", function () {

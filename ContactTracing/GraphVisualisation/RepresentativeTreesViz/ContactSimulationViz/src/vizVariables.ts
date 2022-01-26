@@ -3,7 +3,7 @@
 export class vars {
     //TODO: Currently a mess of global variables. Split and refactor after speedup of code
 
-    public static initEditDistanceSliderVal = 15; //start the slider at 0
+    public static initEditDistanceSliderVal = 6; //start the slider at 0
     public static currentEditDistance = this.initEditDistanceSliderVal; //Current edit distance
     public static maxParts = 7; //How many different parts we can have at maximum in the glyph.
 

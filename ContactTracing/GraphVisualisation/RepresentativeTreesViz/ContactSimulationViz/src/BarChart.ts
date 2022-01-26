@@ -1,15 +1,16 @@
 import * as d3 from 'd3';
-import { 
+import {
     // maxParts, currentLeftDistributionSelection, currentRightDistributionSelection, normalizeComponentChart 
     vars
 } from './vizVariables';
 import { getPartColor, getPartCounts } from './nodeViz';
 import { metaDataFromNodeById } from './dataQueries'
+import { BaseType } from 'd3';
 
 
 const barChartHeight = 100;
 
-export function createComponentBarChart(divToAddTo) {
+export function createComponentBarChart(divToAddTo: d3.Selection<BaseType, unknown, HTMLElement, undefined>) {
 
     let leftColors = [];
     let rightColors = [];
@@ -70,7 +71,7 @@ export function createComponentBarChart(divToAddTo) {
 
 
 
-function createBarChart(gElement, totalHeight, dataValues, colors, sum) {
+function createBarChart(gElement:d3.Selection<SVGElement, unknown, HTMLElement, undefined>, totalHeight:number, dataValues:number[], colors:string[], sum:number) {
     const parts = dataValues.length;
     if (sum === undefined || sum == -1) { //either not given or explicitly set to not use. Otherwise it's a value
         sum = dataValues.reduce((accumulator, currentVal) => accumulator + currentVal)

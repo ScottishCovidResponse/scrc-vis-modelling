@@ -1,4 +1,4 @@
-function createStackedAreaChart(chartDiv, usableWidth, usableHeight, data) {
+function createStackedAreaChart(chartDiv:d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>, usableWidth:number, usableHeight:number, data) {
 
     const margin = { top: 10, right: 30, bottom: 30, left: 50 };
     const width = usableWidth - margin.left - margin.right;
@@ -12,7 +12,7 @@ function createStackedAreaChart(chartDiv, usableWidth, usableHeight, data) {
             "translate(" + margin.left + "," + margin.top + ")");
 
 
-    const keys = distributionChartColorSchemeOrder
+    const keys = distributionChartColorSchemeOrder;
     const colors = distributionChartColorScheme;
 
 

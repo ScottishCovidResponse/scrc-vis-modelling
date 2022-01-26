@@ -84,7 +84,7 @@ export function getMaxDepth() {
     return maxDepth;
 }
 
-function addDepthMetaData(tree, depth) {
+function addDepthMetaData(tree, depth: number) {
     //save node reference
     metaDataFromNodeById.get(tree.id).depth = depth;
 
@@ -201,7 +201,7 @@ function isNodeFiltered(nodeMetadata): boolean {
 /**
  * Get all nodes that the node with nodeId represents at the specified editdistance. treeId is the tree nodeid belong to
  */
-function getRepresentedNodesMetaData(nodeId: number, editDistance: number, locationToVisualize: string, startDate: number, endDate: number) {
+function getRepresentedNodesMetaData(nodeId: number, editDistance: number) {
 
     const node = repNodeById.get(nodeId);
     let reps = node.representations;
@@ -240,7 +240,7 @@ function getRepresentedNodesMetaData(nodeId: number, editDistance: number, locat
  * @param {id of the node we want the data from} id 
  * @returns a single value containing the value of the 'name' attribute of the node with the given id
  */
-export function getMetaDataValueFromId(name, id) {
+export function getMetaDataValueFromId(name: string, id: number) {
     if (name == "None") {
         return "None";
     }
@@ -260,7 +260,7 @@ export function getMetaDataValueFromId(name, id) {
  * @param {An array of all metadata values to be considered}
  * @returns An array of all values for this attribute from the metadata in metadataArray. Values can be present multiple times
  */
-export function getMetaDataValues(name, metaDataArray) {
+export function getMetaDataValues(name: string, metaDataArray) {
 
     //find the index of the string with the given name
     const nameIndex = metaDataNames.indexOf(name);
@@ -291,11 +291,10 @@ export function getMetaDataValues(name, metaDataArray) {
  * @param {name of the attribute we want to get the values from} name  
  * @param {Id of the node that is representing other nodes} id
  * @param {The maximum edit distance to find trees represented by 'id'} editDistance
- * @param {Only get data from nodes matching location (or if location is All) } location
  * @returns An array of all values for this attribute for all trees represented at the given editdistance by the node with the specified id. Values can be present multiple times
  */
-export function getMetaDataValuesFromRepTrees(name, id, editDistance: number, locationToVisualize: string, startDate: number, endDate: number) {
-    const repTreeMetaData = getRepresentedNodesMetaData(id, editDistance, locationToVisualize, startDate, endDate)
+export function getMetaDataValuesFromRepTrees(name: string, id: number, editDistance: number) {
+    const repTreeMetaData = getRepresentedNodesMetaData(id, editDistance)
     return getMetaDataValues(name, repTreeMetaData);
 }
 
@@ -315,7 +314,7 @@ export function getNodes(rootNode) {
 }
 
 
-export function getNodeFromTree(rootNode, nodeId) {
+export function getNodeFromTree(rootNode, nodeId:number) {
     const nodes = getNodes(rootNode);
     for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i];

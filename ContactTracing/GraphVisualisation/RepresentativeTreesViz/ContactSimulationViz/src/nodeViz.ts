@@ -174,7 +174,7 @@ export function getPartCounts(id: number, isRepTree: boolean, isLeftChart: boole
     let values;
     if (isRepTree) {
         //get value of all nodes represented by this id
-        values = getMetaDataValuesFromRepTrees(attributeName, id, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
+        values = getMetaDataValuesFromRepTrees(attributeName, id, vars.currentEditDistance);
     } else {
         values = [getMetaDataValueFromId(attributeName, id)]; //put into arrow for consistency
     }

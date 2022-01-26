@@ -26,12 +26,10 @@ export let currentRightAppPercentage = "100";
 
 
 
-let sortBy = "Tree size";
-
 export function createSidePanel(repTreesData) {
     createSelectors(repTreesData);
     createCalendar();
-    
+
     createDistributionChartPanel();
     createColorLegends();
 }
@@ -49,12 +47,11 @@ function createSelectors(repTreesData) {
         createPolicySelectors(selectorDiv);
         createAppPercentageSelectors(selectorDiv);
     }
-    // createSortOptions(selectorDiv);
     createRecalculateButton(selectorDiv);
 }
 
 
-function createDistanceSlider(selectorDiv, repTreesData) {
+function createDistanceSlider(selectorDiv: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>, repTreesData) {
 
     createSlider(selectorDiv, "DistanceSlider", "Rt tree distance", 0, 99, vars.initEditDistanceSliderVal)
 
@@ -70,7 +67,7 @@ function createDistanceSlider(selectorDiv, repTreesData) {
     createScentedRtLineChart(selectorDiv.select("#DistanceSliderdiv"), vars.initEditDistanceSliderVal, repTreesData);
 }
 
-function createSizeSlider(selectorDiv) {
+function createSizeSlider(selectorDiv: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>) {
 
     createSlider(selectorDiv, "SizeSlider", "Node Size", 1, 10, vars.nodeBaseSize)
 
@@ -86,7 +83,7 @@ function createSizeSlider(selectorDiv) {
 }
 
 
-function createNodeColorSelectors(selectorDiv) {
+function createNodeColorSelectors(selectorDiv: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>) {
 
     createLeftRightSubtitles(selectorDiv, "Node Property");
 
@@ -114,7 +111,7 @@ function createNodeColorSelectors(selectorDiv) {
 }
 
 
-function createPolicySelectors(selectorDiv) {
+function createPolicySelectors(selectorDiv: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>) {
 
     createLeftRightSubtitles(selectorDiv, "Policy");
 
@@ -163,7 +160,7 @@ function createPolicySelectors(selectorDiv) {
 
 
 
-function createAppPercentageSelectors(selectorDiv) {
+function createAppPercentageSelectors(selectorDiv: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>) {
 
     createLeftRightSubtitles(selectorDiv, "App percentage");
 
@@ -240,7 +237,7 @@ function createCalendar() {
             vars.endDate = (picker.getEndDate().getTime() / 1000);
             inputPicker.classed("grayed", false);
         }
-        
+
         changePending();
     }
 
@@ -248,7 +245,7 @@ function createCalendar() {
 }
 
 
-function createRecalculateButton(selectorDiv) {
+function createRecalculateButton(selectorDiv: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>) {
 
     const recalculateDiv = selectorDiv.append("div")
         .attr("class", "recalculateDiv")
@@ -275,7 +272,7 @@ function createColorLegends() {
 }
 
 export function updateColorLegend() {
-    const colorLegendDiv = d3.select("#sidePanel").select("#colorLegendDiv");
+    const colorLegendDiv: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined> = d3.select("#sidePanel").select("#colorLegendDiv");
     colorLegendDiv.selectAll("*").remove(); //remove current legend
     createStateColorLegend(colorLegendDiv, true);
     createStateColorLegend(colorLegendDiv, false);
@@ -283,7 +280,7 @@ export function updateColorLegend() {
 
 const maxIntegerBinsToDispaly = 10;
 
-function createStateColorLegend(colorLegendDiv, isLeft) {
+function createStateColorLegend(colorLegendDiv: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>, isLeft: boolean) {
     const halfColorDiv = colorLegendDiv.append("div")
         .attr("class", "halfColorLegendDiv")
 
@@ -337,7 +334,7 @@ function createStateColorLegend(colorLegendDiv, isLeft) {
 
 }
 
-function getDate(unixTimeStampInSeconds) {
+function getDate(unixTimeStampInSeconds: number) {
     return new Date(unixTimeStampInSeconds * 1000).ddmmyyyy();
 }
 
@@ -354,7 +351,7 @@ Date.prototype.ddmmyyyy = function () {
 };
 
 
-function createStateColorLegendItem(color, name, isLeft, divToAddTo) {
+function createStateColorLegendItem(color: string, name: string, isLeft: boolean, divToAddTo: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>) {
     const item = divToAddTo.insert("div")
         .attr("class", "colorLegendItem");
 
@@ -391,7 +388,7 @@ function createDistributionChartPanel() {
     createComponentBarChart(distributionDiv);
 }
 
-function createDistributionChartSelectors(divToAddTo) {
+function createDistributionChartSelectors(divToAddTo: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>) {
 
     const comboOptions = [
         { "NAME": "All" },
@@ -410,7 +407,7 @@ function createDistributionChartSelectors(divToAddTo) {
                 vars.currentLeftDistributionSelection.push("All")
             } else {
                 //take only the number. Represent as int for ease of manipulation later
-                vars.currentLeftDistributionSelection.push(parseInt(option.value.split(" ")[1]))
+                vars.currentLeftDistributionSelection.push("" + parseInt(option.value.split(" ")[1]))
             }
         }
         updateGlobalChart();
@@ -423,7 +420,7 @@ function createDistributionChartSelectors(divToAddTo) {
                 vars.currentRightDistributionSelection.push("All")
             } else {
                 //take only the number. Represent as int for ease of manipulation later
-                vars.currentRightDistributionSelection.push(parseInt(option.value.split(" ")[1]))
+                vars.currentRightDistributionSelection.push("" + parseInt(option.value.split(" ")[1]))
             }
         }
         updateGlobalChart();
@@ -436,16 +433,15 @@ function createDistributionChartSelectors(divToAddTo) {
     };
     const comboBoxDiv = divToAddTo.append("div").attr("class", "comboBoxesDiv")
 
-    createComboBox(comboBoxDiv, "levelComboBox", comboOptions, sortBy, selectLeftLevelFunction, false);
+    createComboBox(comboBoxDiv, "levelComboBox", comboOptions, "All", selectLeftLevelFunction, false);
 
     createCheckBox(comboBoxDiv, "normalizeCheckbox", false, normalizeCheckBoxFunction, "Normalized")
 
-    createComboBox(comboBoxDiv, "levelComboBox", comboOptions, sortBy, selectRightLevelFunction, false);
-
+    createComboBox(comboBoxDiv, "levelComboBox", comboOptions, "All", selectRightLevelFunction, false);
 }
 
 
-function createLeftRightSubtitles(sidePanelDiv, title) {
+function createLeftRightSubtitles(sidePanelDiv: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>, title: string) {
 
     const subTitleDiv = sidePanelDiv.append("div")
         .attr("class", "subtitleDiv");
@@ -464,7 +460,8 @@ function createLeftRightSubtitles(sidePanelDiv, title) {
 }
 
 
-function createLeftRightComboBoxes(divToAppendTo, colorOptions, leftId, rightId, leftInitColor, rightInitColor, leftChangeFunction, rightChangeFunction) {
+function createLeftRightComboBoxes(divToAppendTo: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>, colorOptions: { NAME: string }[], leftId: string, rightId: string,
+    leftInitColor: string, rightInitColor: string, leftChangeFunction: () => void, rightChangeFunction: () => void) {
 
     const comboBoxDiv = divToAppendTo.append("div")
         .attr("class", "comboBoxesDiv")
@@ -473,7 +470,8 @@ function createLeftRightComboBoxes(divToAppendTo, colorOptions, leftId, rightId,
     createComboBox(comboBoxDiv, rightId, colorOptions, rightInitColor, rightChangeFunction, false);
 }
 
-function createComboBox(divToAppendTo, id, valueList, initVal, changeFunction, multiple) {
+function createComboBox(divToAppendTo: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>, id: string, valueList: { NAME: string }[],
+    initVal: string, changeFunction: () => void, multiple: boolean) {
 
     //attach the combobox
     const dropDown = divToAppendTo.append("select")
@@ -496,7 +494,7 @@ function createComboBox(divToAppendTo, id, valueList, initVal, changeFunction, m
         .attr("value", function (d) {
             return d.NAME;
         })
-        .property("selected", function (d) { return d.NAME === initVal; }); //set default value
+        .property("selected", function (d) { return d.NAME == initVal; }); //set default value
 
     //attach the change function
     dropDown
@@ -504,7 +502,7 @@ function createComboBox(divToAppendTo, id, valueList, initVal, changeFunction, m
 
 }
 
-function createCheckBox(divToAppendTo, id, initVal, changeFunction, labelName) {
+function createCheckBox(divToAppendTo: d3.Selection<HTMLElement, unknown, HTMLElement, undefined>, id: string, initVal: boolean, changeFunction: () => void, labelName: string) {
 
     if (labelName != undefined) {
         const label = divToAppendTo.append("label").text(labelName);
@@ -525,7 +523,7 @@ function createCheckBox(divToAppendTo, id, initVal, changeFunction, labelName) {
 }
 
 
-function createButton(divToAppendTo, id, text, clickFunction) {
+function createButton(divToAppendTo: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>, id: string, text: string, clickFunction: () => void) {
 
     const buttonDiv = divToAppendTo
         .insert("div") //insert combodiv before svg
@@ -540,7 +538,7 @@ function createButton(divToAppendTo, id, text, clickFunction) {
 }
 
 
-function createSlider(divToAppendTo, id, text, minVal, maxVal, initVal) {
+function createSlider(divToAppendTo: d3.Selection<HTMLDivElement, unknown, HTMLElement, undefined>, id: string, text: string, minVal: number, maxVal: number, initVal: number) {
 
     const sliderDiv = divToAppendTo
         .insert("div") //insert sliderdiv before svg

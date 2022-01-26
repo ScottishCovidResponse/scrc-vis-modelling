@@ -7,7 +7,7 @@ import { changePending } from './updateFunctions';
 let gridToSvgMap = new Map();
 
 
-export function initGridMap(gridNames) {
+export function initGridMap(gridNames: string[][]) {
     const sidePanelDiv = d3.select("#sidePanel");
     const gridMapDiv = sidePanelDiv.append("div").attr("id", "gridmap");
     const gridMapGrid = gridMapDiv.append("svg").attr("id", "gridmapGrid");
@@ -37,7 +37,7 @@ export function initGridMap(gridNames) {
                 const topY = rowI * (topCellHeight + spacing);
 
                 //draw top level
-                const topSquareGroupSvg = generateSquareGroup(gridMapGrid, topX, topY, topCellWidth, topCellHeight, "topLevelGridCell");
+                const topSquareGroupSvg = generateSquareGroup(gridMapGrid, topX, topY, topCellWidth, topCellHeight, "topLevelGridCell", name);
                 gridToSvgMap.set(name, topSquareGroupSvg);
 
                 topSquareGroupSvg.on("click", function () {
@@ -58,7 +58,7 @@ export function initGridMap(gridNames) {
 
 
 
-function generateSquareGroup(svg, x: number, y: number, width: number, height: number, className: string) {
+function generateSquareGroup(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, undefined>, x: number, y: number, width: number, height: number, className: string, title: string) {
     const g = svg.append("g")
     const square = g.append("rect")
         .attr("x", x)
@@ -66,6 +66,7 @@ function generateSquareGroup(svg, x: number, y: number, width: number, height: n
         .attr("width", width)
         .attr("height", height)
         .attr("class", className)
+        .attr("title", title)
         .attr("fill", "#FEFEFE"); //default color
 
     const text = g.append("text")
@@ -85,7 +86,7 @@ function generateSquareGroup(svg, x: number, y: number, width: number, height: n
  * @param {*} trees 
  */
 export function updateGridMapFromTrees(startTime: number, endTime: number) {
-    let gridCount = new Map();
+    let gridCount = new Map<string, number>();
 
     let totalCount = 0;
     for (let metaData of metaDataFromNodeById.values()) {
@@ -114,20 +115,20 @@ export function updateGridMapFromTrees(startTime: number, endTime: number) {
 }
 
 
-export function updateGridMapFromMap(gridCount) {
+export function updateGridMapFromMap(gridCount: Map<string, number>) {
     const values = Array.from(gridCount.values())
     const [colorScheme, colorSchemeValues] = getColorScheme("integer", values);
 
     const maxVal = Math.max(...values)
     for (const [name, value] of gridCount.entries()) {
-        const colorIndex = getIndexInColorScheme(value, "integer", colorSchemeValues)
+        const colorIndex = getIndexInColorScheme("" + value, "integer", colorSchemeValues)
         const color = colorScheme[colorIndex];
         updateGridMap(name, color, value);
     }
 }
 
 
-function updateGridMap(name, color, value) {
+function updateGridMap(name: string, color: string, value: number) {
     if (gridToSvgMap.has(name)) {
         gridToSvgMap.get(name).select("rect").attr("fill", color)
         gridToSvgMap.get(name).select("text").text(value)

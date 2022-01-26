@@ -1,9 +1,9 @@
 //Simple line chart including dataprocessing for underneath the R_t slider.
 import * as d3 from 'd3';
 
-const treesPerSize = []; //for each R_t value (represented by the index), holds how many trees there are
+const treesPerSize: number[] = []; //for each R_t value (represented by the index), holds how many trees there are
 
-export function createScentedRtLineChart(chartDiv, scentIndex, repTreesData) {
+export function createScentedRtLineChart(chartDiv: d3.Selection<d3.BaseType, unknown, HTMLElement, undefined>, scentIndex: number, repTreesData) {
 
     console.log("For both the widget and the selector, automatically select maximum interesting edit distance")
 
@@ -38,7 +38,7 @@ export function createScentedRtLineChart(chartDiv, scentIndex, repTreesData) {
  * @param {series of values corresponding to y axis} inputData 
  * @param {dataIndex for what is currently selected} scentIndex 
  */
-function createLineChart(chartDiv, usableWidth, usableHeight, inputData, scentIndex) {
+function createLineChart(chartDiv:d3.Selection<d3.BaseType, unknown, HTMLElement, undefined>, usableWidth:number, usableHeight:number, inputData, scentIndex:number) {
     const margin = { top: 0, right: 0, bottom: 0, left: 0 };
     const width = usableWidth - margin.left - margin.right;
     const height = usableHeight - margin.top - margin.bottom;
@@ -105,17 +105,17 @@ function completeShape(data) {
     data[dataLength + 2] = [0, data[0][1]]; //close the shape
 }
 
-function updateScentedLineChart(id, maxDataIndex) {
+// function updateScentedLineChart(id:number, maxDataIndex) {
 
-    for (let i = 0; i < maxDataIndex; i++) {
-        data[i] = [i, treesPerSize[i]];
-    }
-    data[maxDataIndex] = [maxDataIndex - 1, 0]; //go to 0 on the y-axis
-    data[maxDataIndex + 1] = [0, 0]; //go to 0,0 on the y-axis
-    data[maxDataIndex + 2] = [0, inputData[0]]; //close the shape
+//     for (let i = 0; i < maxDataIndex; i++) {
+//         data[i] = [i, treesPerSize[i]];
+//     }
+//     data[maxDataIndex] = [maxDataIndex - 1, 0]; //go to 0 on the y-axis
+//     data[maxDataIndex + 1] = [0, 0]; //go to 0,0 on the y-axis
+//     data[maxDataIndex + 2] = [0, inputData[0]]; //close the shape
 
-    const svgLine = svg.append("path")
-        .datum(data2)
-        .attr("class", "scentedLine")
-        .attr("d", line)
-}
+//     const svgLine = svg.append("path")
+//         .datum(data2)
+//         .attr("class", "scentedLine")
+//         .attr("d", line)
+// }

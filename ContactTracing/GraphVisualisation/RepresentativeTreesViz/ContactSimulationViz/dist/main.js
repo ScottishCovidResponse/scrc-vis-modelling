@@ -320,7 +320,7 @@ function initGridMap(gridNames) {
         var topX = columnI * (topCellWidth + spacing);
         var topY = rowI * (topCellHeight + spacing); //draw top level
 
-        var topSquareGroupSvg = generateSquareGroup(gridMapGrid, topX, topY, topCellWidth, topCellHeight, "topLevelGridCell");
+        var topSquareGroupSvg = generateSquareGroup(gridMapGrid, topX, topY, topCellWidth, topCellHeight, "topLevelGridCell", name);
         gridToSvgMap.set(name, topSquareGroupSvg);
         topSquareGroupSvg.on("click", function () {
           if (_vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.locationToVisualize != name) {
@@ -343,9 +343,9 @@ function initGridMap(gridNames) {
   }
 }
 
-function generateSquareGroup(svg, x, y, width, height, className) {
+function generateSquareGroup(svg, x, y, width, height, className, title) {
   var g = svg.append("g");
-  var square = g.append("rect").attr("x", x).attr("y", y).attr("width", width).attr("height", height).attr("class", className).attr("fill", "#FEFEFE"); //default color
+  var square = g.append("rect").attr("x", x).attr("y", y).attr("width", width).attr("height", height).attr("class", className).attr("title", title).attr("fill", "#FEFEFE"); //default color
 
   var text = g.append("text").attr("x", x + width / 2).attr("y", y + height / 2).attr("text-anchor", "middle").attr("dominant-baseline", "middle").attr("font-size", "0.002em");
   return g;
@@ -848,7 +848,7 @@ function isNodeFiltered(nodeMetadata) {
  */
 
 
-function getRepresentedNodesMetaData(nodeId, editDistance, locationToVisualize, startDate, endDate) {
+function getRepresentedNodesMetaData(nodeId, editDistance) {
   var node = repNodeById.get(nodeId);
   var reps = node.representations;
   var repNodeIds = [];
@@ -964,8 +964,8 @@ function getMetaDataValues(name, metaDataArray) {
  * @returns An array of all values for this attribute for all trees represented at the given editdistance by the node with the specified id. Values can be present multiple times
  */
 
-function getMetaDataValuesFromRepTrees(name, id, editDistance, locationToVisualize, startDate, endDate) {
-  var repTreeMetaData = getRepresentedNodesMetaData(id, editDistance, locationToVisualize, startDate, endDate);
+function getMetaDataValuesFromRepTrees(name, id, editDistance) {
+  var repTreeMetaData = getRepresentedNodesMetaData(id, editDistance);
   return getMetaDataValues(name, repTreeMetaData);
 }
 function getNodes(rootNode) {
@@ -1289,7 +1289,7 @@ function getPartCounts(id, isRepTree, isLeftChart) {
 
   if (isRepTree) {
     //get value of all nodes represented by this id
-    values = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_0__.getMetaDataValuesFromRepTrees)(attributeName, id, _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.endDate);
+    values = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_0__.getMetaDataValuesFromRepTrees)(attributeName, id, _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.currentEditDistance);
   } else {
     values = [(0,_dataQueries__WEBPACK_IMPORTED_MODULE_0__.getMetaDataValueFromId)(attributeName, id)]; //put into arrow for consistency
   }

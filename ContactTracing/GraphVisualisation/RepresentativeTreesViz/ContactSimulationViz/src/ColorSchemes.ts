@@ -11,7 +11,7 @@ export let noneColorScheme = ["#888888"];
  * @param {*} varType the type of the attribute we are coloring
  * @param {*} values An array of all the values for the attribute we are visualizing
  */
-export function getColorScheme(varType, values) {
+export function getColorScheme(varType: string, values: any[]): [string[], string[]] {
     let colorScheme;
     let colorSchemeValues;
 
@@ -36,18 +36,17 @@ export function getColorScheme(varType, values) {
         //calculate the upper bounds for the bins based on the numbers
         let bins = calculateUpperboundsBins(values, integerColorScheme.length);
         colorSchemeValues = bins;
-
     } else if (varType == "None") {
         colorScheme = noneColorScheme;
         colorSchemeValues = ["none"];
     } else {
         console.error("Variable type " + varType + " is not implemented yet")
     }
-
+    //@ts-ignore numbers are converted to strings by default
     return [colorScheme, colorSchemeValues];
 }
 
-export function getIndexInColorScheme(value, attributeType, colorSchemeValues) {
+export function getIndexInColorScheme(value: string, attributeType: string, colorSchemeValues: any[]) {
     if (attributeType == "categorical") {
         const index = colorSchemeValues.indexOf(value);
         if (index == -1) {
@@ -68,7 +67,7 @@ export function getIndexInColorScheme(value, attributeType, colorSchemeValues) {
 
 
 
-function getTopKValues(values, k) {
+function getTopKValues(values: any[], k: number) {
 
     let frequencyMap = {};
     //count frequencies
@@ -98,7 +97,7 @@ function getTopKValues(values, k) {
  * @param {integer values} values 
  * @param {Amount of bins} binCount 
  */
-function calculateUpperboundsBins(values, binCount) {
+function calculateUpperboundsBins(values:number[], binCount:number) {
 
     let min = Number.MAX_VALUE;
     let max = Number.MIN_VALUE;
@@ -131,7 +130,7 @@ function calculateUpperboundsBins(values, binCount) {
     return bins;
 }
 
-function getDigitCount(number) {
+function getDigitCount(number:number) {
     return Math.floor(number).toString().length;
 }
 

@@ -21,7 +21,7 @@ const gridNamesInputLocation = "../data/TTPDataUpdated/WalesGridmapCoordinates.c
 export let policyDataPresent = false; //Whether policy data is present
 
 //End policies
-export let repTreesData, allTreesData, metaData, gridNames;
+export let repTreesData, allTreesData, metaData, gridNames:string[][];
 
 
 //load in all the data

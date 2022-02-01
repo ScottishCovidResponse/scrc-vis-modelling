@@ -5,7 +5,7 @@ import { getAmountOfTreesRepresentedById, getMetaDataValues, metaDataFromNodeByI
 import { createScentedRtLineChart } from "./LineChart";
 import { vars } from "./vizVariables";
 import { updateColorLegend } from "./sidePanel";
-import { createComponentBarChart } from "./BarChart";
+import { createComponentBarChart } from "./ComponentBarChart";
 import { removeAllPopups } from "./popup";
 import { updateGridMapFromTrees } from "./GridMap";
 import { updateTrees } from "./representativeGraph";

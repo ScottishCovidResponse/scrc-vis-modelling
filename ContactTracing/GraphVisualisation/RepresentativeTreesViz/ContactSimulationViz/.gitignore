@@ -14,6 +14,7 @@
 data
 
 
+dist/main.js.map
 /node_modules
 /test/js
 /test/browsertest/js

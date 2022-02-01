@@ -12,7 +12,7 @@ import {
     vars
 } from './vizVariables';
 import { metaDataNames, metaDataTypes, getMaxDepth } from './dataQueries';
-import { createComponentBarChart } from './BarChart';
+import { createComponentBarChart } from './ComponentBarChart';
 import { changePending, updateAll, updateSliderPreview, setRecalculate, updateGlobalChart } from './updateFunctions';
 import Litepicker from 'litepicker';
 

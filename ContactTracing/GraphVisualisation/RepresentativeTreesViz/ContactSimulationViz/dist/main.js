@@ -1,100 +1,6 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/BarChart.ts":
-/*!*************************!*\
-  !*** ./src/BarChart.ts ***!
-  \*************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "createComponentBarChart": () => (/* binding */ createComponentBarChart)
-/* harmony export */ });
-/* harmony import */ var _vizVariables__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./vizVariables */ "./src/vizVariables.ts");
-/* harmony import */ var _nodeViz__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./nodeViz */ "./src/nodeViz.ts");
-/* harmony import */ var _dataQueries__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dataQueries */ "./src/dataQueries.ts");
-
-
-
-var barChartHeight = 100;
-function createComponentBarChart(divToAddTo) {
-  var leftColors = [];
-  var rightColors = [];
-
-  for (var i = 0; i < _vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.maxParts; i++) {
-    leftColors[i] = (0,_nodeViz__WEBPACK_IMPORTED_MODULE_1__.getPartColor)(i, true);
-    rightColors[i] = (0,_nodeViz__WEBPACK_IMPORTED_MODULE_1__.getPartColor)(i, false);
-  } //get the distribution
-
-
-  var leftValues = new Array(_vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.maxParts).fill(0);
-  var rightValues = new Array(_vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.maxParts).fill(0);
-  _dataQueries__WEBPACK_IMPORTED_MODULE_2__.metaDataFromNodeById.forEach(function (metaData, id) {
-    //only count it this node is at the right depth
-    var nodeDepth = metaData.depth;
-
-    if (_vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.currentLeftDistributionSelection.includes("All") || _vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.currentLeftDistributionSelection.includes(nodeDepth)) {
-      var partCountsLeft = (0,_nodeViz__WEBPACK_IMPORTED_MODULE_1__.getPartCounts)(id, false, true);
-
-      for (var _i = 0; _i < _vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.maxParts; _i++) {
-        leftValues[_i] += partCountsLeft[_i];
-      }
-    }
-
-    if (_vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.currentRightDistributionSelection.includes("All") || _vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.currentRightDistributionSelection.includes(nodeDepth)) {
-      var partCountsRight = (0,_nodeViz__WEBPACK_IMPORTED_MODULE_1__.getPartCounts)(id, false, false);
-
-      for (var _i2 = 0; _i2 < _vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.maxParts; _i2++) {
-        rightValues[_i2] += partCountsRight[_i2];
-      }
-    }
-  }); //add an additional normalizing step as we are only showing the values from a single level which is confusing.
-  //Bar charts need to display height proportional to the total.
-
-  var totalNodes;
-
-  if (_vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.normalizeComponentChart) {
-    //if normalize is true, simply show each level by itself
-    totalNodes = -1;
-  } else {
-    totalNodes = _dataQueries__WEBPACK_IMPORTED_MODULE_2__.metaDataFromNodeById.size;
-  }
-
-  var barchartsDiv = divToAddTo.append("div").attr("class", "barChartsContainer");
-  var leftBarChartG = barchartsDiv.append("svg").attr("class", "barChartSvg").attr("height", barChartHeight).append("g");
-  createBarChart(leftBarChartG, barChartHeight, leftValues, leftColors, totalNodes);
-  var rightBarChartG = barchartsDiv.append("svg").attr("class", "barChartSvg").attr("height", barChartHeight).append("g");
-  createBarChart(rightBarChartG, barChartHeight, rightValues, rightColors, totalNodes);
-}
-
-function createBarChart(gElement, totalHeight, dataValues, colors, sum) {
-  var parts = dataValues.length;
-
-  if (sum === undefined || sum == -1) {
-    //either not given or explicitly set to not use. Otherwise it's a value
-    sum = dataValues.reduce(function (accumulator, currentVal) {
-      return accumulator + currentVal;
-    });
-  }
-
-  var currentY = 0;
-
-  for (var partI = 0; partI < parts; partI++) {
-    var height = dataValues[partI] / sum * totalHeight;
-    var color = colors[partI];
-
-    if (height > 0) {
-      //only add rectangles that have a height
-      gElement.append("rect").attr("x", 0).attr("y", currentY).attr("height", height).attr("fill", color).attr("class", "barChartRectangle");
-      currentY += height;
-    }
-  }
-}
-
-/***/ }),
-
 /***/ "./src/ColorSchemes.ts":
 /*!*****************************!*\
   !*** ./src/ColorSchemes.ts ***!
@@ -150,7 +56,8 @@ function getColorScheme(varType, values) {
     colorSchemeValues = ["none"];
   } else {
     console.error("Variable type " + varType + " is not implemented yet");
-  }
+  } //@ts-ignore numbers are converted to strings by default
+
 
   return [colorScheme, colorSchemeValues];
 }
@@ -247,6 +154,100 @@ function getDigitCount(number) {
 
 function getPartColorSimple() {
   return "#005a32";
+}
+
+/***/ }),
+
+/***/ "./src/ComponentBarChart.ts":
+/*!**********************************!*\
+  !*** ./src/ComponentBarChart.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createComponentBarChart": () => (/* binding */ createComponentBarChart)
+/* harmony export */ });
+/* harmony import */ var _vizVariables__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./vizVariables */ "./src/vizVariables.ts");
+/* harmony import */ var _nodeViz__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./nodeViz */ "./src/nodeViz.ts");
+/* harmony import */ var _dataQueries__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dataQueries */ "./src/dataQueries.ts");
+
+
+
+var barChartHeight = 100;
+function createComponentBarChart(divToAddTo) {
+  var leftColors = [];
+  var rightColors = [];
+
+  for (var i = 0; i < _vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.maxParts; i++) {
+    leftColors[i] = (0,_nodeViz__WEBPACK_IMPORTED_MODULE_1__.getPartColor)(i, true);
+    rightColors[i] = (0,_nodeViz__WEBPACK_IMPORTED_MODULE_1__.getPartColor)(i, false);
+  } //get the distribution
+
+
+  var leftValues = new Array(_vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.maxParts).fill(0);
+  var rightValues = new Array(_vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.maxParts).fill(0);
+  _dataQueries__WEBPACK_IMPORTED_MODULE_2__.metaDataFromNodeById.forEach(function (metaData, id) {
+    //only count it this node is at the right depth
+    var nodeDepth = metaData.depth;
+
+    if (_vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.currentLeftDistributionSelection.includes("All") || _vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.currentLeftDistributionSelection.includes(nodeDepth)) {
+      var partCountsLeft = (0,_nodeViz__WEBPACK_IMPORTED_MODULE_1__.getPartCounts)(id, false, true);
+
+      for (var _i = 0; _i < _vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.maxParts; _i++) {
+        leftValues[_i] += partCountsLeft[_i];
+      }
+    }
+
+    if (_vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.currentRightDistributionSelection.includes("All") || _vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.currentRightDistributionSelection.includes(nodeDepth)) {
+      var partCountsRight = (0,_nodeViz__WEBPACK_IMPORTED_MODULE_1__.getPartCounts)(id, false, false);
+
+      for (var _i2 = 0; _i2 < _vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.maxParts; _i2++) {
+        rightValues[_i2] += partCountsRight[_i2];
+      }
+    }
+  }); //add an additional normalizing step as we are only showing the values from a single level which is confusing.
+  //Bar charts need to display height proportional to the total.
+
+  var totalNodes;
+
+  if (_vizVariables__WEBPACK_IMPORTED_MODULE_0__.vars.normalizeComponentChart) {
+    //if normalize is true, simply show each level by itself
+    totalNodes = -1;
+  } else {
+    totalNodes = _dataQueries__WEBPACK_IMPORTED_MODULE_2__.metaDataFromNodeById.size;
+  }
+
+  var barchartsDiv = divToAddTo.append("div").attr("class", "barChartsContainer");
+  var leftBarChartG = barchartsDiv.append("svg").attr("class", "barChartSvg").attr("height", barChartHeight).append("g");
+  createBarChart(leftBarChartG, barChartHeight, leftValues, leftColors, totalNodes);
+  var rightBarChartG = barchartsDiv.append("svg").attr("class", "barChartSvg").attr("height", barChartHeight).append("g");
+  createBarChart(rightBarChartG, barChartHeight, rightValues, rightColors, totalNodes);
+}
+
+function createBarChart(gElement, totalHeight, dataValues, colors, sum) {
+  var parts = dataValues.length;
+
+  if (sum === undefined || sum == -1) {
+    //either not given or explicitly set to not use. Otherwise it's a value
+    sum = dataValues.reduce(function (accumulator, currentVal) {
+      return accumulator + currentVal;
+    });
+  }
+
+  var currentY = 0;
+
+  for (var partI = 0; partI < parts; partI++) {
+    var height = dataValues[partI] / sum * totalHeight;
+    var color = colors[partI];
+
+    if (height > 0) {
+      //only add rectangles that have a height
+      gElement.append("rect").attr("x", 0).attr("y", currentY).attr("height", height).attr("fill", color).attr("class", "barChartRectangle");
+      currentY += height;
+    }
+  }
 }
 
 /***/ }),
@@ -412,7 +413,7 @@ function updateGridMapFromMap(gridCount) {
           name = _step2$value[0],
           value = _step2$value[1];
 
-      var colorIndex = (0,_ColorSchemes__WEBPACK_IMPORTED_MODULE_1__.getIndexInColorScheme)(value, "integer", colorSchemeValues);
+      var colorIndex = (0,_ColorSchemes__WEBPACK_IMPORTED_MODULE_1__.getIndexInColorScheme)("" + value, "integer", colorSchemeValues);
       var color = colorScheme[colorIndex];
       updateGridMap(name, color, value);
     }
@@ -527,21 +528,18 @@ function completeShape(data) {
   data[dataLength + 1] = [0, 0]; //go to 0,0
 
   data[dataLength + 2] = [0, data[0][1]]; //close the shape
-}
-
-function updateScentedLineChart(id, maxDataIndex) {
-  for (var i = 0; i < maxDataIndex; i++) {
-    data[i] = [i, treesPerSize[i]];
-  }
-
-  data[maxDataIndex] = [maxDataIndex - 1, 0]; //go to 0 on the y-axis
-
-  data[maxDataIndex + 1] = [0, 0]; //go to 0,0 on the y-axis
-
-  data[maxDataIndex + 2] = [0, inputData[0]]; //close the shape
-
-  var svgLine = svg.append("path").datum(data2).attr("class", "scentedLine").attr("d", line);
-}
+} // function updateScentedLineChart(id:number, maxDataIndex) {
+//     for (let i = 0; i < maxDataIndex; i++) {
+//         data[i] = [i, treesPerSize[i]];
+//     }
+//     data[maxDataIndex] = [maxDataIndex - 1, 0]; //go to 0 on the y-axis
+//     data[maxDataIndex + 1] = [0, 0]; //go to 0,0 on the y-axis
+//     data[maxDataIndex + 2] = [0, inputData[0]]; //close the shape
+//     const svgLine = svg.append("path")
+//         .datum(data2)
+//         .attr("class", "scentedLine")
+//         .attr("d", line)
+// }
 
 /***/ }),
 
@@ -960,7 +958,6 @@ function getMetaDataValues(name, metaDataArray) {
  * @param {name of the attribute we want to get the values from} name  
  * @param {Id of the node that is representing other nodes} id
  * @param {The maximum edit distance to find trees represented by 'id'} editDistance
- * @param {Only get data from nodes matching location (or if location is All) } location
  * @returns An array of all values for this attribute for all trees represented at the given editdistance by the node with the specified id. Values can be present multiple times
  */
 
@@ -1434,7 +1431,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index */ "./src/index.ts");
 /* harmony import */ var _vizVariables__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./vizVariables */ "./src/vizVariables.ts");
 /* harmony import */ var _dataQueries__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./dataQueries */ "./src/dataQueries.ts");
-/* harmony import */ var _BarChart__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./BarChart */ "./src/BarChart.ts");
+/* harmony import */ var _ComponentBarChart__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ComponentBarChart */ "./src/ComponentBarChart.ts");
 /* harmony import */ var _updateFunctions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./updateFunctions */ "./src/updateFunctions.ts");
 /* harmony import */ var litepicker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! litepicker */ "./node_modules/litepicker/dist/litepicker.umd.js");
 /* harmony import */ var litepicker__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(litepicker__WEBPACK_IMPORTED_MODULE_7__);
@@ -1469,7 +1466,6 @@ var splitPolicy = false; //Whether to split to policy into infection route preve
 var currentLeftAppPercentage = "100"; //How many people have the app
 
 var currentRightAppPercentage = "100";
-var sortBy = "Tree size";
 function createSidePanel(repTreesData) {
   createSelectors(repTreesData);
   createCalendar();
@@ -1486,14 +1482,13 @@ function createSelectors(repTreesData) {
   if (_index__WEBPACK_IMPORTED_MODULE_2__.policyDataPresent) {
     createPolicySelectors(selectorDiv);
     createAppPercentageSelectors(selectorDiv);
-  } // createSortOptions(selectorDiv);
-
+  }
 
   createRecalculateButton(selectorDiv);
 }
 
 function createDistanceSlider(selectorDiv, repTreesData) {
-  createSlider(selectorDiv, "DistanceSlider", "Rt tree distance", 0, 99, _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.initEditDistanceSliderVal);
+  createSlider(selectorDiv, "DistanceSlider", "Maximal Rt distance in cluster", 0, 99, _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.initEditDistanceSliderVal);
   d3__WEBPACK_IMPORTED_MODULE_0__.select("#DistanceSlider").on("input", function () {
     _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.currentEditDistance = parseInt(this.value); //keep the value up to date
 
@@ -1799,7 +1794,7 @@ function createDistributionChartPanel() {
   var distributionDiv = d3__WEBPACK_IMPORTED_MODULE_0__.select("#sidePanel").append("div").attr("id", "distributionChartPanel").attr("class", "distributionChartPanel SidePanelPanelDiv");
   distributionDiv.append("p").attr("class", "title text").text("Distribution of properties");
   createDistributionChartSelectors(distributionDiv);
-  (0,_BarChart__WEBPACK_IMPORTED_MODULE_5__.createComponentBarChart)(distributionDiv);
+  (0,_ComponentBarChart__WEBPACK_IMPORTED_MODULE_5__.createComponentBarChart)(distributionDiv);
 }
 
 function createDistributionChartSelectors(divToAddTo) {
@@ -1828,7 +1823,7 @@ function createDistributionChartSelectors(divToAddTo) {
           _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.currentLeftDistributionSelection.push("All");
         } else {
           //take only the number. Represent as int for ease of manipulation later
-          _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.currentLeftDistributionSelection.push(parseInt(option.value.split(" ")[1]));
+          _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.currentLeftDistributionSelection.push("" + parseInt(option.value.split(" ")[1]));
         }
       }
     } catch (err) {
@@ -1854,7 +1849,7 @@ function createDistributionChartSelectors(divToAddTo) {
           _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.currentRightDistributionSelection.push("All");
         } else {
           //take only the number. Represent as int for ease of manipulation later
-          _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.currentRightDistributionSelection.push(parseInt(option.value.split(" ")[1]));
+          _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.currentRightDistributionSelection.push("" + parseInt(option.value.split(" ")[1]));
         }
       }
     } catch (err) {
@@ -1872,9 +1867,9 @@ function createDistributionChartSelectors(divToAddTo) {
   };
 
   var comboBoxDiv = divToAddTo.append("div").attr("class", "comboBoxesDiv");
-  createComboBox(comboBoxDiv, "levelComboBox", comboOptions, sortBy, selectLeftLevelFunction, false);
+  createComboBox(comboBoxDiv, "levelComboBox", comboOptions, "All", selectLeftLevelFunction, false);
   createCheckBox(comboBoxDiv, "normalizeCheckbox", false, normalizeCheckBoxFunction, "Normalized");
-  createComboBox(comboBoxDiv, "levelComboBox", comboOptions, sortBy, selectRightLevelFunction, false);
+  createComboBox(comboBoxDiv, "levelComboBox", comboOptions, "All", selectRightLevelFunction, false);
 }
 
 function createLeftRightSubtitles(sidePanelDiv, title) {
@@ -1904,7 +1899,7 @@ function createComboBox(divToAppendTo, id, valueList, initVal, changeFunction, m
   }).attr("value", function (d) {
     return d.NAME;
   }).property("selected", function (d) {
-    return d.NAME === initVal;
+    return d.NAME == initVal;
   }); //set default value
   //attach the change function
 
@@ -2124,7 +2119,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _LineChart__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./LineChart */ "./src/LineChart.ts");
 /* harmony import */ var _vizVariables__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./vizVariables */ "./src/vizVariables.ts");
 /* harmony import */ var _sidePanel__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./sidePanel */ "./src/sidePanel.ts");
-/* harmony import */ var _BarChart__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./BarChart */ "./src/BarChart.ts");
+/* harmony import */ var _ComponentBarChart__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ComponentBarChart */ "./src/ComponentBarChart.ts");
 /* harmony import */ var _GridMap__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./GridMap */ "./src/GridMap.ts");
 /* harmony import */ var _representativeGraph__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./representativeGraph */ "./src/representativeGraph.ts");
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
@@ -2250,7 +2245,7 @@ function updateGlobalChart() {
   //TODO: Not optimized at all, but works
   var distributionDiv = d3__WEBPACK_IMPORTED_MODULE_0__.select("#sidePanel").select("#distributionChartPanel");
   distributionDiv.select(".barChartsContainer").remove();
-  (0,_BarChart__WEBPACK_IMPORTED_MODULE_7__.createComponentBarChart)(distributionDiv);
+  (0,_ComponentBarChart__WEBPACK_IMPORTED_MODULE_7__.createComponentBarChart)(distributionDiv);
 }
 
 function changeNoLongerPending() {
@@ -2332,7 +2327,7 @@ var vars = /*#__PURE__*/_createClass(function vars() {
   _classCallCheck(this, vars);
 });
 
-_defineProperty(vars, "initEditDistanceSliderVal", 15);
+_defineProperty(vars, "initEditDistanceSliderVal", 6);
 
 _defineProperty(vars, "currentEditDistance", vars.initEditDistanceSliderVal);
 

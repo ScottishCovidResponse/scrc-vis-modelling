@@ -75,10 +75,11 @@ Css code for the visualization of the trees
     /*visible*/
 }
 
-.popupFrame {
+#popup {
+    position: absolute;
     stroke-width: 2;
     stroke: black;
-    fill: white;
+    background: lightblue;
 }
 
 .nodeText .textRepAmount {

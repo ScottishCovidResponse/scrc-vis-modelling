@@ -18,7 +18,7 @@ export function initSingleTree(divToAddTo: d3.Selection<d3.BaseType, unknown, HT
     let scaleFactor = 1;
     let repAmount = 0;
     if (isRepTree) {
-        repAmount = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
+        repAmount = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance);
         scaleFactor = getScaleFactorByRepAmount(repAmount);
     }
 
@@ -96,7 +96,7 @@ export function updateTree(treeSvgDiv: d3.Selection<d3.BaseType, unknown, HTMLEl
     let repAmount: number = null;
     let scaleFactor = 1;
     if (isRepTree) {
-        repAmount = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
+        repAmount = getAmountOfTreesRepresentedById(treeId, vars.currentEditDistance);
         scaleFactor = getScaleFactorByRepAmount(repAmount);
     }
 

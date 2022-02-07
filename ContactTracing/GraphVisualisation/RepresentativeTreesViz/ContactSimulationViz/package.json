@@ -23,6 +23,7 @@
         "@babel/preset-env": "^7.16.7",
         "babel-loader": "^8.2.3",
         "d3": "^7.3.0",
-        "litepicker": "^2.0.12"
+        "litepicker": "^2.0.12",
+        "regenerator-runtime": "^0.13.9"
     }
 }

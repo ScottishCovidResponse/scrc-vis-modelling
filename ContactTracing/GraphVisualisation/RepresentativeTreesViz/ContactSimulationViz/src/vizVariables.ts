@@ -36,7 +36,7 @@ export class vars {
 
     //Visual variables
     //Variables for the tree visualization
-    public static nodeBaseSize = 8; //radius of the node
+    public static nodeBaseSize = 5; //radius of the node
     public static linkBaseSize = this.nodeBaseSize / 2; //Width of links
     public static verNodeSpace = this.nodeBaseSize * 2 + 3; //vertical space between nodes
     public static horNodeSpace = this.nodeBaseSize * 2 + 2; //horitonzal space between nodes

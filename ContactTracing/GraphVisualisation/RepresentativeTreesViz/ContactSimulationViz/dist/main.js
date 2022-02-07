@@ -252,6 +252,539 @@ function createBarChart(gElement, totalHeight, dataValues, colors, sum) {
 
 /***/ }),
 
+/***/ "./src/DensityPlot.ts":
+/*!****************************!*\
+  !*** ./src/DensityPlot.ts ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "makeRtPlot": () => (/* binding */ makeRtPlot)
+/* harmony export */ });
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+
+//Needed for generator functions. 
+//Paper for the algorithm of calculating it: Visualizing a million time series with the density line chart
+//Original github: //https://github.com/domoritz/line-density
+//Used code from https://observablehq.com/@twitter/time-series-density-plot
+function makeRtPlot(divToAddTo, rtValues, width, height) {
+  //Delete the previous
+  d3__WEBPACK_IMPORTED_MODULE_0__.select("#canvasContainer").remove();
+  var maxX = getReasonableMaxXValue(rtValues); //trim data series to the maximal length
+
+  for (var i in rtValues) {
+    var rtPerTimeStep = rtValues[i];
+    var trimmedArray = rtPerTimeStep.slice(0, maxX);
+    rtValues[i] = trimmedArray;
+  }
+
+  var density = seriesDensity(width, height); // .yDomain([0, maxY]).xDomain(0, maxX)
+
+  var plot = densityPlot(density);
+  var divElement = plot(rtValues);
+  divToAddTo.node().appendChild(divElement);
+}
+
+function getReasonableMaxXValue(rtValues) {
+  var lengthCount = [];
+
+  var _iterator = _createForOfIteratorHelper(rtValues),
+      _step;
+
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var valueArray = _step.value;
+
+      for (var _i in valueArray) {
+        if (lengthCount[_i] == undefined) {
+          lengthCount[_i] = 0;
+        }
+
+        if (valueArray[_i] != 0) {
+          lengthCount[_i] = lengthCount[_i] + 1;
+        }
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+
+  var lastNonZeroI = 0;
+  var zeroCount = 0;
+
+  for (var i in lengthCount) {
+    var val = lengthCount[i];
+
+    if (val == 0) {
+      zeroCount++;
+    } else {
+      zeroCount = 0;
+      lastNonZeroI = parseInt(i);
+    } //encountering too many zero's. Cut it off here as this is a data error.
+
+
+    if (zeroCount > 5 && lastNonZeroI != 0) {
+      return lastNonZeroI;
+    }
+  }
+
+  return lastNonZeroI;
+}
+
+function seriesDensity(xBins, yBins) {
+  var x0 = function x0(d) {
+    return d.x0 || 0;
+  },
+      ys = function ys(d) {
+    return d;
+  },
+      xDomain,
+      yDomain,
+      arcLengthNormalize = true;
+
+  var ret = function ret(data) {
+    if (!Number.isInteger(xBins)) throw new Error("xBins must be an integer (got ".concat(xBins, ")"));
+    if (!Number.isInteger(yBins)) throw new Error("yBins must be an integer (got ".concat(yBins, ")"));
+    if (!xBins || !yBins) throw new Error("computing density requires nonzero values for both xBins and yBins.");
+    return renderSeries(data, ret.options(data));
+  };
+
+  ret.options = function (data) {
+    return {
+      xBins: xBins,
+      yBins: yBins,
+      x0: x0,
+      ys: ys,
+      xDomain: xDomain || ret.defaultXDomain(data),
+      yDomain: yDomain || ret.defaultYDomain(data),
+      arcLengthNormalize: arcLengthNormalize
+    };
+  };
+
+  ret.xBins = function (_) {
+    return arguments.length ? (xBins = _, ret) : xBins;
+  };
+
+  ret.yBins = function (_) {
+    return arguments.length ? (yBins = _, ret) : yBins;
+  };
+
+  ret.x0 = function (_) {
+    return arguments.length ? (x0 = _, ret) : x0;
+  };
+
+  ret.ys = function (_) {
+    return arguments.length ? (ys = _, ret) : ys;
+  };
+
+  ret.xDomain = function (_) {
+    return arguments.length ? (xDomain = _, ret) : xDomain;
+  };
+
+  ret.yDomain = function (_) {
+    return arguments.length ? (yDomain = _, ret) : yDomain;
+  };
+
+  ret.arcLengthNormalize = function (_) {
+    return arguments.length ? (arcLengthNormalize = _, ret) : arcLengthNormalize;
+  }; // optimization opportunity: compute the extents in one pass
+
+
+  ret.defaultXDomain = function (data) {
+    return [d3__WEBPACK_IMPORTED_MODULE_0__.min(data, x0), d3__WEBPACK_IMPORTED_MODULE_0__.max(data, function (series, i, a) {
+      return x0(series, i, a) + ys(series, i, a).length;
+    }) - 1];
+  };
+
+  ret.defaultYDomain = function (data) {
+    return [d3__WEBPACK_IMPORTED_MODULE_0__.min(data, function (series) {
+      return d3__WEBPACK_IMPORTED_MODULE_0__.min(ys(series));
+    }), d3__WEBPACK_IMPORTED_MODULE_0__.max(data, function (series) {
+      return d3__WEBPACK_IMPORTED_MODULE_0__.max(ys(series));
+    })];
+  };
+
+  ret.copy = function (_) {
+    return seriesDensity(xBins, yBins).x0(x0).ys(ys).xDomain(xDomain).yDomain(yDomain).arcLengthNormalize(arcLengthNormalize);
+  };
+
+  return ret;
+} // high-level convenience for rendering a plot, canvas with axes
+
+
+function densityPlot(density) {
+  var interpolator = cacheInterpolator(d3__WEBPACK_IMPORTED_MODULE_0__.interpolateViridis);
+
+  var color = function color(buf) {
+    return d3__WEBPACK_IMPORTED_MODULE_0__.scaleSequential(d3__WEBPACK_IMPORTED_MODULE_0__.extent(buf), interpolator);
+  };
+
+  var background = "white";
+  var drawAxes = true;
+  var xAxisScale, yAxisScale;
+
+  var ret = function ret() {
+    // note: margins take up extra space, in addition to width and height.
+    var margin = {
+      left: 30,
+      top: 5,
+      right: 0,
+      bottom: 25
+    };
+    var dense = density.copy();
+    var xBins = dense.xBins();
+    var yBins = dense.yBins();
+    var width = xBins,
+        height = yBins;
+
+    if (drawAxes) {
+      // this isn't great, but we need to do this so that everything still fits on screen.
+      // The optional preserveCanvasSize option will prevent the canvas from being resized, so that
+      // `size` will refer to canvas size rather than the total size take by the chart.
+      if (!drawAxes.preserveCanvasSize) {
+        width = width - margin.left - margin.right;
+        height = height - margin.top - margin.bottom;
+      }
+    }
+
+    var canvas = d3__WEBPACK_IMPORTED_MODULE_0__.create("canvas").node(); // let canvas = document.getElementById("canvasTest");
+
+    canvas.setAttribute("width", xBins);
+    canvas.setAttribute("height", yBins);
+    var ctx = canvas.getContext('2d');
+    canvas.style.width = "".concat(width, "px");
+    canvas.style.height = "".concat(height, "px");
+    canvas.style.imageRendering = 'pixelated';
+    ctx.imageSmoothingEnabled = false;
+    var container = d3__WEBPACK_IMPORTED_MODULE_0__.create('div').attr("id", "canvasContainer"); // We need to know the x and y extents in order to draw axes.
+    // If none were passed, compute them, and set them explicitly
+    // on our copy of `density` to avoid recomputing them later.
+
+    for (var _len = arguments.length, data = new Array(_len), _key = 0; _key < _len; _key++) {
+      data[_key] = arguments[_key];
+    }
+
+    if (!dense.xDomain()) {
+      var domains = data.map(function (data) {
+        return dense.defaultXDomain(data);
+      });
+      dense.xDomain([d3__WEBPACK_IMPORTED_MODULE_0__.min(domains, function (values) {
+        return d3__WEBPACK_IMPORTED_MODULE_0__.min(values);
+      }), d3__WEBPACK_IMPORTED_MODULE_0__.max(domains, function (values) {
+        return d3__WEBPACK_IMPORTED_MODULE_0__.max(values);
+      })]);
+    }
+
+    if (!dense.yDomain()) {
+      var _domains = data.map(function (data) {
+        return dense.defaultYDomain(data);
+      });
+
+      dense.yDomain([d3__WEBPACK_IMPORTED_MODULE_0__.min(_domains, function (values) {
+        return d3__WEBPACK_IMPORTED_MODULE_0__.min(values);
+      }), d3__WEBPACK_IMPORTED_MODULE_0__.max(_domains, function (values) {
+        return d3__WEBPACK_IMPORTED_MODULE_0__.max(values);
+      })]);
+    }
+
+    var xAxisG, yAxisG;
+
+    if (drawAxes) {
+      container.style('position', 'relative').style('width', width + margin.left + margin.right + 'px').style('height', height + margin.bottom + margin.top + 'px');
+      var axesSel = container.append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.bottom + margin.top).style('position', 'absolute').style('z-index', '0').style('overflow', 'visible');
+      xAxisG = axesSel.append('g').attr('transform', "translate(".concat(margin.left, ", ").concat(height + margin.top, ")"));
+      yAxisG = axesSel.append('g').attr('transform', "translate(".concat(margin.left, ", ").concat(margin.top, ")"));
+      ctx.canvas.style.width = width + 'px';
+      ctx.canvas.style.height = height + 'px';
+      d3__WEBPACK_IMPORTED_MODULE_0__.select(container.node().appendChild(ctx.canvas)).style('position', 'absolute').style('z-index', '1').style('left', "".concat(margin.left + 1
+      /* avoid overlapping the vertical y axis line */
+      , "px")).style('top', "".concat(margin.top, "px"));
+    }
+
+    var render = function render(buffers) {
+      if (drawAxes) {
+        xAxisG.call(d3__WEBPACK_IMPORTED_MODULE_0__.axisBottom(xAxisScale ? xAxisScale.copy().range([0, width]) : d3__WEBPACK_IMPORTED_MODULE_0__.scaleLinear(dense.xDomain(), [0, width])));
+        yAxisG.call(d3__WEBPACK_IMPORTED_MODULE_0__.axisLeft(yAxisScale ? yAxisScale.copy().range([height, 0]) : d3__WEBPACK_IMPORTED_MODULE_0__.scaleLinear(dense.yDomain(), [height, 0])));
+      }
+
+      var colorScale = color.apply(void 0, _toConsumableArray(buffers));
+      var values = new Array(buffers.length).fill(0.0); // Determine whether the color scale returns color strings or objects.
+      // If the scale returns objects, it is assumed that they have {r, g, b} properties.
+      // This allows us to avoid the overhead of parsing color strings.
+
+      var colorScaleReturnsString = typeof colorScale.apply(void 0, _toConsumableArray(values)) == 'string'; // Fill the canvas with the background color, or the zero color for the scale
+      // if no background color was specified
+
+      ctx.fillStyle = background || d3__WEBPACK_IMPORTED_MODULE_0__.rgb(colorScale.apply(void 0, _toConsumableArray(values))).toString();
+      ctx.fillRect(0, 0, xBins, yBins);
+      var img = ctx.getImageData(0, 0, xBins, yBins);
+      var imgData = img.data;
+
+      for (var x = 0; x < xBins; x++) {
+        for (var y = 0; y < yBins; y++) {
+          var draw = false; // whether to draw this pixel
+          // plot data is column-major, image data is row-major
+
+          for (var _i2 = 0; _i2 < buffers.length; _i2++) {
+            var value = buffers[_i2][yBins * x + y];
+            values[_i2] = value;
+            if (value) draw = true;
+          }
+
+          if (!draw) continue;
+          var c = colorScaleReturnsString ? d3__WEBPACK_IMPORTED_MODULE_0__.rgb(colorScale.apply(void 0, _toConsumableArray(values))) : colorScale.apply(void 0, _toConsumableArray(values));
+          var i = xBins * y + x;
+          imgData[4 * i] = c.r;
+          imgData[4 * i + 1] = c.g;
+          imgData[4 * i + 2] = c.b;
+          imgData[4 * i + 3] = 255 * c.opacity;
+        }
+      }
+
+      ctx.putImageData(img, 0, 0);
+      var node = drawAxes ? container.node() : ctx.canvas;
+      return node;
+    }; // idea: something with requestAnimationFrame to do the next batch,
+    // making our actual structure push-based...
+
+
+    var update = function update() {
+      for (var _len2 = arguments.length, data = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        data[_key2] = arguments[_key2];
+      }
+
+      var results = Array.from(data, function (data) {
+        return dense(data);
+      });
+      return render(results);
+    };
+
+    return update.apply(void 0, data);
+  }; // can we make the chart once, then incrementally re-render the data?
+  // (keeping the same canvas across datasets)
+
+
+  ret.density = function (_) {
+    return arguments.length ? (density = _, ret) : density;
+  };
+
+  ret.size = function (_) {
+    return arguments.length ? (size = _, ret) : size;
+  };
+
+  ret.color = function (_) {
+    return arguments.length ? (color = _, ret) : color;
+  };
+
+  ret.background = function (_) {
+    return arguments.length ? (background = _, ret) : background;
+  };
+
+  ret.drawAxes = function (_) {
+    return arguments.length ? (drawAxes = _, ret) : drawAxes;
+  };
+
+  ret.xAxisScale = function (_) {
+    return arguments.length ? (xAxisScale = _, ret) : xAxisScale;
+  };
+
+  ret.yAxisScale = function (_) {
+    return arguments.length ? (yAxisScale = _, ret) : yAxisScale;
+  }; // ...
+
+
+  return ret;
+}
+
+function binScale(a, b, nbins) {
+  // Returns a scale function with domain [a, b] and integer output range [0, nbins - 1]
+  // - the number of bins should be a 32-bit integer, since we use | for a fast floor operation.
+  // - d should never be NaN, since the bitwise operation will incorrectly turn it into a zero.
+  var eps = 1e-6; // this factor scales the range [a, b] to [0, nbins - eps]
+
+  var factor = (nbins - eps) / (b - a);
+  return function (d) {
+    return (d - a) * factor | 0;
+  };
+} // bresenham's line algorithm. code adapted from
+// https://observablehq.com/@mbostock/bresenhams-line-algorithm
+// note: this bresenham implementation assumes integer coordinates
+
+
+function plotLine(x0, y0, x1, y1, plot) {
+  if (Math.abs(y1 - y0) < Math.abs(x1 - x0)) {
+    if (x0 > x1) plotLineLow(x1, y1, x0, y0, plot);else plotLineLow(x0, y0, x1, y1, plot);
+  } else {
+    if (y0 > y1) plotLineHigh(x1, y1, x0, y0, plot);else plotLineHigh(x0, y0, x1, y1, plot);
+  }
+}
+
+function plotLineHigh(x0, y0, x1, y1, plot) {
+  var dx = x1 - x0;
+  var dy = y1 - y0;
+  var xi = dx < 0 ? (dx = -dx, -1) : 1;
+  var D = 2 * dx - dy;
+
+  for (var x = x0, y = y0; y <= y1; ++y, D += 2 * dx) {
+    plot(x, y);
+    if (D > 0) x += xi, D -= 2 * dy;
+  }
+}
+
+function plotLineLow(x0, y0, x1, y1, plot) {
+  var dx = x1 - x0;
+  var dy = y1 - y0;
+  var yi = dy < 0 ? (dy = -dy, -1) : 1;
+  var D = 2 * dy - dx;
+
+  for (var x = x0, y = y0; x <= x1; ++x, D += 2 * dy) {
+    plot(x, y);
+    if (D > 0) y += yi, D -= 2 * dx;
+  }
+} // Convenience function to create a cached color interpolator that
+// returns cached rgb objects, avoiding color string parsing.
+
+
+function cacheInterpolator(interpolator) {
+  var n = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 250;
+  return d3__WEBPACK_IMPORTED_MODULE_0__.scaleQuantize(d3__WEBPACK_IMPORTED_MODULE_0__.quantize(function (pc) {
+    return d3__WEBPACK_IMPORTED_MODULE_0__.rgb(interpolator(pc));
+  }, n));
+}
+
+function renderSeries(data, options) {
+  var xBins = options.xBins,
+      yBins = options.yBins,
+      x0 = options.x0,
+      ys = options.ys,
+      xDomain = options.xDomain,
+      yDomain = options.yDomain,
+      normalize = options.normalize; // note: the buffers represent data in column-major order since we sum by column
+
+  var buffer = new Float64Array(xBins * yBins);
+  var tmpBuf = new Int8Array(xBins * yBins);
+  var tmpSums = new Int32Array(xBins); // note: assumes no more than 2.1 billion weight per pixel
+
+  var tmpMinY = new Int32Array(xBins);
+  var tmpMaxY = new Int32Array(xBins);
+  var tmp = {
+    tmpBuf: tmpBuf,
+    tmpSums: tmpSums,
+    tmpMinY: tmpMinY,
+    tmpMaxY: tmpMaxY
+  };
+  var xScale = binScale(xDomain[0], xDomain[1], xBins);
+  var yScale = binScale(yDomain[1], yDomain[0], yBins);
+  var i = 0;
+
+  var _iterator2 = _createForOfIteratorHelper(data),
+      _step2;
+
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var series = _step2.value;
+      renderSingleSeries(x0(series, i, data), ys(series, i, data), options, xScale, yScale, tmp, buffer);
+      i += 1;
+    }
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+
+  return buffer;
+}
+
+function renderSingleSeries(x0, ys, options, xScale, yScale, _ref, ret) {
+  var tmp = _ref.tmpBuf,
+      sums = _ref.tmpSums,
+      minY = _ref.tmpMinY,
+      maxY = _ref.tmpMaxY;
+  var xBins = options.xBins,
+      yBins = options.yBins,
+      arcLengthNormalize = options.arcLengthNormalize;
+  if (ys.length < 2) return ret;
+  var max = Math.max,
+      min = Math.min;
+  var prevX = xScale(x0);
+  var prevY = yScale(ys[0]); // prepare our temporary buffers
+
+  tmp.fill(0);
+  sums.fill(0);
+  minY.fill(yBins - 1);
+  maxY.fill(0); // render all interpolated lines (between adjacent points) to the temp canvas
+  // note: the current bresenham implementation assumes integer coordinates.
+
+  var curInBounds = 0 <= prevX && prevX < xBins && 0 <= prevY && prevY < yBins;
+  var prevInBounds;
+
+  for (var i = 1; i < ys.length; i++) {
+    var curX = xScale(x0 + i);
+    var curY = yScale(ys[i]); // perf todo: this could apply a constant increment?
+    // this bounds check prevents rendering NaN values as well as datapoints out of bounds
+
+    prevInBounds = curInBounds;
+    curInBounds = 0 <= curX && curX < xBins && 0 <= curY && curY < yBins;
+    var inBounds = prevInBounds || curInBounds;
+
+    if (inBounds || nonnegative(prevY) != nonnegative(curY)) {
+      plotLine(prevX, prevY, curX, curY, function (x, y) {
+        // plot only in-bounds pixels
+        if (0 <= x && x < xBins && 0 <= y && y < yBins) {
+          sums[x] += tmp[yBins * x + y] == 0;
+          tmp[yBins * x + y] = 1;
+          minY[x] = min(minY[x], y);
+          maxY[x] = max(maxY[x], y);
+        }
+      });
+    }
+
+    prevX = curX;
+    prevY = curY;
+  } // normalize the temp canvas by column sums and add to ret canvas
+
+
+  for (var x = 0; x < xBins; x++) {
+    var sum = sums[x];
+
+    if (sum > 0) {
+      var scale = arcLengthNormalize ? 1 / sum : 1;
+      var lo = yBins * x + minY[x];
+      var hi = yBins * x + maxY[x] + 1;
+
+      for (var _i3 = lo; _i3 < hi; _i3++) {
+        ret[_i3] += tmp[_i3] * scale;
+      }
+    }
+  }
+
+  return ret;
+}
+
+function nonnegative(x) {
+  x > 0;
+}
+
+/***/ }),
+
 /***/ "./src/GridMap.ts":
 /*!************************!*\
   !*** ./src/GridMap.ts ***!
@@ -719,7 +1252,7 @@ function getTreeHeight(treeNode) {
  */
 
 
-function getAmountOfTreesRepresentedById(id, editDistance, locationToVisualize, startDate, endDate) {
+function getAmountOfTreesRepresentedById(id, editDistance) {
   var repTree = repTreeById.get(id);
 
   if (repTree === undefined) {
@@ -727,14 +1260,14 @@ function getAmountOfTreesRepresentedById(id, editDistance, locationToVisualize, 
     return 1;
   }
 
-  return getTreesRepresentedById(id, editDistance, locationToVisualize, startDate, endDate).length;
+  return getTreesRepresentedById(id, editDistance).length;
 }
 /**
  * Gets the amount of trees represented by the tree with id {@code id} before editdistance {@code editDistance}
  * @param {*} editDistance 
  */
 
-function getTreesRepresentedById(id, editDistance, locationToVisualize, startDate, endDate) {
+function getTreesRepresentedById(id, editDistance) {
   //Need to filter trees differently
   var repTree = repTreeById.get(id);
   var reps = repTree.representations;
@@ -1035,7 +1568,10 @@ var gridNamesInputLocation = "../data/TTPDataUpdated/WalesGridmapCoordinates.csv
 var policyDataPresent = false; //Whether policy data is present
 //End policies
 
-var repTreesData, allTreesData, metaData, gridNames; //load in all the data
+var repTreesData, allTreesData, metaData, gridNames;
+console.log("Testing DensityPlot"); // const testDiv = d3.select("#treeGridDiv");
+// generateDensityPlot(testDiv);
+//load in all the data
 
 d3__WEBPACK_IMPORTED_MODULE_1__.json(repTreesDataInputLocation).then(function (repTreesDataInput) {
   d3__WEBPACK_IMPORTED_MODULE_1__.json(allTreesDataInputLocation).then(function (allTreesDataInput) {
@@ -1311,6 +1847,144 @@ function getPartCounts(id, isRepTree, isLeftChart) {
 
 /***/ }),
 
+/***/ "./src/popup.ts":
+/*!**********************!*\
+  !*** ./src/popup.ts ***!
+  \**********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "showRtOfTreesRepresented": () => (/* binding */ showRtOfTreesRepresented)
+/* harmony export */ });
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
+/* harmony import */ var _dataQueries__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dataQueries */ "./src/dataQueries.ts");
+/* harmony import */ var _DensityPlot__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DensityPlot */ "./src/DensityPlot.ts");
+/* harmony import */ var _representativeGraph__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./representativeGraph */ "./src/representativeGraph.ts");
+/* harmony import */ var _vizVariables__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./vizVariables */ "./src/vizVariables.ts");
+
+
+
+
+
+var popupWidth = 500; //width of the popup when clicking a node to see which trees it represents.
+
+var popupHeight = 200; //height of the popup
+//getting the width of the page
+
+function getPageWidth() {
+  return Math.max(document.body.scrollWidth, document.documentElement.scrollWidth, document.body.offsetWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
+} //getting the height of the page
+
+
+function getPageHeight() {
+  return Math.max(document.body.scrollHeight, document.documentElement.scrollHeight, document.body.offsetHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
+} // let popupVisible = false;
+
+
+function showRtOfTreesRepresented(event, treeRoot) {
+  var id = treeRoot.data.id;
+  var popupDiv = d3__WEBPACK_IMPORTED_MODULE_0__.select("#popup");
+  var x = event.pageX;
+  var y = event.pageY + 20; //put it slightly below
+
+  var pageWidth = getPageWidth();
+  var pageHeight = getPageHeight();
+
+  if (x + popupWidth > pageWidth) {
+    x = pageWidth - popupWidth - 10;
+  }
+
+  if (y + popupHeight > pageHeight) {
+    y = pageHeight - popupHeight - 10;
+  }
+
+  popupDiv.on("click", function () {
+    removePopup();
+  }) //add a removal function
+  .style("left", x + "px").style("top", y + "px").style("width", popupWidth + "px").style("height", popupHeight + "px").style("display", "flex");
+  var treesRepresented = getTreeHierarchiesRepresented(id);
+  var data = [];
+
+  for (var i in treesRepresented) {
+    var tree = treesRepresented[i];
+    var rtDistance = getRtDistance(tree);
+    data[i] = rtDistance;
+  }
+
+  console.log("Might need to fill data");
+  (0,_DensityPlot__WEBPACK_IMPORTED_MODULE_2__.makeRtPlot)(popupDiv, data, popupWidth, popupHeight);
+}
+
+function getDaysPassed(node, rootTime) {
+  var id = node.data.id;
+  var infectionTime = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_1__.getMetaDataValueFromId)("positiveTestTime", id);
+  var timeDiff = infectionTime - rootTime;
+  var daysPassed = Math.round(timeDiff / 60 / 60 / 24); //seconds to days
+
+  return daysPassed;
+}
+
+function getRtDistance(rootNode) {
+  var nodes = rootNode.descendants();
+  var rootId = rootNode.data.id;
+  var rootTime = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_1__.getMetaDataValueFromId)("positiveTestTime", rootId);
+  var nodesInfectedAtDay = [];
+  var childCountOfNodesInfectedAtDay = [];
+  var maxDay = 0;
+
+  for (var i in nodes) {
+    var node = nodes[i];
+    var childCount = 0;
+
+    if (node.children != undefined) {
+      childCount = node.children.length;
+    }
+
+    var daysPassed = getDaysPassed(node, rootTime);
+    maxDay = Math.max(maxDay, daysPassed); //add 1 to the nodesInfectedAtDay
+
+    if (nodesInfectedAtDay[daysPassed] == undefined) {
+      nodesInfectedAtDay[daysPassed] = 0;
+    }
+
+    nodesInfectedAtDay[daysPassed] = nodesInfectedAtDay[daysPassed] + 1; //add childCount to the amount of children
+
+    if (childCountOfNodesInfectedAtDay[daysPassed] == undefined) {
+      childCountOfNodesInfectedAtDay[daysPassed] = 0;
+    }
+
+    childCountOfNodesInfectedAtDay[daysPassed] = childCountOfNodesInfectedAtDay[daysPassed] + childCount;
+  }
+
+  var rtValues = [];
+
+  for (var _i = 0; _i <= maxDay; _i++) {
+    if (nodesInfectedAtDay[_i] == 0 || nodesInfectedAtDay[_i] == undefined) {
+      //prevent divide by 0 errors
+      rtValues[_i] = 0;
+    } else {
+      rtValues[_i] = childCountOfNodesInfectedAtDay[_i] / nodesInfectedAtDay[_i];
+    }
+  }
+
+  return rtValues;
+}
+
+function getTreeHierarchiesRepresented(id) {
+  var treesRepresented = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_1__.getTreesRepresentedById)(id, _vizVariables__WEBPACK_IMPORTED_MODULE_4__.vars.currentEditDistance); //use function from representativeGraph to get the tree layouts
+
+  var treeRoots = (0,_representativeGraph__WEBPACK_IMPORTED_MODULE_3__.getTreeRoots)(treesRepresented);
+  return treeRoots;
+}
+
+function removePopup() {
+  d3__WEBPACK_IMPORTED_MODULE_0__.select("#popup").style("display", "none");
+}
+
+/***/ }),
+
 /***/ "./src/representativeGraph.ts":
 /*!************************************!*\
   !*** ./src/representativeGraph.ts ***!
@@ -1325,8 +1999,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "getTreeRoots": () => (/* binding */ getTreeRoots)
 /* harmony export */ });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/src/index.js");
-/* harmony import */ var _treeLayout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./treeLayout */ "./src/treeLayout.ts");
-/* harmony import */ var _vizVariables__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./vizVariables */ "./src/vizVariables.ts");
+/* harmony import */ var _popup__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./popup */ "./src/popup.ts");
+/* harmony import */ var _treeLayout__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./treeLayout */ "./src/treeLayout.ts");
+/* harmony import */ var _vizVariables__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./vizVariables */ "./src/vizVariables.ts");
+
 
 
  // export var treeBaseWidthById = new Map(); //Base width of the tree by id of the root. Uses nodes of {@code nodeBaseSize} size
@@ -1340,14 +2016,17 @@ function initTreeGrid(repTreesData) {
   var treeRoots = getTreeRoots(repTreesData);
   console.log("Creating a tree for every treeroot");
 
-  for (var i = 0; i < treeRoots.length; i++) {
+  var _loop = function _loop(i) {
     var treeRoot = treeRoots[i];
     var id = treeRoot.data.id;
-    var treeSvg = (0,_treeLayout__WEBPACK_IMPORTED_MODULE_1__.initSingleTree)(treeGridDiv, treeRoot, id, true);
+    var treeSvg = (0,_treeLayout__WEBPACK_IMPORTED_MODULE_2__.initSingleTree)(treeGridDiv, treeRoot, id, true);
     treeSvg.on("click", function (event) {
-      // showTreesRepresented(event, treeRoot) 
-      console.log("Clicking is disabled for now. See comment");
+      (0,_popup__WEBPACK_IMPORTED_MODULE_1__.showRtOfTreesRepresented)(event, treeRoot);
     }); //TODO: Change click function to work on all of svg, not just nodes.
+  };
+
+  for (var i = 0; i < treeRoots.length; i++) {
+    _loop(i);
   }
 }
 function updateTrees() {
@@ -1355,7 +2034,7 @@ function updateTrees() {
   d3__WEBPACK_IMPORTED_MODULE_0__.select("#treeGridDiv").selectAll(".divsvgtree").each(function (d) {
     //only update trees that are not hidden, don't need to update the rest.
     if (d3__WEBPACK_IMPORTED_MODULE_0__.select(this).classed("hidden") == false) {
-      (0,_treeLayout__WEBPACK_IMPORTED_MODULE_1__.updateTree)(d3__WEBPACK_IMPORTED_MODULE_0__.select(this), true);
+      (0,_treeLayout__WEBPACK_IMPORTED_MODULE_2__.updateTree)(d3__WEBPACK_IMPORTED_MODULE_0__.select(this), true);
     }
   });
 }
@@ -1377,7 +2056,7 @@ function getTreeRoots(treeData) {
 
 function getTree(data) {
   var dataRoot = d3__WEBPACK_IMPORTED_MODULE_0__.hierarchy(data);
-  var treeRoot = d3__WEBPACK_IMPORTED_MODULE_0__.tree().nodeSize([_vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.horNodeSpace, _vizVariables__WEBPACK_IMPORTED_MODULE_2__.vars.verNodeSpace])(dataRoot);
+  var treeRoot = d3__WEBPACK_IMPORTED_MODULE_0__.tree().nodeSize([_vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.horNodeSpace, _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.verNodeSpace])(dataRoot);
   moveTreeToFirstQuadrantAndInvert(treeRoot);
   return treeRoot;
 }
@@ -1974,7 +2653,7 @@ function initSingleTree(divToAddTo, root, treeId, isRepTree) {
   var repAmount = 0;
 
   if (isRepTree) {
-    repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_2__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.endDate);
+    repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_2__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.currentEditDistance);
     scaleFactor = getScaleFactorByRepAmount(repAmount);
   }
 
@@ -2022,7 +2701,7 @@ function updateTree(treeSvgDiv, isRepTree) {
   var scaleFactor = 1;
 
   if (isRepTree) {
-    repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_2__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.endDate);
+    repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_2__.getAmountOfTreesRepresentedById)(treeId, _vizVariables__WEBPACK_IMPORTED_MODULE_1__.vars.currentEditDistance);
     scaleFactor = getScaleFactorByRepAmount(repAmount);
   } //update width and height
 
@@ -2289,7 +2968,7 @@ function getIdsToHide() {
   for (var i = 0; i < _index__WEBPACK_IMPORTED_MODULE_1__.repTreesData.length; i++) {
     var repData = _index__WEBPACK_IMPORTED_MODULE_1__.repTreesData[i];
     var id = repData.id;
-    var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_3__.getAmountOfTreesRepresentedById)(id, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.locationToVisualize, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.startDate, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.endDate);
+    var repAmount = (0,_dataQueries__WEBPACK_IMPORTED_MODULE_3__.getAmountOfTreesRepresentedById)(id, _vizVariables__WEBPACK_IMPORTED_MODULE_5__.vars.currentEditDistance);
 
     if (repAmount == 0) {
       idsToHide.push(id);
@@ -2361,7 +3040,7 @@ _defineProperty(vars, "startDate", 1622505600);
 
 _defineProperty(vars, "endDate", 1638316800);
 
-_defineProperty(vars, "nodeBaseSize", 8);
+_defineProperty(vars, "nodeBaseSize", 5);
 
 _defineProperty(vars, "linkBaseSize", vars.nodeBaseSize / 2);
 

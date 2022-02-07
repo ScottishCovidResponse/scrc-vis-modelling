@@ -131,7 +131,7 @@ function getIdsToHide() {
         const repData = repTreesData[i];
         let id = repData.id;
 
-        let repAmount = getAmountOfTreesRepresentedById(id, vars.currentEditDistance, vars.locationToVisualize, vars.startDate, vars.endDate);
+        let repAmount = getAmountOfTreesRepresentedById(id, vars.currentEditDistance);
         if (repAmount == 0) {
             idsToHide.push(id);
         }

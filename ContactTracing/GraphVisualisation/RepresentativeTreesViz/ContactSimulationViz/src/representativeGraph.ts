@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { showRtOfTreesRepresented } from './popup';
 import { initSingleTree, updateTree } from './treeLayout';
 import { vars } from './vizVariables';
 
@@ -21,9 +22,7 @@ export function initTreeGrid(repTreesData) {
 
         const treeSvg = initSingleTree(treeGridDiv, treeRoot, id, true);
         treeSvg.on("click", function (event) {
-            // showTreesRepresented(event, treeRoot) 
-            console.log("Clicking is disabled for now. See comment")
-
+            showRtOfTreesRepresented(event, treeRoot) 
         }) //TODO: Change click function to work on all of svg, not just nodes.
 
     }

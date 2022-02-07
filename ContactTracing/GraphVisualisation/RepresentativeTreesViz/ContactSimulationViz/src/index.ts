@@ -6,6 +6,7 @@ import { initTreeGrid } from "./representativeGraph";
 import { updateAll } from "./updateFunctions";
 import { noneColorScheme } from './ColorSchemes';
 import { vars } from "./vizVariables";
+import { generateDensityPlot } from "./DensityPlot.ts";
 
 
 const repTreesDataInputLocation = "../data/TTPDataUpdated/RepTrees.json";
@@ -21,8 +22,12 @@ const gridNamesInputLocation = "../data/TTPDataUpdated/WalesGridmapCoordinates.c
 export let policyDataPresent = false; //Whether policy data is present
 
 //End policies
-export let repTreesData, allTreesData, metaData, gridNames:string[][];
+export let repTreesData, allTreesData, metaData, gridNames: string[][];
 
+console.log("Testing DensityPlot");
+
+// const testDiv = d3.select("#treeGridDiv");
+// generateDensityPlot(testDiv);
 
 //load in all the data
 d3.json(repTreesDataInputLocation).then(function (repTreesDataInput) {
@@ -40,7 +45,7 @@ d3.json(repTreesDataInputLocation).then(function (repTreesDataInput) {
                     const repTree = repTreesData[i];
                     if (repTree.maxEditDistance > 0) {
                         // if (repTree.children.length != 0) { //Speedup option
-                            repTreesDataFiltered.push(repTree);
+                        repTreesDataFiltered.push(repTree);
                         // }
                     }
                 }

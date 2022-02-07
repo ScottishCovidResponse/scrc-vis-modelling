@@ -115,21 +115,21 @@ function getTreeHeight(treeNode) {
  * @param {*} editDistance 
  * @param {Which location we are visualizing} locationToVisualize
  */
-export function getAmountOfTreesRepresentedById(id: number, editDistance: number, locationToVisualize: String, startDate: number, endDate: number) {
+export function getAmountOfTreesRepresentedById(id: number, editDistance: number) {
 
     const repTree = repTreeById.get(id);
     if (repTree === undefined) { //Occurs when looking at Alltrees which do not have representations
         return 1;
     }
 
-    return getTreesRepresentedById(id, editDistance, locationToVisualize, startDate, endDate).length;
+    return getTreesRepresentedById(id, editDistance).length;
 }
 
 /**
  * Gets the amount of trees represented by the tree with id {@code id} before editdistance {@code editDistance}
  * @param {*} editDistance 
  */
-export function getTreesRepresentedById(id: number, editDistance: number, locationToVisualize: String, startDate: number, endDate: number) {
+export function getTreesRepresentedById(id: number, editDistance: number) {
     //Need to filter trees differently
 
     const repTree = repTreeById.get(id);

@@ -3,16 +3,17 @@ import * as d3 from 'd3';
 
 const treesPerSize: number[] = []; //for each R_t value (represented by the index), holds how many trees there are
 
+console.error("Manually setting maximum edit distance, should be done automatically")
 export function createScentedRtLineChart(chartDiv: d3.Selection<d3.BaseType, unknown, HTMLElement, undefined>, scentIndex: number, repTreesData) {
 
     console.log("For both the widget and the selector, automatically select maximum interesting edit distance")
 
-    for (let i = 0; i <= 100; i++) {
+    for (let i = 0; i <= 10; i++) {
         treesPerSize[i] = 0;
     }
 
     for (let treeI = 0; treeI < repTreesData.length; treeI++) {
-        let maxDis = repTreesData[treeI].maxEditDistance;
+        let maxDis = Math.min(10,repTreesData[treeI].maxEditDistance);
         //tree exists up to and includinc maxEditDistance. Add 1 to all values below
         for (let i = 0; i <= maxDis; i++) {
             treesPerSize[i] = treesPerSize[i] + 1;
@@ -26,7 +27,7 @@ export function createScentedRtLineChart(chartDiv: d3.Selection<d3.BaseType, unk
         .attr("class", "LineChart")
         .style("margin-left", "12.5px")
 
-    createLineChart(lineChartDiv, width, height, treesPerSize, scentIndex);
+    createLineChart(lineChartDiv, width, height, treesPerSize, scentIndex+1);
 }
 
 

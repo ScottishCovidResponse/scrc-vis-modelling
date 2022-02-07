@@ -18,7 +18,7 @@ export function makeRtPlot(divToAddTo: d3.Selection<d3.BaseType, unknown, HTMLEl
     for(let i in rtValues)
     {
         let rtPerTimeStep = rtValues[i];
-        let trimmedArray = rtPerTimeStep.slice(0,maxX);
+        let trimmedArray = rtPerTimeStep.slice(0,maxX+1);
 
         rtValues[i] = trimmedArray;
     }
@@ -128,7 +128,7 @@ function seriesDensity(xBins: number, yBins: number) {
         1
     ];
     ret.defaultYDomain = (data: number[]) => [
-        d3.min(data, series => d3.min(ys(series))),
+       -1,// d3.min(data, series => d3.min(ys(series))),
         d3.max(data, series => d3.max(ys(series)))
     ];
     ret.copy = function (_) {
@@ -144,7 +144,15 @@ function seriesDensity(xBins: number, yBins: number) {
 
 // high-level convenience for rendering a plot, canvas with axes
 function densityPlot(density) {
-    let interpolator = cacheInterpolator(d3.interpolateViridis);
+
+    //interpolate but use the higher values or oranges
+    function interpolateHighOranges(value: number){
+        let offset = 0.4;
+        let val = offset+value/offset;
+        return d3.interpolateOranges(val)
+    }
+
+    let interpolator = cacheInterpolator(interpolateHighOranges);
     let color = buf => d3.scaleSequential(d3.extent(buf), interpolator);
     let background = "white";
     let drawAxes = true;
@@ -182,8 +190,8 @@ function densityPlot(density) {
         let ctx = canvas.getContext('2d');
         canvas.style.width = `${width}px`;
         canvas.style.height = `${height}px`;
-        canvas.style.imageRendering = 'pixelated';
-        ctx.imageSmoothingEnabled = false;
+        // canvas.style.imageRendering = 'pixelated'; //No idea why this was in here, likely for truly large data, not needed in our case
+        // ctx.imageSmoothingEnabled = false;
 
         let container = d3.create('div').attr("id", "canvasContainer");
 

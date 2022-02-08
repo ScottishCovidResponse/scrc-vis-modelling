@@ -144,9 +144,9 @@ export function getTreesRepresentedById(id: number, editDistance: number) {
         if ((repDistData.editDistance) <= editDistance) { //This tree is represented at this distance
             for (let repTreeId of repDistData.representationIds) {
                 let representedTree = allTreeById.get(repTreeId);
-                // if (isTreeFiltered(representedTree) == false) {
+                if (isTreeFiltered(representedTree) == false) {
                     repTreeIds.push(repTreeId);
-                // }
+                }
             }
         }
     }

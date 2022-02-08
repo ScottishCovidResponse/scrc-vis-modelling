@@ -37,6 +37,8 @@ d3.json(repTreesDataInputLocation).then(function (repTreesDataInput) {
                 repTreesData = repTreesDataInput;
                 allTreesData = allTreesDataInput;
                 metaData = metaDataInput;
+                gridNames = d3.csvParseRows(gridNamesInput)
+
 
                 //Shouldn't be neededm but keeping it in for now due to time-constraints
                 console.log("Reptrees of maxeditdistance = 0 are included. Need to remove those from data in earlier phase.")
@@ -58,7 +60,6 @@ d3.json(repTreesDataInputLocation).then(function (repTreesDataInput) {
 
                 preprocessData(repTreesData, allTreesData, metaData);
 
-                gridNames = d3.csvParseRows(gridNamesInput)
 
                 if ("policies" in metaData[0]) {
                     policyDataPresent = true;

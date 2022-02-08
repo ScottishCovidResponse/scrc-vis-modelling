@@ -116,7 +116,9 @@ function getTreeHeight(treeNode) {
  * @param {Which location we are visualizing} locationToVisualize
  */
 export function getAmountOfTreesRepresentedById(id: number, editDistance: number) {
-
+    if (id == 688153) {
+        console.log(id);
+    }
     const repTree = repTreeById.get(id);
     if (repTree === undefined) { //Occurs when looking at Alltrees which do not have representations
         return 1;
@@ -125,6 +127,8 @@ export function getAmountOfTreesRepresentedById(id: number, editDistance: number
     return getTreesRepresentedById(id, editDistance).length;
 }
 
+console.error("Off by one error in the represenations of Rt distances, function below has it manually adjaced")
+
 /**
  * Gets the amount of trees represented by the tree with id {@code id} before editdistance {@code editDistance}
  * @param {*} editDistance 
@@ -132,17 +136,22 @@ export function getAmountOfTreesRepresentedById(id: number, editDistance: number
 export function getTreesRepresentedById(id: number, editDistance: number) {
     //Need to filter trees differently
 
+    if (id == 436387) {
+        console.log(id);
+    }
+
     const repTree = repTreeById.get(id);
     let reps = repTree.representations;
 
-    if (repTree.maxEditDistance <= editDistance) {//This tree is no longer represented
+    //There is an off
+    if ((repTree.maxEditDistance) <= editDistance) {//This tree is no longer represented
         return [];
     }
 
     //First gather all the trees represented by this tree.
     let repTreeIds = [];
     for (let repDistData of reps) {//go through the various edit distances
-        if (repDistData.editDistance <= editDistance) { //This tree is represented at this distance
+        if ((repDistData.editDistance) <= editDistance) { //This tree is represented at this distance
             for (let repTreeId of repDistData.representationIds) {
                 let representedTree = allTreeById.get(repTreeId);
                 if (isTreeFiltered(representedTree) == false) {
@@ -314,7 +323,7 @@ export function getNodes(rootNode) {
 }
 
 
-export function getNodeFromTree(rootNode, nodeId:number) {
+export function getNodeFromTree(rootNode, nodeId: number) {
     const nodes = getNodes(rootNode);
     for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i];

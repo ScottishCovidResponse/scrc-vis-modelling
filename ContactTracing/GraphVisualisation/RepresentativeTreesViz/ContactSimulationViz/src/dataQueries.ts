@@ -124,7 +124,6 @@ export function getAmountOfTreesRepresentedById(id: number, editDistance: number
     return getTreesRepresentedById(id, editDistance).length;
 }
 
-console.error("Off by one error in the represenations of Rt distances, function below has it manually adjaced")
 
 /**
  * Gets the amount of trees represented by the tree with id {@code id} before editdistance {@code editDistance}

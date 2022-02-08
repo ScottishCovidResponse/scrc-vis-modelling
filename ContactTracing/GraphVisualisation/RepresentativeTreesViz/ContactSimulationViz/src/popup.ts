@@ -57,9 +57,12 @@ export function showRtOfTreesRepresented(event, treeRoot) {
         .style("top", y + "px")
         .style("width", popupWidth + "px")
         .style("height", popupHeight + "px")
-        .style("display","flex")
+        .style("display", "flex")
 
     const treesRepresented = getTreeHierarchiesRepresented(id);
+
+    //note: The clusters are calculated on 7 day average RT, but this does not make as much sense for the Viz to display
+    //as a single infection will result in a flat line for 7 days in the smaller trees.
 
     let data: number[][] = [];
     for (let i in treesRepresented) {
@@ -70,7 +73,7 @@ export function showRtOfTreesRepresented(event, treeRoot) {
 
     console.log("Might need to fill data")
 
-    makeRtPlot(popupDiv, data,popupWidth,popupHeight)
+    makeRtPlot(popupDiv, data, popupWidth, popupHeight)
 }
 
 function getDaysPassed(node: d3.HierarchyNode<unknown>, rootTime: number): number {
@@ -79,6 +82,27 @@ function getDaysPassed(node: d3.HierarchyNode<unknown>, rootTime: number): numbe
     let timeDiff = infectionTime - rootTime;
     let daysPassed = Math.round(timeDiff / 60 / 60 / 24);//seconds to days
     return daysPassed;
+}
+
+/**
+ * Gets the 7day running average of the rt distance
+ * @param rootNode 
+ */
+function getAverageRtDistance(rootNode: d3.HierarchyNode<unknown>): number[] {
+    let rtValues = getRtDistance(rootNode);
+    let rt7StepAverage = [];
+    for (let i = 0; i < rtValues.length; i++) {
+        let sum = 0;
+        for (let j = 0; j < 7; j++) {
+            let val = rtValues[i+j];
+            if (val != undefined) {
+                sum += val;
+            }
+        }
+        rt7StepAverage[i] = sum/7;
+    }
+
+    return rt7StepAverage;
 }
 
 function getRtDistance(rootNode: d3.HierarchyNode<unknown>): number[] {

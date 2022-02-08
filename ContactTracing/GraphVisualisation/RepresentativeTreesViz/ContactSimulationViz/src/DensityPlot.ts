@@ -22,7 +22,7 @@ export function makeRtPlot(divToAddTo: d3.Selection<d3.BaseType, unknown, HTMLEl
 
         rtValues[i] = trimmedArray;
     }
-
+    
 
     let density = seriesDensity(width, height)
     // .yDomain([0, maxY]).xDomain(0, maxX)
@@ -64,7 +64,8 @@ function getReasonableMaxXValue(rtValues: number[][]): number {
             return lastNonZeroI;
         }
     }
-    return lastNonZeroI;
+    //Return one later so the line goes back to zero, but don't go overlength
+    return Math.min(lastNonZeroI+1,lengthCount.length);
 }
 
 
@@ -128,7 +129,7 @@ function seriesDensity(xBins: number, yBins: number) {
         1
     ];
     ret.defaultYDomain = (data: number[]) => [
-       -1,// d3.min(data, series => d3.min(ys(series))),
+       0,// d3.min(data, series => d3.min(ys(series))),
         d3.max(data, series => d3.max(ys(series)))
     ];
     ret.copy = function (_) {

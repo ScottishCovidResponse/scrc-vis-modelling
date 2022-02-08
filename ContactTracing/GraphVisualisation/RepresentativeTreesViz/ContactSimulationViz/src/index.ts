@@ -9,10 +9,10 @@ import { vars } from "./vizVariables";
 import { generateDensityPlot } from "./DensityPlot.ts";
 
 
-const repTreesDataInputLocation = "../data/TTPDataUpdated/RepTrees.json";
-const allTreesDataInputLocation = "../data/TTPDataUpdated/AllTrees.json";
-const metaDataInputLocation = "../data/TTPDataUpdated/NodesAndMeta.json";
-const gridNamesInputLocation = "../data/TTPDataUpdated/WalesGridmapCoordinates.csv";
+const repTreesDataInputLocation = "../data/TTPData08-02Update/RepTrees.json";
+const allTreesDataInputLocation = "../data/TTPData08-02Update/AllTrees.json";
+const metaDataInputLocation = "../data/TTPData08-02Update/NodesAndMeta.json";
+const gridNamesInputLocation = "../data/TTPData08-02Update/WalesGridmapCoordinates.csv";
 
 
 

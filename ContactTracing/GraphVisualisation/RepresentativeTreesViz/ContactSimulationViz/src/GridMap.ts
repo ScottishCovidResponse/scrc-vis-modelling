@@ -41,12 +41,15 @@ export function initGridMap(gridNames: string[][]) {
                 gridToSvgMap.set(name, topSquareGroupSvg);
 
                 topSquareGroupSvg.on("click", function () {
+                    //turn all selections off
+                    gridMapGrid.selectAll("g").selectAll("rect").classed("selectedRectangle", false)
+
+                    //update selection
                     if (vars.locationToVisualize != name) {
                         vars.locationToVisualize = name;
                         d3.select(this).select("rect").classed("selectedRectangle", true)
                     } else {//clicked on it while active, disable
                         vars.locationToVisualize = "All";
-                        d3.select(this).select("rect").classed("selectedRectangle", false);
                     }
                     changePending();
                 })

@@ -290,7 +290,7 @@ function makeRtPlot(divToAddTo, rtValues, width, height) {
 
   for (var i in rtValues) {
     var rtPerTimeStep = rtValues[i];
-    var trimmedArray = rtPerTimeStep.slice(0, maxX);
+    var trimmedArray = rtPerTimeStep.slice(0, maxX + 1);
     rtValues[i] = trimmedArray;
   }
 
@@ -344,9 +344,10 @@ function getReasonableMaxXValue(rtValues) {
     if (zeroCount > 5 && lastNonZeroI != 0) {
       return lastNonZeroI;
     }
-  }
+  } //Return one later so the line goes back to zero, but don't go overlength
 
-  return lastNonZeroI;
+
+  return Math.min(lastNonZeroI + 1, lengthCount.length);
 }
 
 function seriesDensity(xBins, yBins) {
@@ -415,9 +416,8 @@ function seriesDensity(xBins, yBins) {
   };
 
   ret.defaultYDomain = function (data) {
-    return [d3__WEBPACK_IMPORTED_MODULE_0__.min(data, function (series) {
-      return d3__WEBPACK_IMPORTED_MODULE_0__.min(ys(series));
-    }), d3__WEBPACK_IMPORTED_MODULE_0__.max(data, function (series) {
+    return [0, // d3.min(data, series => d3.min(ys(series))),
+    d3__WEBPACK_IMPORTED_MODULE_0__.max(data, function (series) {
       return d3__WEBPACK_IMPORTED_MODULE_0__.max(ys(series));
     })];
   };
@@ -431,7 +431,14 @@ function seriesDensity(xBins, yBins) {
 
 
 function densityPlot(density) {
-  var interpolator = cacheInterpolator(d3__WEBPACK_IMPORTED_MODULE_0__.interpolateViridis);
+  //interpolate but use the higher values or oranges
+  function interpolateHighOranges(value) {
+    var offset = 0.4;
+    var val = offset + value / offset;
+    return d3__WEBPACK_IMPORTED_MODULE_0__.interpolateOranges(val);
+  }
+
+  var interpolator = cacheInterpolator(interpolateHighOranges);
 
   var color = function color(buf) {
     return d3__WEBPACK_IMPORTED_MODULE_0__.scaleSequential(d3__WEBPACK_IMPORTED_MODULE_0__.extent(buf), interpolator);
@@ -471,9 +478,9 @@ function densityPlot(density) {
     canvas.setAttribute("height", yBins);
     var ctx = canvas.getContext('2d');
     canvas.style.width = "".concat(width, "px");
-    canvas.style.height = "".concat(height, "px");
-    canvas.style.imageRendering = 'pixelated';
-    ctx.imageSmoothingEnabled = false;
+    canvas.style.height = "".concat(height, "px"); // canvas.style.imageRendering = 'pixelated'; //No idea why this was in here, likely for truly large data, not needed in our case
+    // ctx.imageSmoothingEnabled = false;
+
     var container = d3__WEBPACK_IMPORTED_MODULE_0__.create('div').attr("id", "canvasContainer"); // We need to know the x and y extents in order to draw axes.
     // If none were passed, compute them, and set them explicitly
     // on our copy of `density` to avoid recomputing them later.
@@ -983,15 +990,16 @@ __webpack_require__.r(__webpack_exports__);
 
 var treesPerSize = []; //for each R_t value (represented by the index), holds how many trees there are
 
+console.error("Manually setting maximum edit distance, should be done automatically");
 function createScentedRtLineChart(chartDiv, scentIndex, repTreesData) {
   console.log("For both the widget and the selector, automatically select maximum interesting edit distance");
 
-  for (var i = 0; i <= 100; i++) {
+  for (var i = 0; i <= 10; i++) {
     treesPerSize[i] = 0;
   }
 
   for (var treeI = 0; treeI < repTreesData.length; treeI++) {
-    var maxDis = repTreesData[treeI].maxEditDistance; //tree exists up to and includinc maxEditDistance. Add 1 to all values below
+    var maxDis = Math.min(10, repTreesData[treeI].maxEditDistance); //tree exists up to and includinc maxEditDistance. Add 1 to all values below
 
     for (var _i = 0; _i <= maxDis; _i++) {
       treesPerSize[_i] = treesPerSize[_i] + 1;
@@ -1002,7 +1010,7 @@ function createScentedRtLineChart(chartDiv, scentIndex, repTreesData) {
 
   var height = 20;
   var lineChartDiv = chartDiv.append("div").attr("id", "RtScentedChart").attr("class", "LineChart").style("margin-left", "12.5px");
-  createLineChart(lineChartDiv, width, height, treesPerSize, scentIndex);
+  createLineChart(lineChartDiv, width, height, treesPerSize, scentIndex + 1);
 }
 /**
  * 
@@ -1262,18 +1270,18 @@ function getAmountOfTreesRepresentedById(id, editDistance) {
 
   return getTreesRepresentedById(id, editDistance).length;
 }
+console.error("Off by one error in the represenations of Rt distances, function below has it manually adjaced");
 /**
  * Gets the amount of trees represented by the tree with id {@code id} before editdistance {@code editDistance}
  * @param {*} editDistance 
  */
 
 function getTreesRepresentedById(id, editDistance) {
-  //Need to filter trees differently
   var repTree = repTreeById.get(id);
   var reps = repTree.representations;
 
-  if (repTree.maxEditDistance <= editDistance) {
-    //This tree is no longer represented
+  if (repTree.maxEditDistance < editDistance) {
+    //This tree is no longer represented. Using < as <= as it is represented untill maxEditDistance.
     return [];
   } //First gather all the trees represented by this tree.
 
@@ -1296,11 +1304,9 @@ function getTreesRepresentedById(id, editDistance) {
         try {
           for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
             var repTreeId = _step5.value;
-            var representedTree = allTreeById.get(repTreeId);
+            var representedTree = allTreeById.get(repTreeId); // if (isTreeFiltered(representedTree) == false) {
 
-            if (isTreeFiltered(representedTree) == false) {
-              repTreeIds.push(repTreeId);
-            }
+            repTreeIds.push(repTreeId); // }
           }
         } catch (err) {
           _iterator5.e(err);
@@ -1560,10 +1566,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var repTreesDataInputLocation = "../data/TTPDataUpdated/RepTrees.json";
-var allTreesDataInputLocation = "../data/TTPDataUpdated/AllTrees.json";
-var metaDataInputLocation = "../data/TTPDataUpdated/NodesAndMeta.json";
-var gridNamesInputLocation = "../data/TTPDataUpdated/WalesGridmapCoordinates.csv"; //Policies
+var repTreesDataInputLocation = "../data/TTPData08-02Update/RepTrees.json";
+var allTreesDataInputLocation = "../data/TTPData08-02Update/AllTrees.json";
+var metaDataInputLocation = "../data/TTPData08-02Update/NodesAndMeta.json";
+var gridNamesInputLocation = "../data/TTPData08-02Update/WalesGridmapCoordinates.csv"; //Policies
 
 var policyDataPresent = false; //Whether policy data is present
 //End policies
@@ -1579,7 +1585,8 @@ d3__WEBPACK_IMPORTED_MODULE_1__.json(repTreesDataInputLocation).then(function (r
       d3__WEBPACK_IMPORTED_MODULE_1__.text(gridNamesInputLocation).then(function (gridNamesInput) {
         repTreesData = repTreesDataInput;
         allTreesData = allTreesDataInput;
-        metaData = metaDataInput; //Shouldn't be neededm but keeping it in for now due to time-constraints
+        metaData = metaDataInput;
+        gridNames = d3__WEBPACK_IMPORTED_MODULE_1__.csvParseRows(gridNamesInput); //Shouldn't be neededm but keeping it in for now due to time-constraints
 
         console.log("Reptrees of maxeditdistance = 0 are included. Need to remove those from data in earlier phase.");
         var repTreesDataFiltered = [];
@@ -1598,7 +1605,6 @@ d3__WEBPACK_IMPORTED_MODULE_1__.json(repTreesDataInputLocation).then(function (r
         _vizVariables__WEBPACK_IMPORTED_MODULE_7__.vars.currentLeftColorScheme = _ColorSchemes__WEBPACK_IMPORTED_MODULE_6__.noneColorScheme;
         _vizVariables__WEBPACK_IMPORTED_MODULE_7__.vars.currentRightColorScheme = _ColorSchemes__WEBPACK_IMPORTED_MODULE_6__.noneColorScheme;
         (0,_dataQueries__WEBPACK_IMPORTED_MODULE_0__.preprocessData)(repTreesData, allTreesData, metaData);
-        gridNames = d3__WEBPACK_IMPORTED_MODULE_1__.csvParseRows(gridNamesInput);
 
         if ("policies" in metaData[0]) {
           policyDataPresent = true;
@@ -2167,7 +2173,7 @@ function createSelectors(repTreesData) {
 }
 
 function createDistanceSlider(selectorDiv, repTreesData) {
-  createSlider(selectorDiv, "DistanceSlider", "Maximal Rt distance in cluster", 0, 99, _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.initEditDistanceSliderVal);
+  createSlider(selectorDiv, "DistanceSlider", "Maximal Rt distance in cluster", 0, 10, _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.initEditDistanceSliderVal);
   d3__WEBPACK_IMPORTED_MODULE_0__.select("#DistanceSlider").on("input", function () {
     _vizVariables__WEBPACK_IMPORTED_MODULE_3__.vars.currentEditDistance = parseInt(this.value); //keep the value up to date
 
@@ -3006,7 +3012,7 @@ var vars = /*#__PURE__*/_createClass(function vars() {
   _classCallCheck(this, vars);
 });
 
-_defineProperty(vars, "initEditDistanceSliderVal", 6);
+_defineProperty(vars, "initEditDistanceSliderVal", 2);
 
 _defineProperty(vars, "currentEditDistance", vars.initEditDistanceSliderVal);
 

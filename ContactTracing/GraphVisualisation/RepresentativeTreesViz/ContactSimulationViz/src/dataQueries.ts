@@ -116,9 +116,6 @@ function getTreeHeight(treeNode) {
  * @param {Which location we are visualizing} locationToVisualize
  */
 export function getAmountOfTreesRepresentedById(id: number, editDistance: number) {
-    if (id == 688153) {
-        console.log(id);
-    }
     const repTree = repTreeById.get(id);
     if (repTree === undefined) { //Occurs when looking at Alltrees which do not have representations
         return 1;
@@ -134,17 +131,11 @@ console.error("Off by one error in the represenations of Rt distances, function 
  * @param {*} editDistance 
  */
 export function getTreesRepresentedById(id: number, editDistance: number) {
-    //Need to filter trees differently
-
-    if (id == 436387) {
-        console.log(id);
-    }
-
     const repTree = repTreeById.get(id);
     let reps = repTree.representations;
 
-    //There is an off
-    if ((repTree.maxEditDistance) <= editDistance) {//This tree is no longer represented
+    
+    if ((repTree.maxEditDistance) < editDistance) {//This tree is no longer represented. Using < as <= as it is represented untill maxEditDistance.
         return [];
     }
 
@@ -154,9 +145,9 @@ export function getTreesRepresentedById(id: number, editDistance: number) {
         if ((repDistData.editDistance) <= editDistance) { //This tree is represented at this distance
             for (let repTreeId of repDistData.representationIds) {
                 let representedTree = allTreeById.get(repTreeId);
-                if (isTreeFiltered(representedTree) == false) {
+                // if (isTreeFiltered(representedTree) == false) {
                     repTreeIds.push(repTreeId);
-                }
+                // }
             }
         }
     }
